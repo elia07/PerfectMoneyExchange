@@ -1,0 +1,179 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities;
+@using System.Text;
+@using System.ComponentModel.DataAnnotations;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core.Enumerations;
+@{
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = ViewBag.UserID;
+
+    TransactionRepository tr = new TransactionRepository();
+    FinancialLogRepository flr = new FinancialLogRepository();
+}
+
+<div class="payment-method">
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px" voucherValue="5">
+        <img src="~/Resources/images/perfect5usd.png">
+        وچر 5 دلاری
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType" style="max-width:150px"  voucherValue="10">
+        <img src="~/Resources/images/perfect10usd.png">
+        وچر 10 دلاری
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType" style="max-width:150px"  voucherValue="25">
+        <img src="~/Resources/images/perfect25usd.png">
+        وچر 25 دلاری
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType" style="max-width:150px"  voucherValue="50">
+        <img src="~/Resources/images/perfect50usd.jpg">
+        وچر 50 دلاری
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType" style="max-width:150px"  voucherValue="1">
+        <img src="~/Resources/images/perfectcustomusd.png">
+        وچر به مبلغ دلخواه
+    </a>
+</div>
+    
+<div style="width:100%">
+    <br>
+    <span style="font-weight:bold">میزان وچر : </span><input id="voucherValue" class="form-control" type="text" value="5$" readonly /><br>
+    <span style="font-weight:bold">مبلغ به تومان : </span><input id="voucherValueToman" class="form-control" type="text" value="150000" readonly /><br>
+    <button class="btn btn-success" style="width:100%" onclick="selectPaymentType();"><i class="mdi mdi-cash-multiple" style="font-size:20px;"></i> خرید</button>
+</div>
+<div style="width:100% ; height:100%">
+
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-history"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_History"] <span style="float:left;cursor:pointer" data-toggle="modal" data-target="#BuyChipsModal">خرید جدید <i class="d-inline-flex align-middle ml-2 mdi mdi-shopify"></i></span></p><hr class="bodyTitleSperator">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_ID"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Date"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Amount"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_PaymentType"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Status"]</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var records = tr.GetUserTransactions(UserID);
+                    foreach (var item in records)
+                    {
+                        <tr>
+                            <td>@item.xID</td>
+                            <td>@DateConvertor.MiladiToShamsi(item.xDate)</td>
+                            <td>@item.xAmount</td>
+                            <td>@(SectionInfo.Setting.Languages[LanguageCode][EnumUtils.GetAttribute<DisplayAttribute>((GatewayType)item.Gateway.xType).Name])</td>
+                            <td>@(item.xVerified ? SectionInfo.Setting.Languages[LanguageCode]["Txt_VerifiedTransaction"] : SectionInfo.Setting.Languages[LanguageCode]["Txt_NotVerifiedTransaction"])</td>
+                        </tr>
+                    }
+                    if (records.Count() == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <br>
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-history"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_History"]  وچر های دریافتی شما</p><hr class="bodyTitleSperator">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Date"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Amount"]</th>
+                    <th class="text-center">اطلاعات وچر</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var records2 = flr.GetByType(FinancialLogType.UserVoucher,UserID);
+                    foreach (var item in records2)
+                    {
+                        <tr>
+                            <td>@DateConvertor.MiladiToShamsi(item.xDate)</td>
+                            <td>@item.xAmount</td>
+                            <td>@item.xDescription</td>
+                            
+                        </tr>
+                    }
+                    if (records.Count() == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var voucherRate=@SectionInfo.Setting.PerfectMoneySellPrice;
+    $(".paymentType").click(function () {
+        $(".paymentType").removeClass("selected");
+        $(this).addClass("selected");
+        $(".paymentTypeContainer").css("display", "none");
+
+        $("#voucherValue").val($(this).attr("voucherValue"));
+        $("#voucherValueToman").val(parseInt($(this).attr("voucherValue")) * voucherRate);
+        if ($(this).attr("voucherValue") == "1") {
+            $("#voucherValueToman").removeAttr("readonly");
+        }
+        else {
+            $("#voucherValueToman").attr("readonly","true");
+        }
+        
+    });
+    $('#voucherValueToman').on('input', function () {
+        
+        if (!isNaN(parseInt($(this).val()))) {
+            $("#voucherValue").val(parseInt($(this).val()) / voucherRate);
+        }
+        else {
+            $("#voucherValue").val("1");
+            $("#voucherValueToman").val(voucherRate);
+        }
+    });
+    function selectPaymentType() {
+        $("#BuyChipsModal").modal("show");
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/GetPartialView?viewName=SelectPaymentType&amount=" + $("#voucherValueToman").val(), type: "GET",
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                $("#paymentTypesContainer").html(unescapeHtml(e));
+                
+            }
+        });
+    }
+</script>
+@{
+    tr.Dispose();
+    flr.Dispose();
+}

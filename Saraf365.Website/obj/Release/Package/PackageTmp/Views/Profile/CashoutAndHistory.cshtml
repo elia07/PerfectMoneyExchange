@@ -1,0 +1,190 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Enumerations;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities;
+@using System.ComponentModel.DataAnnotations;
+@{
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = ViewBag.UserID;
+
+    WithdrawalRepository wr = new WithdrawalRepository();
+}
+
+<div style="width:100% ; height:100%">
+    
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-history"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_History"] <span style="float:left;cursor:pointer" data-toggle="modal" data-target="#NewWithdrawalModal">ثبت در خواست نقد کردن وچر<i class="d-inline-flex align-middle ml-2 mdi mdi-bank-transfer"></i></span> </p><hr class="bodyTitleSperator">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankName"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_CartNumber"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Date"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Amount"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Status"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_SettlementDate"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Description"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var records = wr.GetUserWithdrawals(UserID);
+                    foreach (var item in records)
+                    {
+                <tr>
+                    @if (item.UserBankAccount != null)
+                    {
+                        <td>@item.UserBankAccount.xBankType</td>
+                        <td>@item.UserBankAccount.xCartNumber</td>
+                    }
+                    else
+                    {
+                        <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_PerfectMoney"]</td>
+                        <td></td>
+                    }
+
+
+                    <td>@DateConvertor.MiladiToShamsi(item.xDate)</td>
+                    <td>@item.xAmount</td>
+                    <td>@(SectionInfo.Setting.Languages[LanguageCode][EnumUtils.GetAttribute<DisplayAttribute>((WithdrawalStatusType)item.xStatus).Name])</td>
+                    <td>@(item.xSettlementDate == null ? "" : DateConvertor.MiladiToShamsi(item.xDate))</td>
+                    <td>@item.xDescription</td>
+
+                </tr>
+                    }
+                    if (records.Count() == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<div class="modal fade massage-modal" id="NewWithdrawalModal" tabindex="-1" role="dialog" aria-labelledby="MassageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MassageModalLabel"><i class="d-inline-flex align-middle ml-1 mdi mdi-bank-transfer"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_NewCashout"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (SectionInfo.Setting.PerfectBuyAvail)
+                {
+                    if (new UserBankAccountRepository().GetUserBankAccounts(UserID).Where(x => x.xIsVerified).Count() == 0)
+                    {
+                        <p>هیچ حساب بانکی تایید شده در حساب کاربری شما پیدا نشد ، لطفا از قسمت پروفایل من اقدام به ثبت حساب بانکی نمایید ، در صورت صحیح بودن نام صاحب کارت با اطلاعات هویتی ثبت شده از طرف شما کارشناسان ما ظرف مدت اندکی حساب شما را تایید خواهند نمود</p>
+                    }
+                    else
+                    {
+                        <p>توجه داشته باشید که هزینه نقد کردن(کارت به کارت) از مبلغ کل وچر کسر خواهد شد ، کمترین میزان کارمزد @(SectionInfo.Setting.CashWithdrawalCost.ElementAt(0).Key) تومان می باشد</p>
+                        <form id="NewWithdrawal" name="NewWithdrawal" data-parsley-validate>
+                            <div class="form-group">
+                                <i class="mdi mdi-bank"></i>
+                                <select class="form-control" id="userBankAccountID" name="userBankAccountID" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankName"]">
+                                    @{
+                                        var userAccounts = new UserBankAccountRepository().GetUserBankAccounts(UserID).Where(x => x.xIsVerified);
+                                        if (userAccounts.Count() != 0)
+                                        {
+                                            foreach (var item in userAccounts)
+                                            {
+                                                <option value="@item.xID">@item.xBankType - @item.xCartNumber</option>
+                                            }
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <i class="mdi mdi-cash"></i>
+                                <p><span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_EachPerfectMoneyEquals"] </span><span>@SectionInfo.Setting.PerfectMoneyBuyPrice @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"] </span></p>
+                                <input type="text" class="form-control" name="voucherCode" id="voucherCode" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_VoucherCode"]" data-parsley-required data-trigger="change"><br />
+                                <input type="text" class="form-control" name="voucherActivationCode" id="voucherActivationCode" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_VoucherActivationCode"]" data-parsley-required data-trigger="change"><br />
+                            </div>
+                            <button type="submit" class="btn formBtn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                        </form>
+                    }
+
+                }
+                else
+                {
+                        <p>با پشتیبانی تماس بگیرید و یا لطفا ساعاتی بعد یا فردا مراجعه نمایید</p>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+   
+    $("#NewWithdrawal").submit(function (event) {
+        
+        event.preventDefault();
+        if (!$("#NewWithdrawal").parsley().validate()) {
+            return;
+        }
+        $("#NewWithdrawalModal").modal("hide");
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/AddNewWithdrawal", data: $(this).serialize(), type: "POST", dataType: 'json',
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () {
+                            window.location.reload();
+                        }
+                    });
+
+                }
+            }
+        });
+
+    });
+
+
+
+
+
+
+</script>
+@{
+    wr.Dispose();
+}

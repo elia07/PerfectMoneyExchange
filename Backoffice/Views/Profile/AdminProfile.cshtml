@@ -1,0 +1,86 @@
+﻿
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+
+@{
+    ViewBag.Title = "AdminProfile";
+    Layout = "~/Views/PanelMaster.cshtml";
+    
+    AdminRepository ar= new AdminRepository();
+    Admin instance = ar.GetByID(Convert.ToInt64(((Admin)Session["Admin"]).xID));
+    
+}
+
+<ol class="breadcrumb">
+	<li><a href="/Profile">صفحه اصلی</a></li> 
+	<li class="active"><a href="#">پروفایل من</a></li>
+</ol>
+ <div id="content">
+    <section class="panel">
+		<header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+				<h3 style="color: rgb(255, 255, 255);"><strong>پروفایل من</strong></h3>
+		</header>
+		<div class="panel-body" style="direction:rtl;">
+            <form id="form-update" data-parsley-validate>
+
+
+                <div class="form-group clearfix">
+                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمز عبور فعلی</label>
+                    <div class="col-md-11">
+                        <input class="form-control" type="text" name="xPassword" id="xPassword" value="" data-parsley-minlength="5" data-trigger="change" required>
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمز عبور جدید</label>
+                    <div class="col-md-11">
+                        <input class="form-control" type="text" name="newPassword" id="newPassword" value="" data-parsley-minlength="5" data-trigger="change" required>
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="col-md-12">
+                        <button type="button" id="update" class="btn btn-success">ویرایش</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script type="text/javascript">
+    $("#form-update").parsley();
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;                
+            }
+        }
+    $("#update").click(function () {
+        if ($("#form-update").parsley().validate()) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Profile/Update',
+                data: JSON.stringify(getFormData($("#form-update"))),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        setTimeout("window.location.reload()",1000);
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    });
+</script>
+@{
+    ar.Dispose();
+    }

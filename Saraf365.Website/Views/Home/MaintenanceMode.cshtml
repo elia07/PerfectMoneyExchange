@@ -1,0 +1,81 @@
+﻿@using BotDetect.Web.Mvc;
+@{
+    Layout = null;
+    string LanguageCode = ViewBag.LanguageCode;
+}
+<!doctype html>
+<html lang="fa_IR" dir="rtl">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138609180-1"></script>
+    <script>window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138609180-1');</script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="~/Resources/images/saraf365125.png">
+    <title>@SectionInfo.Setting.ApplicationName</title>
+
+    <!-- All CSS -->
+    <link rel="stylesheet" href="~/Resources/plugins/bootstrap-v4-rtl/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Resources/fonts/mdi/font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/Resources/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css" />
+    <link href="~/Resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Resources/css/style.css">
+</head>
+<body class="body-home" style="background-image: url('/Resources/images/PagMaintenance.jpg');">
+    <header>
+
+        <!--Header-->
+        <section class="container-fluid bg-home">
+            <div class="container home">
+                <div class="right">
+                    <p onclick="window.location.href='@SectionInfo.Setting.DomainAddress'"><i class="d-inline-flex align-middle mdi mdi-home"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Home"]</p>
+                </div>
+                <div class="left">
+                </div>
+            </div>
+        </section>
+        <!--End Header-->
+
+    </header>
+    <main class="main-content">
+        <div class="container-fluid">
+            <div class="container p-0">
+                <section class="row">
+
+                    <!--Section Main Content-->
+                    <div class="col-lg-12">
+
+
+
+                    </div>
+                    <!--End Section Main Content-->
+
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+
+
+    <script type="text/javascript" src="~/Resources/plugins/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/bootstrap-v4-rtl/js/bootstrap.min.js"></script>
+    <script src="~/Resources/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        Swal({
+            title: '@SectionInfo.Setting.Languages[ViewBag.LanguageCode]["Txt_MaintentanceModeTitle"]',
+            text: '@SectionInfo.Setting.MaintenanceModeMessage',
+            type: 'warning'
+        });
+    </script>
+
+
+
+
+</body>
+</html>

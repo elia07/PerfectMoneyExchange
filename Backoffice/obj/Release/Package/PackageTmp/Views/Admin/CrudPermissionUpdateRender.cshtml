@@ -1,0 +1,158 @@
+﻿@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using RockCandy.Web.Framework.Utilities;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Core.Enumerations;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    AdminRoleRepository kr = new AdminRoleRepository();
+    AdminRole instance = kr.GetByID(xID);
+    char[] permistions = instance.xCrudPermission.ToCharArray();
+}
+
+<ol class="breadcrumb">
+	<li><a href="/Profile">صفحه اصلی</a></li> 
+	<li><a href="/Admin/Index?@queryString">مدیریت سطوح دسترسی</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+ <div id="content">
+    <section class="panel">
+		<header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+				<h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+		</header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-update">
+                    <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(xID.ToString(), true, SectionInfo.Setting.SecurityKey)">
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                        <div class="col-md-11">
+                            <label>@(EnumUtils.GetAttribute<DisplayAttribute>((AdminRoleSectionType)instance.xSectionType).Name)</label>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp دسترسی خواندن</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xReadPermission" name="xReadPermission" value="true" @(permistions[(byte)CrudOperationType.Select] == '1' ? "checked" : "") style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp دسترسی نوشتن</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xInsertPermission" name="xInsertPermission" value="true" @(permistions[(byte)CrudOperationType.Insert] == '1' ? "checked" : "") style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp دسترسی به روز رسانی</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xUpdatePermission" name="xUpdatePermission" value="true" @(permistions[(byte)CrudOperationType.Update] == '1' ? "checked" : "") style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp دسترسی حذف</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xDeletePermission" name="xDeletePermission" value="true" @(permistions[(byte)CrudOperationType.Delete] == '1' ? "checked" : "") style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp دسترسی گزارش گیری</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xReportPermission" name="xReportPermission" value="true" @(permistions[(byte)CrudOperationType.Report] == '1' ? "checked" : "") style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="col-md-12">
+                            <button type="button" id="UpdateConfirm" class="btn btn-success">ویرایش</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+                      
+    </section>
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+				<h4 class="modal-title">تایید ویرایش</h4>
+		</div>
+		<!-- //modal-header-->
+		<div class="modal-body">
+			<p>برای ویرایش رکورد بر روی دکمه تایید کلیک کنید.</p>
+            <button id="Update" OnClick="Update()" type="button" class="btn btn-success">تایید</button>
+		</div>
+		<!-- //modal-body-->
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('.selectpicker').change();
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+    });
+    function Update()
+    {
+        var xCrudPermissions="";
+        xCrudPermissions=""+$("#xReadPermission").is(":checked");
+        xCrudPermissions+=""+$("#xInsertPermission").is(":checked");
+        xCrudPermissions+=""+$("#xUpdatePermission").is(":checked");
+        xCrudPermissions+=""+$("#xDeletePermission").is(":checked");
+        xCrudPermissions+=""+$("#xReportPermission").is(":checked");
+        xCrudPermissions = xCrudPermissions.replace(new RegExp("true", 'g'), "1");
+        xCrudPermissions = xCrudPermissions.replace(new RegExp("false", 'g'), "0");
+
+        var args = {
+            "xID":$("#xID").val(),
+            "xCrudPermissions":xCrudPermissions
+            
+        }
+        @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;                
+            }
+        }
+        $.ajax({
+            type: "POST",
+            headers: {
+                'RequestVerificationToken': '@TokenHeaderValue()'
+            },
+            contentType: "application/json; charset=utf-8",
+            url: '/Admin/CrudPermissionUpdate',
+            data: JSON.stringify(args),
+            dataType: "json",
+            success: function (response) {
+                if (response.Status == true) {
+                    $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                    setTimeout("window.location.reload()",1000);
+                }
+                else {
+                    $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                }
+            },
+            statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+        });
+    }
+    
+</script>
+@{
+    kr.Dispose();
+    }

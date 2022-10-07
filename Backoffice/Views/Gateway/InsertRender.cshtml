@@ -1,0 +1,167 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/Gateway/Index">مدیریت درگاه</a></li>
+    <li class="active">جدید</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong> درگاه جدید</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-insert" data-parsley-validate>
+
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xName" id="xName" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                        <div class="col-md-11">
+                            @(Html.RenderEnum<GatewayType>("xType"))
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سقف روزانه</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xMaxDailyAmount" id="xMaxDailyAmount" data-parsley-type="integer" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تنظیمات</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xConfig" id="xConfig" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp برای کاربران بالای لول</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xActiveforLevelsAbove" id="xActiveforLevelsAbove" data-parsley-type="digits" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp کارمزد درگاه</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xCommisionPercent" id="xCommisionPercent"  data-parsley-pattern="^[0-9]*\.[0-9]{1}$" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp کف خرید</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xMinBuyIn" id="xMinBuyIn" data-parsley-type="digits" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp درصد بونوس</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xBonusPercent" id="xBonusPercent" data-parsley-type="digits" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سقف بونوس</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xMaxBonusValue" id="xMaxBonusValue" data-parsley-type="digits" data-trigger="change" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp خرید با مبلغ دلخواه</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xAllowCustomAmountForBuyIn" name="xAllowCustomAmountForBuyIn" value="true" style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp VIP</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xIsVip" name="xIsVip" value="true" style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp اصلی</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xIsPrimary" name="xIsPrimary" value="true" style="float:right;width:30px;">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp فعال</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xIsActive" name="xIsActive" value="true" style="float:right;width:30px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-success" onclick="insert()">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<script type="text/javascript">
+
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $("#form-insert").parsley();
+    });
+    function insert() {
+       //data: JSON.stringify($(this).serialize()),
+        if ($("#form-insert").parsley().validate()) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Gateway/Insert',
+                data: JSON.stringify($("#form-insert").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.href = "/Gateway/Index";
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+
+</script>

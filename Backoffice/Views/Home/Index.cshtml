@@ -1,0 +1,231 @@
+﻿@using System.Configuration;
+@using BotDetect.Web.Mvc;
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Meta information -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<!-- Title-->
+		<!-- Favicons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/Resources/assets/ico/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/Resources/assets/ico/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/Resources/assets/ico/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="/Resources/assets/ico/apple-touch-icon-57-precomposed.png">
+		<link rel="shortcut icon" href="/Resources/assets/ico/favicon.ico">
+		<!-- CSS Stylesheet-->
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/bootstrap/bootstrap.min.css" />
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/bootstrap/bootstrap-themes.css" />
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/style.css" />
+        <link type="text/css" rel="stylesheet" href="/Resources/assets/css/overwrite/overwrite.css" />
+		<SCRIPT type="JavaScript">wside = (window.sidebar) ? true : false; var isOff = false; function mt_cm() { return false } function mt_md(e) { mac = navigator.userAgent.indexOf('Mac') != -1; if (document.all) { if (event.button == 2 || (mac && (event.ctrlKey || event.keyCode == 91))) { return false } } else { if (e.which == 3 || (mac && (e.modifiers == 2 || e.ctrlKey))) { return false } } } if (navigator.appName.indexOf('Internet Explorer') == -1 || (navigator.userAgent.indexOf('MSIE') != -1 && document.all.length != 0)) { if (document.all) { mac = navigator.userAgent.indexOf('Mac') != -1; version = parseFloat('0' + navigator.userAgent.substr(navigator.userAgent.indexOf('MSIE') + 5), 10); if (!mac && version > 4) { document.oncontextmenu = mt_cm } else { document.onmousedown = mt_md; document.onkeydown = mt_md } } else if (document.layers) { window.captureEvents(Event.MOUSEDOWN | Event.modifiers | Event.KEYDOWN); window.onmousedown = mt_md; window.onkeydown = mt_md } else if (document.getElementById && !document.all) { document.oncontextmenu = mt_cm } } function mt_dn(a) { return false }; function mt_de(e) { return (e.target.tagName != null && e.target.tagName.search('^(INPUT|TEXTAREA|BUTTON|SELECT)$') != -1) }; function mt_md(e) { if (e.which == 1) { window.captureEvents(Event.MOUSEMOVE); window.onmousemove = mt_dn } } function mt_mu(e) { if (e.which == 1) { window.releaseEvents(Event.MOUSEMOVE); window.onmousemove = null } } if (navigator.appName.indexOf('Internet Explorer') == -1 || (navigator.userAgent.indexOf('MSIE') != -1 && document.all.length != 0)) { if (document.all) { document.onselectstart = mt_dn } else if (document.layers) { window.captureEvents(Event.MOUSEUP | Event.MOUSEDOWN); window.onmousedown = mt_md; window.onmouseup = mt_mu } else if (document.getElementById && !document.all) { document.onmousedown = mt_de } } function mt_nls() { window.status = ''; return true } function mt_nlsl() { mt_nls(); setTimeout('mt_nlsl()', 10) } if (document.layers) document.captureEvents(Event.MOUSEOVER | Event.MOUSEOUT); document.onmouseover = mt_nls; document.onmouseout = mt_nls; mt_nlsl();</SCRIPT>
+        <link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+			.account-wall .form-signin .input-group-addon i:after {
+				left: -15px;
+			}
+		    
+		    .account-wall .login-title small  {
+               font-size:18px;
+		    }
+            body,h1,small,.account-wall .login-title small,label,button{
+                font-family:BBCNassim;
+		    }
+            .account-wall .form-signin {
+                max-width: 530px;
+            }
+		    .jquery-notific8-notification {
+                direction:rtl;
+
+		    }
+		    .jquery-notific8-heading {
+                    font-size:18px;
+		    }
+            .jquery-notific8-message {
+                    font-size:16px;
+		    }
+		</style>
+	</head>
+	
+	<body class="full-lg">
+		<style media='print'>body {display:none}</style>
+		<div id="wrapper">
+
+		<div id="loading-top">
+				<div id="canvas_loading"><img src="/Resources/assets/img/ajax-loader.gif" /></div>
+				<span>... در حال بررسی</span>
+		</div>
+
+		<div id="main">
+				<div class="real-border">
+						<div class="row">
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+								<div class="col-xs-1"></div>
+						</div>
+				</div>
+				<div class="container">
+						<div class="row">
+								<div class="col-lg-12">
+										<div class="account-wall">
+												<section class="align-lg-center">
+												<div class="site-logo"></div>
+												<h1 class="login-title"><span>خوش</span>آمدید <small> پنل مدیریت</small></h1>
+                                                    
+												</section>
+												<form id="form-signin" class="form-signin">
+														<section dir="rtl">
+																<div class="input-group">
+																		<div class="input-group-addon"><i class="fa fa-user"></i></div>
+																		<input type="text" class="form-control" name="xEmail" placeholder="پست الکترونیک">
+																</div>
+																<div class="input-group">
+																		<div class="input-group-addon"><i class="fa fa-key"></i></div>
+																		<input type="password" class="form-control" name="xPassword" placeholder="رمز عبور">
+																</div>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon"><i class="fa fa-key"></i></div>
+                                                                    @Html.TextBox("CaptchaCode", null, new { @class = "form-control", @PlaceHolder = "کد امنیتی" ,@id="captchaInput", @autocomplete = "off" })
+                                                                </div>
+                                                                
+                                                                @{ MvcCaptcha exampleCaptcha = new MvcCaptcha("ExampleCaptcha"); }
+                                                                @Html.Captcha(exampleCaptcha)
+                                                                <br />
+																<button class="btn btn-lg btn-theme-inverse btn-block" type="submit" id="sign-in">ورود</button>
+														</section>	
+												</form>
+												<a href="#" class="footer-link" style="font-size:16px;">&copy; </a>
+										</div>	
+										<!-- //account-wall-->
+										
+								</div>
+								<!-- //col-sm-6 col-md-4 col-md-offset-4-->
+						</div>
+						<!-- //row-->
+				</div>
+				<!-- //container-->
+				
+		</div>
+		<!-- //main-->
+
+				
+		</div>
+		<!-- //wrapper-->
+
+
+		<!--
+		////////////////////////////////////////////////////////////////////////
+		////////// JAVASCRIPT LIBRARY //////////
+		/////////////////////////////////////////////////////////////////////
+		-->
+				
+		<script type="text/javascript" src="/Resources/assets/js/jquery.min.js"></script>
+
+		
+		<script type="text/javascript" src="/Resources/assets/js/jquery.ui.min.js"></script>
+
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/bootstrap/bootstrap.min.js"></script>
+
+		<!-- Modernizr Library For HTML5 And CSS3 -->
+		
+		<script type="text/javascript" src="/Resources/assets/js/modernizr/modernizr.js"></script>
+
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/mmenu/jquery.mmenu.js"></script>
+
+		<!-- Holder Images -->
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/holder/holder.js"></script>
+
+		<!-- Form plugins -->
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/form/form.js"></script>
+
+		<!-- Datetime plugins -->
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/datetime/datetime.js"></script>
+
+		<!-- Library Chart-->
+		
+		<script type="text/javascript" src="/Resources/assets/plugins/chart/chart.js"></script>
+
+		<!-- Library Themes Customize-->
+		
+		<script type="text/javascript" src="/Resources/assets/js/caplet.custom.js"></script>
+
+         <script type="text/javascript" src="/Resources/assets/js/FrameworkCore.js"></script>
+
+		
+		<script type="text/javascript">
+            $(document).ready(function (e) {
+                $("#ExampleCaptcha_ReloadIcon").click();
+                $("#captchaInput").val("");
+            });
+		    $(function () {
+		        //Login animation to center 
+		        function toCenter() {
+		            var mainH = $("#main").outerHeight();
+		            var accountH = $(".account-wall").outerHeight();
+		            var marginT = (mainH - accountH) / 2;
+		            if (marginT > 30) {
+		                $(".account-wall").css("margin-top", marginT - 15);
+		            } else {
+		                $(".account-wall").css("margin-top", 30);
+		            }
+		        }
+		        toCenter();
+		        var toResize;
+		        $(window).resize(function (e) {
+		            clearTimeout(toResize);
+		            toResize = setTimeout(toCenter(), 500);
+		        });
+
+		        //Set note alert
+		        /*setTimeout(function () {
+		            $.notific8('Hi Guest , you can use Username : <strong>demo</strong> and Password: <strong>demo</strong> to access account.', { sticky: true, horizontalEdge: "top", theme: "inverse", heading: "LOGIN DEMO" })
+		        }, 1000);*/
+		        
+
+		        $("#form-signin").submit(function (event) {
+		            event.preventDefault();
+		            var main = $("#main");
+		            //scroll to top
+		            main.animate({
+		                scrollTop: 0
+		            }, 500);
+		            main.addClass("slideDown");
+
+		            // send username and password to php check login
+		            $.ajax({
+		                url: "/Home/login", data: $(this).serialize(), type: "POST", dataType: 'json',
+		                success: function (e) {
+		                    setTimeout(function () { main.removeClass("slideDown") }, !e.status ? 500 : 3000);
+		                    if (!e.Status) {
+		                        $.notific8(e.Message, { life: 5000, horizontalEdge: "top", theme: "danger", heading: " خطا " });
+		                        $("#ExampleCaptcha_ReloadIcon").click();
+		                        $("#captchaInput").val("");
+		                        return false;
+		                    }
+		                    setTimeout(function () { $("#loading-top span").text("کاربر با موفقیت اهراز هویت شد") }, 500);
+		                    setTimeout(function () { $("#loading-top span").text("... در حال انتقال به پروفایل کاربر") }, 1500);
+		                    setTimeout("window.location.href='@ConfigurationManager.AppSettings.Get("PanelBaseAddress")'", 3100);
+		                }
+		            });
+
+		        });
+		    });
+		</script> 
+	</body>
+</html>

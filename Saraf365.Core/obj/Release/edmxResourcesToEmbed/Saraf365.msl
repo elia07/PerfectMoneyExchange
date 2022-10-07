@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Saraf365ModelStoreContainer" CdmEntityContainer="Saraf365Entities">
+    <EntitySetMapping Name="Admin">
+      <EntityTypeMapping TypeName="Saraf365Model.Admin">
+        <MappingFragment StoreEntitySet="Admin">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xEmail" ColumnName="xEmail" />
+          <ScalarProperty Name="xPassword" ColumnName="xPassword" />
+          <ScalarProperty Name="xName" ColumnName="xName" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+          <ScalarProperty Name="xSalt" ColumnName="xSalt" />
+          <ScalarProperty Name="xTelegramID" ColumnName="xTelegramID" />
+          <ScalarProperty Name="xTelegramUsername" ColumnName="xTelegramUsername" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdminNotification">
+      <EntityTypeMapping TypeName="Saraf365Model.AdminNotification">
+        <MappingFragment StoreEntitySet="AdminNotification">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xResponsibleAdmin" ColumnName="xResponsibleAdmin" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xDescription" ColumnName="xDescription" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xCreator" ColumnName="xCreator" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdminRole">
+      <EntityTypeMapping TypeName="Saraf365Model.AdminRole">
+        <MappingFragment StoreEntitySet="AdminRole">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xAdminID" ColumnName="xAdminID" />
+          <ScalarProperty Name="xSectionType" ColumnName="xSectionType" />
+          <ScalarProperty Name="xCrudPermission" ColumnName="xCrudPermission" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankCard">
+      <EntityTypeMapping TypeName="Saraf365Model.BankCard">
+        <MappingFragment StoreEntitySet="BankCard">
+          <ScalarProperty Name="xSpecialConfigs" ColumnName="xSpecialConfigs" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xCardHolderName" ColumnName="xCardHolderName" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xBankName" ColumnName="xBankName" />
+          <ScalarProperty Name="xAccountNumber" ColumnName="xAccountNumber" />
+          <ScalarProperty Name="xCardNumber" ColumnName="xCardNumber" />
+          <ScalarProperty Name="xInternetUsername" ColumnName="xInternetUsername" />
+          <ScalarProperty Name="xInternetPassword" ColumnName="xInternetPassword" />
+          <ScalarProperty Name="xMinToTransfer" ColumnName="xMinToTransfer" />
+          <ScalarProperty Name="xSecondPassword" ColumnName="xSecondPassword" />
+          <ScalarProperty Name="xCvv2" ColumnName="xCvv2" />
+          <ScalarProperty Name="xExpireMonth" ColumnName="xExpireMonth" />
+          <ScalarProperty Name="xExpireYear" ColumnName="xExpireYear" />
+          <ScalarProperty Name="xBalance" ColumnName="xBalance" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+          <ScalarProperty Name="xDepositStatus" ColumnName="xDepositStatus" />
+          <ScalarProperty Name="xLastLoginStatus" ColumnName="xLastLoginStatus" />
+          <ScalarProperty Name="xBannedAmount" ColumnName="xBannedAmount" />
+          <ScalarProperty Name="xFailedLoginCount" ColumnName="xFailedLoginCount" />
+          <ScalarProperty Name="xMinDeposit" ColumnName="xMinDeposit" />
+          <ScalarProperty Name="xLastUsageDate" ColumnName="xLastUsageDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CartTransferHistory">
+      <EntityTypeMapping TypeName="Saraf365Model.CartTransferHistory">
+        <MappingFragment StoreEntitySet="CartTransferHistory">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xTransactionID" ColumnName="xTransactionID" />
+          <ScalarProperty Name="xBankCardID" ColumnName="xBankCardID" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xAmountIn" ColumnName="xAmountIn" />
+          <ScalarProperty Name="xAmountOut" ColumnName="xAmountOut" />
+          <ScalarProperty Name="xCodePeigiri" ColumnName="xCodePeigiri" />
+          <ScalarProperty Name="xCodeErja" ColumnName="xCodeErja" />
+          <ScalarProperty Name="xDescription" ColumnName="xDescription" />
+          <ScalarProperty Name="xDocumentNumber" ColumnName="xDocumentNumber" />
+          <ScalarProperty Name="xDocumentDate" ColumnName="xDocumentDate" />
+          <ScalarProperty Name="xCardNumber" ColumnName="xCardNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Conversation">
+      <EntityTypeMapping TypeName="Saraf365Model.Conversation">
+        <MappingFragment StoreEntitySet="Conversation">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xTicketID" ColumnName="xTicketID" />
+          <ScalarProperty Name="xBody" ColumnName="xBody" />
+          <ScalarProperty Name="xResponse" ColumnName="xResponse" />
+          <ScalarProperty Name="xResponseDate" ColumnName="xResponseDate" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FileData">
+      <EntityTypeMapping TypeName="Saraf365Model.FileData">
+        <MappingFragment StoreEntitySet="FileData">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xSystemnFileID" ColumnName="xSystemnFileID" />
+          <ScalarProperty Name="xData" ColumnName="xData" />
+          <ScalarProperty Name="xIsThumbnail" ColumnName="xIsThumbnail" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ScheduleMessage">
+      <EntityTypeMapping TypeName="Saraf365Model.ScheduleMessage">
+        <MappingFragment StoreEntitySet="ScheduleMessage">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xSystemFileID" ColumnName="xSystemFileID" />
+          <ScalarProperty Name="xTitle" ColumnName="xTitle" />
+          <ScalarProperty Name="xBody" ColumnName="xBody" />
+          <ScalarProperty Name="xExpression" ColumnName="xExpression" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Setting">
+      <EntityTypeMapping TypeName="Saraf365Model.Setting">
+        <MappingFragment StoreEntitySet="Setting">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xKey" ColumnName="xKey" />
+          <ScalarProperty Name="xValue" ColumnName="xValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SystemFile">
+      <EntityTypeMapping TypeName="Saraf365Model.SystemFile">
+        <MappingFragment StoreEntitySet="SystemFile">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xFileExtention" ColumnName="xFileExtention" />
+          <ScalarProperty Name="xContentType" ColumnName="xContentType" />
+          <ScalarProperty Name="xFileName" ColumnName="xFileName" />
+          <ScalarProperty Name="xAddingDate" ColumnName="xAddingDate" />
+          <ScalarProperty Name="xMD5" ColumnName="xMD5" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SystemLog">
+      <EntityTypeMapping TypeName="Saraf365Model.SystemLog">
+        <MappingFragment StoreEntitySet="SystemLog">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xDetail" ColumnName="xDetail" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xShortDetail" ColumnName="xShortDetail" />
+          <ScalarProperty Name="xAdminID" ColumnName="xAdminID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ticket">
+      <EntityTypeMapping TypeName="Saraf365Model.Ticket">
+        <MappingFragment StoreEntitySet="Ticket">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xUserID" ColumnName="xUserID" />
+          <ScalarProperty Name="xTitle" ColumnName="xTitle" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xStatus" ColumnName="xStatus" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserBankAccount">
+      <EntityTypeMapping TypeName="Saraf365Model.UserBankAccount">
+        <MappingFragment StoreEntitySet="UserBankAccount">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xUserID" ColumnName="xUserID" />
+          <ScalarProperty Name="xBankType" ColumnName="xBankType" />
+          <ScalarProperty Name="xCartNumber" ColumnName="xCartNumber" />
+          <ScalarProperty Name="xShebaNumber" ColumnName="xShebaNumber" />
+          <ScalarProperty Name="xAccountNumber" ColumnName="xAccountNumber" />
+          <ScalarProperty Name="xIsVerified" ColumnName="xIsVerified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Withdrawal">
+      <EntityTypeMapping TypeName="Saraf365Model.Withdrawal">
+        <MappingFragment StoreEntitySet="Withdrawal">
+          <ScalarProperty Name="xID" ColumnName="xID" />
+          <ScalarProperty Name="xUserID" ColumnName="xUserID" />
+          <ScalarProperty Name="xUserBankAccountID" ColumnName="xUserBankAccountID" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xAmount" ColumnName="xAmount" />
+          <ScalarProperty Name="xStatus" ColumnName="xStatus" />
+          <ScalarProperty Name="xDescription" ColumnName="xDescription" />
+          <ScalarProperty Name="xSettlementDate" ColumnName="xSettlementDate" />
+          <ScalarProperty Name="xWithdrawalCost" ColumnName="xWithdrawalCost" />
+          <ScalarProperty Name="xWithdrawalType" ColumnName="xWithdrawalType" />
+          <ScalarProperty Name="xSecondCurrencyAmmount" ColumnName="xSecondCurrencyAmmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Transaction">
+      <EntityTypeMapping TypeName="Saraf365Model.Transaction">
+        <MappingFragment StoreEntitySet="Transaction">
+          <ScalarProperty Name="xCurrencyExchangeRate" ColumnName="xCurrencyExchangeRate" />
+          <ScalarProperty Name="xCurrencyAmount" ColumnName="xCurrencyAmount" />
+          <ScalarProperty Name="xInvoice_key" ColumnName="xInvoice_key" />
+          <ScalarProperty Name="xBankRef" ColumnName="xBankRef" />
+          <ScalarProperty Name="xComissionAmount" ColumnName="xComissionAmount" />
+          <ScalarProperty Name="xComissionPercent" ColumnName="xComissionPercent" />
+          <ScalarProperty Name="xPaymentInfo" ColumnName="xPaymentInfo" />
+          <ScalarProperty Name="xVerified" ColumnName="xVerified" />
+          <ScalarProperty Name="xAmount" ColumnName="xAmount" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xGatewayID" ColumnName="xGatewayID" />
+          <ScalarProperty Name="xUserID" ColumnName="xUserID" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FinancialLog">
+      <EntityTypeMapping TypeName="Saraf365Model.FinancialLog">
+        <MappingFragment StoreEntitySet="FinancialLog">
+          <ScalarProperty Name="xDescription" ColumnName="xDescription" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xAddBy" ColumnName="xAddBy" />
+          <ScalarProperty Name="xAmount" ColumnName="xAmount" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xUserID" ColumnName="xUserID" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Gateway">
+      <EntityTypeMapping TypeName="Saraf365Model.Gateway">
+        <MappingFragment StoreEntitySet="Gateway">
+          <ScalarProperty Name="xLastSuccessTransactionDate" ColumnName="xLastSuccessTransactionDate" />
+          <ScalarProperty Name="xTodayTotalTransactionAmounts" ColumnName="xTodayTotalTransactionAmounts" />
+          <ScalarProperty Name="xAllowCustomAmountForBuyIn" ColumnName="xAllowCustomAmountForBuyIn" />
+          <ScalarProperty Name="xMinBuyIn" ColumnName="xMinBuyIn" />
+          <ScalarProperty Name="xIsVip" ColumnName="xIsVip" />
+          <ScalarProperty Name="xCommisionPercent" ColumnName="xCommisionPercent" />
+          <ScalarProperty Name="xIsPrimary" ColumnName="xIsPrimary" />
+          <ScalarProperty Name="xActiveforLevelsAbove" ColumnName="xActiveforLevelsAbove" />
+          <ScalarProperty Name="xConfig" ColumnName="xConfig" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+          <ScalarProperty Name="xMaxDailyAmount" ColumnName="xMaxDailyAmount" />
+          <ScalarProperty Name="xType" ColumnName="xType" />
+          <ScalarProperty Name="xName" ColumnName="xName" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="User">
+      <EntityTypeMapping TypeName="Saraf365Model.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="xRefferalSharePercent" ColumnName="xRefferalSharePercent" />
+          <ScalarProperty Name="xAgentID" ColumnName="xAgentID" />
+          <ScalarProperty Name="xInviteID" ColumnName="xInviteID" />
+          <ScalarProperty Name="xWallet" ColumnName="xWallet" />
+          <ScalarProperty Name="xLastSendSmsDate" ColumnName="xLastSendSmsDate" />
+          <ScalarProperty Name="xLastSendEmailDate" ColumnName="xLastSendEmailDate" />
+          <ScalarProperty Name="xCellphoneActivationCode" ColumnName="xCellphoneActivationCode" />
+          <ScalarProperty Name="xActivationCodeExpireAt" ColumnName="xActivationCodeExpireAt" />
+          <ScalarProperty Name="xSalt" ColumnName="xSalt" />
+          <ScalarProperty Name="xIPGRestriction" ColumnName="xIPGRestriction" />
+          <ScalarProperty Name="xCellphone" ColumnName="xCellphone" />
+          <ScalarProperty Name="xActivationCode" ColumnName="xActivationCode" />
+          <ScalarProperty Name="xCellphoneActivated" ColumnName="xCellphoneActivated" />
+          <ScalarProperty Name="xIsVip" ColumnName="xIsVip" />
+          <ScalarProperty Name="xLastSigninDate" ColumnName="xLastSigninDate" />
+          <ScalarProperty Name="xSignupDate" ColumnName="xSignupDate" />
+          <ScalarProperty Name="xLevel" ColumnName="xLevel" />
+          <ScalarProperty Name="xIsNationalIDValidated" ColumnName="xIsNationalIDValidated" />
+          <ScalarProperty Name="xIsEmailValidated" ColumnName="xIsEmailValidated" />
+          <ScalarProperty Name="xDescription" ColumnName="xDescription" />
+          <ScalarProperty Name="xIsActive" ColumnName="xIsActive" />
+          <ScalarProperty Name="xPassword" ColumnName="xPassword" />
+          <ScalarProperty Name="xEmail" ColumnName="xEmail" />
+          <ScalarProperty Name="xFullName" ColumnName="xFullName" />
+          <ScalarProperty Name="xNationalIDNumber" ColumnName="xNationalIDNumber" />
+          <ScalarProperty Name="xNationalIDImage" ColumnName="xNationalIDImage" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TelegramSupport">
+      <EntityTypeMapping TypeName="Saraf365Model.TelegramSupport">
+        <MappingFragment StoreEntitySet="TelegramSupport">
+          <ScalarProperty Name="xResponseDate" ColumnName="xResponseDate" />
+          <ScalarProperty Name="xSystemFileID" ColumnName="xSystemFileID" />
+          <ScalarProperty Name="xResponseAdmin" ColumnName="xResponseAdmin" />
+          <ScalarProperty Name="xResponse" ColumnName="xResponse" />
+          <ScalarProperty Name="xDate" ColumnName="xDate" />
+          <ScalarProperty Name="xUsername" ColumnName="xUsername" />
+          <ScalarProperty Name="xMessageID" ColumnName="xMessageID" />
+          <ScalarProperty Name="xMessage" ColumnName="xMessage" />
+          <ScalarProperty Name="xChatID" ColumnName="xChatID" />
+          <ScalarProperty Name="xID" ColumnName="xID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

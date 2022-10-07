@@ -1,0 +1,439 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    UserRepository kr = new UserRepository();
+    User instance = kr.GetByID(xID);
+
+
+    AdminRepository ur = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser = ur.GetByID(adminUser.xID);
+    AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserManagement).SingleOrDefault();
+    char[] permissions = null;
+    if (arInstance == null)
+    {
+        arInstance = new AdminRole();
+        permissions = "00000".ToCharArray();
+    }
+    else
+    {
+        permissions = arInstance.xCrudPermission.ToCharArray();
+    }
+
+
+
+    AdminRole arfInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserFinancialManagement).SingleOrDefault();
+    char[] ufpermissions = null;
+    if (arfInstance == null)
+    {
+        arfInstance = new AdminRole();
+        ufpermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        ufpermissions = arfInstance.xCrudPermission.ToCharArray();
+    }
+
+}
+<script type="text/javascript" src="/Resources/assets/plugins/bootstrap/SelectPickerAjaxExtention.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/calendar.all.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.css" />
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/User/Index?@queryString">مدیریت کاربر ها</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <a class="btn btn-success" href="@(string.Format("/Withdrawal/Index?OrderByType=0&OrderByFieldName=xID&xEmail_NO=0&xEmail={0}&xEmail_II=on&xCartNumber_NO=0&xCartNumber=&xAccountNumber_NO=0&xAccountNumber=&xShebaNumber_NO=0&xShebaNumber=&xDate_LO=0&xDate=2019%2F04%2F27&xSettlementDate_LO=0&xSettlementDate=2019%2F04%2F27&xAmount_LO=0&xAmount=&xStatus_NO=0&xStatus=-1",instance.xEmail))" target="_blank">تسویه های کاربر</a>
+            <a class="btn btn-success" href="@(string.Format("/Ticket/Index?OrderByType=0&OrderByFieldName=xID&xEmail_NO=0&xEmail={0}&xEmail_II=on&xTitle_NO=0&xTitle=&xDate_LO=0&xDate=2019%2F04%2F27&xType_NO=0&xType=-1&xStatus_NO=0&xStatus=-1",instance.xEmail))" target="_blank">تیکت های کاربر</a>
+            <a class="btn btn-success" href="@(string.Format("/CartTransferHistory/Index?OrderByType=0&OrderByFieldName=xID&xEmail_NO=0&xEmail={0}&xEmail_II=on&xCardNumber_NO=0&xCardNumber=&xDocumentNumber_NO=0&xDocumentNumber=&xCodePeigiri_NO=0&xCodePeigiri=&xCodeErja_NO=0&xCodeErja=&xBankCardNumber_NO=0&xBankCardNumber=&xBankAccountNumber_NO=0&xBankAccountNumber=&xTransactionID_LO=0&xTransactionID=&xAmountIn_LO=0&xAmountIn=&xAmountOut_LO=0&xAmountOut=&xDate_LO=0&xDate=2019%2F04%2F27&xDocumentDate_LO=0&xDocumentDate=2019%2F04%2F27",instance.xEmail))" target="_blank">کارت به کارت های کاربر</a>
+            <a class="btn btn-success" href="@(string.Format("/Transaction/Index?OrderByType=0&OrderByFieldName=xID&xEmail_NO=0&xEmail={0}&xEmail_II=on&xGatewayName_NO=0&xGatewayName=&xPaymentInfo_NO=0&xPaymentInfo=&xBankRef_NO=0&xBankRef=&xInvoice_key_NO=0&xInvoice_key=&xDate_LO=0&xDate=2019%2F04%2F27&xAmount_LO=0&xAmount=&xVerified_NO=0&xVerified=&xIsSuspicious_NO=0&xIsSuspicious=&xValidationCheck_NO=0&xValidationCheck=&xCommisionPercent_LO=0&xCommisionPercent=&xComissionAmount_LO=0&xComissionAmount=",instance.xEmail))" target="_blank">تراکنش های کاربر</a>
+            <a class="btn btn-success" href="@(string.Format("/FinancialLog/Index?OrderByType=0&OrderByFieldName=xID&xEmail_NO=0&xEmail={0}&xEmail_II=on&xDescription_NO=0&xDescription=&xAddBy_NO=0&xAddBy=&xHandNumber_NO=0&xHandNumber=&xType_NO=0&xType=-1&xDate_LO=0&xDate=2019%2F04%2F27&xAmount_LO=0&xAmount=",instance.xEmail))" target="_blank">لاگ های مالی کاربر</a>
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#edit" data-toggle="tab">ویرایش</a></li>
+                    <li><a href="#bankAccounts" data-toggle="tab">حساب های بانکی</a></li>
+                </ul>
+                <div class="tab-content" style="border:solid 2px #d9dfe3;border-top:none;">
+                    <div class="tab-pane fade in active" id="edit">
+
+                        <div class="form-group clearfix">
+                            @if (instance.xNationalIDImage != null)
+                            {
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp کارت ملی</label>
+                                    <div class="col-md-11">
+                                        @MvcHtmlString.Create(string.Format("<img src='{0}' style='width:300px' />", "/Download/GetFile?xFileId=" + instance.SystemFile.xID)))
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12">
+                                        <button type="button" onclick="DeleteNationalIdImage('@MD5Encryption.Encrypt(xID.ToString(), true,SectionInfo.Setting.SecurityKey)')" class="btn btn-success">حذف عکس کارت ملی</button>
+                                    </div>
+                                </div>
+                            }
+                            <br><hr><br>
+                                    <form id="form-update" data-parsley-validate>
+                                        <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(xID.ToString(), true,SectionInfo.Setting.SecurityKey)">
+
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp محدیدویت استفاده از درگاه تا تاریخ</label>
+
+                                            <div id="datepicker_xIPGRestriction" class="input-group date form_datetime col-md-11" style="padding-right:17px;padding-left:17px;" data-picker-position="bottom-left" data-date-format="dd MM yyyy - HH:ii p" style="display:inline-flex;">
+                                                <input id="xIPGRestriction" name="xIPGRestriction" type="text" class="form-control" readonly />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-times"></i></button>
+                                                    <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp توضیحات</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="text" name="xDescription" id="xDescription" value="@instance.xDescription" data-trigger="change">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp ولت</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="text" name="xWallet" id="xWallet" value="@instance.xWallet" parsley-data-type="digits" data-trigger="change">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp درصد مشارکت در فروش</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="text" name="xRefferalSharePercent" id="xRefferalSharePercent" value="@instance.xRefferalSharePercent" parsley-data-type="digits" data-trigger="change">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره ملی</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="text" name="xNationalIDNumber" id="xNationalIDNumber" value="@instance.xNationalIDNumber" data-trigger="change">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp Vip</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="checkbox" id="xIsVip" name="xIsVip" value="true" @(instance.xIsVip == true ? "checked" : "") style="float:right;width:30px;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp فعال</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="checkbox" id="xIsActive" name="xIsActive" value="true" @(instance.xIsActive == true ? "checked" : "") style="float:right;width:30px;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاییدیه کارت ملی</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="checkbox" id="xIsNationalIDValidated" name="xIsNationalIDValidated" value="true" @(instance.xIsNationalIDValidated == true ? "checked" : "") style="float:right;width:30px;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاییدیه ایمیل</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="checkbox" id="xIsEmailValidated" name="xIsEmailValidated" value="true" @(instance.xIsEmailValidated == true ? "checked" : "") style="float:right;width:30px;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاییدیه موبایل</label>
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="checkbox" id="xCellphoneActivated" name="xCellphoneActivated" value="true" @(instance.xCellphoneActivated == true ? "checked" : "") style="float:right;width:30px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group clearfix">
+                                            <div class="col-md-12">
+                                                <button type="button" id="UpdateConfirm" class="btn btn-success">ذخیره</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                        </div>
+
+                    </div>
+                 
+
+                 
+                    <div class="tab-pane fade in" id="bankAccounts">
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><label>نام بانک</label></th>
+                                    <th><label>شماره کارت</label></th>
+                                    <th><label>شماره حساب</label></th>
+                                    <th><label>شماره شبا</label></th>
+                                    <th><label>فعالیت ها</label></th>
+
+                                </tr>
+                            </thead>
+                            <tbody align="center">
+                                @using (UserBankAccountRepository ubr = new UserBankAccountRepository())
+                                {
+                                    foreach (var item in ubr.GetUserBankAccounts(instance.xID))
+                                    {
+                                        <tr>
+                                            <th><label>@item.xBankType</label></th>
+                                            <th><label>@item.xCartNumber</label></th>
+                                            <th><label>@item.xAccountNumber</label></th>
+                                            <th><label>@item.xShebaNumber</label></th>
+                                            <th>
+                                                @if (!item.xIsVerified)
+                                                {
+                                                    <button onclick="GetCardHolderName('@item.xCartNumber')" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش نام دارنده کارت"><i class='fa fa-user'></i></button>
+                                                    <button onclick="VerifyBankAccount(@item.xID)" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="تایید"><i class='fa fa-pencil'></i></button>
+                                                    <button onclick="DeleteBankAccount(@item.xID)" type="button" class="btn btn-default DeleteConfirm" data-toggle="tooltip" data-placement="top" data-effect="md-slideUp" title="" data-original-title="حذف"><i class='fa fa-times'></i></button>
+                                                }
+                                            </th>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                  
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update()" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+<div id="md-DeleteConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید حذف</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای حذف رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Delete" OnClick="Delete($(this).attr('RowID'),'/User/DeleteComission')" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+<script type="text/javascript">
+
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+
+
+
+  
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker();
+        $('.selectpicker').change();
+        $("#form-update").parsley();
+
+        $('#datepicker_xIPGRestriction').datepicker({
+            preventPastSelect: false,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            format: "dd MM yyyy",
+            isRTL: false
+        });
+
+        @if (instance.xIPGRestriction != null)
+        {
+            @:$('#datepicker_xIPGRestriction').datepicker('setDate', new Date("@Convert.ToDateTime(instance.xIPGRestriction).AddDays(1).ToShortDateString()"));
+        }
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+
+    });
+    
+    function GetCardHolderName(cardNumber)
+    {
+        var args = {
+            "cardNumber": cardNumber
+        }
+        $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/BankCard/GetCardHolderName',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+    function VerifyBankAccount(id)
+    {
+        var args = {
+            "bankAccountID":id
+        }
+        $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/User/VerifyBankAccount',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.reload();
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+    function DeleteBankAccount(id)
+    {
+        var args = {
+            "bankAccountID":id
+        }
+        $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/User/DeleteBankAccount',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.reload();
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+    function DeleteNationalIdImage(id)
+    {
+        var args = {
+            "xID":id
+        }
+        $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/User/DeleteNationalIdImage',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.reload();
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+
+
+
+    function Update()
+    {
+        if($("#form-update").parsley().validate())
+        {
+            var args = $("#form-update").serializeToJSON();
+            args.xIPGRestriction = GetDate("xIPGRestriction");
+
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/User/Update',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/User/Index'",1000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    kr.Dispose();
+}

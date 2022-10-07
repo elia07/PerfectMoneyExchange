@@ -1,0 +1,450 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9B3E0944-F2E1-4190-8DBD-B1409D8133EA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Saraf365.Website2</RootNamespace>
+    <AssemblyName>Saraf365.Website2</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BotDetect, Version=4.2.0.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.2.0\lib\net46\BotDetect.dll</HintPath>
+    </Reference>
+    <Reference Include="BotDetect.Web.Mvc, Version=4.2.0.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.2.0\lib\net46\BotDetect.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="RockCandy.Web.Framework.Core">
+      <HintPath>..\Libraries\RockCandy.Web.Framework.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="RockCandy.Web.Framework.Utilities">
+      <HintPath>..\Libraries\RockCandy.Web.Framework.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.111.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Resources\css\index.html" />
+    <Content Include="Resources\css\style.css" />
+    <Content Include="Resources\css\theme-red.css" />
+    <Content Include="Resources\css\theme-blue.css" />
+    <Content Include="Resources\css\theme-cyan.css" />
+    <Content Include="Resources\css\theme-green.css" />
+    <Content Include="Resources\css\theme-purple.css" />
+    <Content Include="Resources\css\theme-yellow.css" />
+    <Content Include="Resources\css\theme.css" />
+    <Content Include="Resources\css\vendor.bundle.css" />
+    <Content Include="Resources\css\vendor\animate.css" />
+    <Content Include="Resources\css\vendor\bootstrap.min.css" />
+    <Content Include="Resources\css\vendor\font-awesome.css" />
+    <Content Include="Resources\css\vendor\index.html" />
+    <Content Include="Resources\css\vendor\magnific-popup.css" />
+    <Content Include="Resources\css\vendor\owl.carousel.css" />
+    <Content Include="Resources\css\vendor\owl.theme.default.css" />
+    <Content Include="Resources\css\vendor\pe-icon-7-stroke.css" />
+    <Content Include="Resources\fonts\fontawesome-webfont.svg" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Resources\fonts\index.html" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.css" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.min.css" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.svg" />
+    <Content Include="Resources\fonts\mdi\font\preview.html" />
+    <Content Include="Resources\fonts\Pe-icon-7-stroke.svg" />
+    <Content Include="Resources\images\android.png" />
+    <Content Include="Resources\images\apple.png" />
+    <Content Include="Resources\images\box-icon-a.png" />
+    <Content Include="Resources\images\box-icon-b.png" />
+    <Content Include="Resources\images\box-icon-c.png" />
+    <Content Include="Resources\images\box-icon-d.png" />
+    <Content Include="Resources\images\box-icon-e.png" />
+    <Content Include="Resources\images\box-icon-f.png" />
+    <Content Include="Resources\images\box-icon-g.png" />
+    <Content Include="Resources\images\box-icon-h.png" />
+    <Content Include="Resources\images\box-icon-i.png" />
+    <Content Include="Resources\images\box-icon-j.png" />
+    <Content Include="Resources\images\box-icon-k.png" />
+    <Content Include="Resources\images\box-icon-l.png" />
+    <Content Include="Resources\images\box-icon-m.png" />
+    <Content Include="Resources\images\box-icon-n.png" />
+    <Content Include="Resources\images\box-icon-o.png" />
+    <Content Include="Resources\images\box-icon-p.png" />
+    <Content Include="Resources\images\box-icon-q.png" />
+    <Content Include="Resources\images\box-icon-r.png" />
+    <Content Include="Resources\images\calc-bg.jpg" />
+    <Content Include="Resources\images\cl-logo1-w.png" />
+    <Content Include="Resources\images\cl-logo1.png" />
+    <Content Include="Resources\images\cl-logo2-w.png" />
+    <Content Include="Resources\images\cl-logo2.png" />
+    <Content Include="Resources\images\cl-logo3-w.png" />
+    <Content Include="Resources\images\cl-logo3.png" />
+    <Content Include="Resources\images\cl-logo4-w.png" />
+    <Content Include="Resources\images\cl-logo4.png" />
+    <Content Include="Resources\images\cl-logo5-w.png" />
+    <Content Include="Resources\images\cl-logo5.png" />
+    <Content Include="Resources\images\cl-logo6-w.png" />
+    <Content Include="Resources\images\cl-logo6.png" />
+    <Content Include="Resources\images\client-a.jpg" />
+    <Content Include="Resources\images\client-b.jpg" />
+    <Content Include="Resources\images\cta-bg.jpg" />
+    <Content Include="Resources\images\cta-light-bg.jpg" />
+    <Content Include="Resources\images\direction-dots-a.png" />
+    <Content Include="Resources\images\direction-dots-b.png" />
+    <Content Include="Resources\images\favicon.png" />
+    <Content Include="Resources\images\footer-bg.jpg" />
+    <Content Include="Resources\images\footer-bg.png" />
+    <Content Include="Resources\images\header-bg-a.jpg" />
+    <Content Include="Resources\images\header-bg-b.jpg" />
+    <Content Include="Resources\images\header-bg-c.jpg" />
+    <Content Include="Resources\images\header-bg-d.jpg" />
+    <Content Include="Resources\images\icon-a.png" />
+    <Content Include="Resources\images\icon-b.png" />
+    <Content Include="Resources\images\illustration-md-a.png" />
+    <Content Include="Resources\images\illustration-md-b.png" />
+    <Content Include="Resources\images\illustration-md-c.png" />
+    <Content Include="Resources\images\illustration-md-d.png" />
+    <Content Include="Resources\images\illustration-md-e.png" />
+    <Content Include="Resources\images\index.html" />
+    <Content Include="Resources\images\loading.gif" />
+    <Content Include="Resources\images\loading.png" />
+    <Content Include="Resources\images\loading.svg" />
+    <Content Include="Resources\images\logo-blue.png" />
+    <Content Include="Resources\images\logo.png" />
+    <Content Include="Resources\images\logo_blue_white.png" />
+    <Content Include="Resources\images\logo_white.png" />
+    <Content Include="Resources\images\page-bitcoin-bg.jpg" />
+    <Content Include="Resources\images\page-inside-bg.jpg" />
+    <Content Include="Resources\images\PerfectMoney.png" />
+    <Content Include="Resources\images\photo-md-a.jpg" />
+    <Content Include="Resources\images\photo-sm-a.jpg" />
+    <Content Include="Resources\images\photo-sm-b.jpg" />
+    <Content Include="Resources\images\photo-sm-c.jpg" />
+    <Content Include="Resources\images\plx-side-a.jpg" />
+    <Content Include="Resources\images\post-large-a.jpg" />
+    <Content Include="Resources\images\post-thumb-a.jpg" />
+    <Content Include="Resources\images\post-thumb-b.jpg" />
+    <Content Include="Resources\images\post-thumb-c.jpg" />
+    <Content Include="Resources\images\post-thumb-sm-a.jpg" />
+    <Content Include="Resources\images\post-thumb-sm-b.jpg" />
+    <Content Include="Resources\images\post-thumb-sm-c.jpg" />
+    <Content Include="Resources\images\post-thumb-sm-d.jpg" />
+    <Content Include="Resources\images\saraf365125.png" />
+    <Content Include="Resources\images\service-thumb-a.jpg" />
+    <Content Include="Resources\images\service-thumb-b.jpg" />
+    <Content Include="Resources\images\service-thumb-c.jpg" />
+    <Content Include="Resources\images\service-thumb-d.jpg" />
+    <Content Include="Resources\images\service-thumb-e.jpg" />
+    <Content Include="Resources\images\service-thumb-f.jpg" />
+    <Content Include="Resources\images\square-md-a.png" />
+    <Content Include="Resources\images\step-screen-a.jpg" />
+    <Content Include="Resources\images\step-screen-b.jpg" />
+    <Content Include="Resources\images\step-screen-c.jpg" />
+    <Content Include="Resources\images\step-screen-md-a.png" />
+    <Content Include="Resources\images\step-screen-md-b.png" />
+    <Content Include="Resources\images\step-screen-md-c.png" />
+    <Content Include="Resources\images\team-thumb-a.jpg" />
+    <Content Include="Resources\images\team-thumb-b.jpg" />
+    <Content Include="Resources\images\team-thumb-c.jpg" />
+    <Content Include="Resources\images\team-thumb-d.jpg" />
+    <Content Include="Resources\images\team-thumb-e.jpg" />
+    <Content Include="Resources\images\team-thumb-f.jpg" />
+    <Content Include="Resources\images\testimonial-bg.jpg" />
+    <Content Include="Resources\images\uploadDocGuide.jpg" />
+    <Content Include="Resources\images\video-md-a.jpg" />
+    <Content Include="Resources\images\video-md-b.jpg" />
+    <Content Include="Resources\js\googleMap.js" />
+    <Content Include="Resources\js\index.html" />
+    <Content Include="Resources\js\jquery.bundle.js" />
+    <Content Include="Resources\js\script.js" />
+    <Content Include="Resources\js\site.js" />
+    <Content Include="Resources\js\vendor\bootstrap.min.js" />
+    <Content Include="Resources\js\vendor\index.html" />
+    <Content Include="Resources\js\vendor\jquery.easing.min.js" />
+    <Content Include="Resources\js\vendor\jquery.js" />
+    <Content Include="Resources\js\vendor\jquery.magnific-popup.min.js" />
+    <Content Include="Resources\js\vendor\owl.carousel.js" />
+    <Content Include="Resources\js\vendor\particles.min.js" />
+    <Content Include="Resources\js\vendor\wow.js" />
+    <Content Include="Resources\plugins\Parsley\fa.js" />
+    <Content Include="Resources\plugins\Parsley\parsley.min.js" />
+    <Content Include="Resources\plugins\Parsley\parsleyConfigs.js" />
+    <Content Include="Resources\plugins\Parsley\parsleyCustomValidation.js" />
+    <Content Include="Resources\plugins\Parsley\persian-rex.min.js" />
+    <Content Include="Resources\plugins\sweetalert2\sweetalert2.all.min.js" />
+    <Content Include="Resources\plugins\sweetalert2\sweetalert2.min.css" />
+    <Content Include="Resources\templates\fa\ActivationTemplate.html" />
+    <Content Include="Resources\templates\fa\RecoverPasswordActivationCodeTemplate.html" />
+    <Content Include="Resources\templates\fa\WelcomeTemplate.html" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Filters\UserAuthorize.cs" />
+    <Compile Include="Filters\ViewBagInitalizer.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SectionInfo.cs" />
+    <Compile Include="SettingUpdater.cs" />
+    <Compile Include="Utils\CookieUtils.cs" />
+    <Compile Include="Utils\CryptoUtils.cs" />
+    <Compile Include="Utils\EmailWrapper.cs" />
+    <Compile Include="Utils\G8Interface.cs" />
+    <Compile Include="Utils\IPUtils.cs" />
+    <Compile Include="Utils\ProfileValidation.cs" />
+    <Compile Include="Utils\SessionUtils.cs" />
+    <Compile Include="Utils\SmsUtils.cs" />
+    <Compile Include="Utils\TConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <Content Include="Resources\fonts\fontawesome-webfont.eot" />
+    <Content Include="Resources\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Resources\fonts\fontawesome-webfont.woff" />
+    <Content Include="Resources\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Resources\fonts\FontAwesome.otf" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Resources\fonts\OpenSans-Light.eot" />
+    <Content Include="Resources\fonts\OpenSans-Light.ttf" />
+    <Content Include="Resources\fonts\OpenSans-Light.woff" />
+    <Content Include="Resources\fonts\OpenSans-Light.woff2" />
+    <Content Include="Resources\fonts\OpenSans-Regular.eot" />
+    <Content Include="Resources\fonts\OpenSans-Regular.ttf" />
+    <Content Include="Resources\fonts\OpenSans-Regular.woff" />
+    <Content Include="Resources\fonts\OpenSans-Regular.woff2" />
+    <Content Include="Resources\fonts\OpenSans-SemiBold.eot" />
+    <Content Include="Resources\fonts\OpenSans-SemiBold.ttf" />
+    <Content Include="Resources\fonts\OpenSans-SemiBold.woff" />
+    <Content Include="Resources\fonts\OpenSans-SemiBold.woff2" />
+    <Content Include="Resources\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Resources\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Resources\fonts\Pe-icon-7-stroke.woff" />
+    <Content Include="Resources\fonts\Quicksand-Bold.eot" />
+    <Content Include="Resources\fonts\Quicksand-Bold.ttf" />
+    <Content Include="Resources\fonts\Quicksand-Bold.woff" />
+    <Content Include="Resources\fonts\Quicksand-Bold.woff2" />
+    <Content Include="Resources\fonts\Quicksand-Light.eot" />
+    <Content Include="Resources\fonts\Quicksand-Light.ttf" />
+    <Content Include="Resources\fonts\Quicksand-Light.woff" />
+    <Content Include="Resources\fonts\Quicksand-Light.woff2" />
+    <Content Include="Resources\fonts\Quicksand-Medium.eot" />
+    <Content Include="Resources\fonts\Quicksand-Medium.ttf" />
+    <Content Include="Resources\fonts\Quicksand-Medium.woff" />
+    <Content Include="Resources\fonts\Quicksand-Medium.woff2" />
+    <Content Include="Resources\fonts\Quicksand-Regular.eot" />
+    <Content Include="Resources\fonts\Quicksand-Regular.ttf" />
+    <Content Include="Resources\fonts\Quicksand-Regular.woff" />
+    <Content Include="Resources\fonts\Quicksand-Regular.woff2" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Resources\languages\fa.json" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
+    <Content Include="Views\Home\RecoverPassword.cshtml" />
+    <Content Include="Views\Home\Faq.cshtml" />
+    <Content Include="Views\Home\Rules.cshtml" />
+    <Content Include="Views\Home\ContactUs.cshtml" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Bold.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Light.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Medium.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_UltraLight.eot" />
+    <Content Include="Resources\fonts\mdi\font\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Resources\fonts\mdi\font\bower.json" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.css.map" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.min.css.map" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.eot" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.ttf" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.woff2" />
+    <Content Include="Resources\fonts\mdi\font\license.md" />
+    <Content Include="Resources\fonts\mdi\font\package.json" />
+    <Content Include="Resources\fonts\mdi\font\README.md" />
+    <Content Include="Resources\fonts\mdi\font\scss\_animated.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_core.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_extras.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_functions.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_icons.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_path.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_variables.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\materialdesignicons.scss" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Bold.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Light.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Medium.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_UltraLight.ttf" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Bold.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Light.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Medium.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_UltraLight.woff" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Bold.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Light.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Medium.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_UltraLight.woff2" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Saraf365.Core\Saraf365.Core.csproj">
+      <Project>{a768b489-a8a4-470f-9711-b60c28e419f4}</Project>
+      <Name>Saraf365.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>65056</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:65056/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

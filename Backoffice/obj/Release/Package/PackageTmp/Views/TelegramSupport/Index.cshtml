@@ -1,0 +1,168 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    int currentPage = Convert.ToInt32(ViewBag.currentPage);
+    int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ItemsPerPage"));
+    Pagination pagination = null;
+    SearchModelManager searchModelManager = ViewBag.searchModelManager;
+    string queryString = ViewBag.queryString;
+
+    AdminRepository ur = new AdminRepository();
+    Admin adminTelegramSupport = (Admin)Session["Admin"];
+    adminTelegramSupport = ur.GetByID(adminTelegramSupport.xID);
+    AdminRole arInstance = adminTelegramSupport.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TelegramSupportManagement).SingleOrDefault();
+    char[] permissions = null;
+    if (arInstance == null)
+    {
+        arInstance = new AdminRole();
+        permissions = "00000".ToCharArray();
+    }
+    else
+    {
+        permissions = arInstance.xCrudPermission.ToCharArray();
+    }
+}
+
+<ol class="breadcrumb">
+	<li><a href="/Profile">صفحه اصلی</a></li> 
+	<li>مدیریت ساپورت تلگرام</li>
+    <li class="active">اطلاعات جاری</li>
+</ol>
+ <div id="content">
+    <section class="panel">
+		<header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+				<h3 style="color: rgb(255, 255, 255);"><strong>مدیریت ساپورت تلگرام</strong></h3>
+		</header>
+        <div class="panel-body" style="direction:rtl;">
+            <section class="panel">
+                <header class="panel-heading md" data-color="#F0C449">
+                    <h3 style="color: rgb(255, 255, 255);"><strong>جستجو</strong></h3>
+                    <div class="panel-tools color" align="left" data-toolscolor="#F4AD41" style="width:0px;float:left;position: relative;top: -30px;left: 125px;">
+                        <ul class="tooltip-area">
+                            <li style="position:relative;left:-100px;"><a href="javascript:void(0)" class="btn btn-collapse in" title="" data-original-title="Collapse"><i class="fa fa-sort-amount-asc"></i></a></li>
+                        </ul>
+                    </div>
+                </header>
+                <div class="panel-body" style="direction:rtl;display:none">
+                    @Html.Partial("~/Views/Partial/SearchForm.cshtml")
+
+                </div>
+
+            </section>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><label>عکس</label></th>
+                        <th><label>نام عکس ذخیره شده</label></th>
+                        @if (adminTelegramSupport.xType == (byte)AdminType.Supervisor)
+                        {
+                            <th><label>ChatID</label></th>
+                            <th><label>نام کاربری</label></th>
+                        }
+                        <th><label>پیام</label></th>
+                        <th><label>تاریخ</label></th>
+                        <th><label>پاسخ</label></th>
+                        <th><label>تاریخ پاسخ</label></th>
+                        <th><label>توسط</label></th>
+                        <th><label>فعالیت ها</label></th>
+                    </tr>
+                </thead>
+                <tbody align="center">
+                    @using (TelegramSupportRepository opr = new TelegramSupportRepository())
+                    {
+                        pagination = new Pagination(currentPage, itemsPerPage, 0);
+                        IQueryable<TelegramSupport> records = opr.FilterByParam(searchModelManager, opr.GetPredicate(searchModelManager.SearchModels), pagination, searchModelManager.OrderByType, searchModelManager.OrderByFieldName);
+                        pagination = new Pagination(currentPage, itemsPerPage, opr.Count(opr.GetPredicate(searchModelManager.SearchModels)));
+
+                        foreach (var item in records)
+                        {
+                            <tr id="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)">
+                                <td><label>@(item.SystemFile == null ? MvcHtmlString.Create("") : MvcHtmlString.Create(string.Format("<img src='{0}' style='width:100px'/>", item.SystemFile.GetAddress(SectionInfo.Setting.CdnAddress,false))))</label></td>
+                                <td><label>@(item.SystemFile == null ? "" : item.SystemFile.xFileName)</label></td>
+                                @if (adminTelegramSupport.xType == (byte)AdminType.Supervisor)
+                                {
+                                    <td><label>@item.xChatID</label></td>
+                                    <td><label>@item.xUsername</label></td>
+                                }
+                                <td><label>@(item.xMessage.Length > 20 ? item.xMessage.Substring(0, 20) + " ..." : item.xMessage)</label></td>
+                                <td><label>@DateConvertor.MiladiToShamsi(item.xDate) - @item.xDate.ToShortTimeString()</label></td>
+                                @if (item.xResponse != null)
+                                {
+                                    <td><label>@(item.xResponse.Length > 20 ? item.xResponse.Substring(0, 20) + " ..." : item.xResponse)</label></td>
+                                }
+                                else
+                                {
+                                    <td><label></label></td>
+                                }
+                                @if (item.xResponseDate != null)
+                                {
+                                    <td><label>@DateConvertor.MiladiToShamsi(item.xDate) - @item.xDate.ToShortTimeString()</label></td>
+                                }
+                                else
+                                {
+                                    <td><label></label></td>
+                                }
+                                @if (item.xResponseAdmin != null)
+                                {
+                                    <td><label>@item.Admin.xName</label></td>
+                                }
+                                else
+                                {
+                                    <td><label></label></td>
+                                }
+
+                                <td>
+                                    <span class="tooltip-area">
+                                        @if (permissions[(byte)CrudOperationType.Update] == '1' || adminTelegramSupport.xType == (byte)AdminType.Supervisor)
+                                        {
+                                            <button onclick="UpdateRender('@MD5Encryption.Encrypt(item.xID.ToString(), true, SectionInfo.Setting.SecurityKey)','/TelegramSupport/UpdateRender')" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="ویرایش"><i class='fa fa-pencil'></i></button>
+                                        }
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @MvcHtmlString.Create(pagination.Render("/TelegramSupport/Index", queryString))
+        </div>
+    </section>
+</div>
+
+
+<script type="text/javascript">
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;                
+        }
+    }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+   
+</script>
+@{
+    ur.Dispose();
+    }

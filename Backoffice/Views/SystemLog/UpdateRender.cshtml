@@ -1,0 +1,45 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    SystemLogRepository kr = new SystemLogRepository();
+    SystemLog instance = kr.GetByID(xID);
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/SystemLog/Index?@queryString">مدیریت لاگ های سیستم</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+           @instance.xDetail
+        </div>
+    </section>
+</div>
+@{
+    kr.Dispose();
+}

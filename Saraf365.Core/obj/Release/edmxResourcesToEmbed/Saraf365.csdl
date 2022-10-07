@@ -1,0 +1,659 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Saraf365Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Admin">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <Property Name="xSalt" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xTelegramID" Type="Int64" />
+    <Property Name="xTelegramUsername" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AdminNotification" Relationship="Self.FK_xAdminID_AdminNotification_Admin" FromRole="Admin" ToRole="AdminNotification" />
+    <NavigationProperty Name="AdminRole" Relationship="Self.Fk_xAdminID_AdminRole_Admin" FromRole="Admin" ToRole="AdminRole" />
+    <NavigationProperty Name="SystemLog" Relationship="Self.FK_xAdminID_SystemLog_Admin" FromRole="Admin" ToRole="SystemLog" />
+    <NavigationProperty Name="AdminNotification1" Relationship="Self.FK_xCreator_AdminNotification_Admin" FromRole="Admin" ToRole="AdminNotification" />
+    <NavigationProperty Name="TelegramSupport" Relationship="Saraf365Model.FK_xResponseAdmin_TelegramSupport_Admin" FromRole="Admin" ToRole="TelegramSupport" />
+  </EntityType>
+  <EntityType Name="AdminNotification">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xResponsibleAdmin" Type="Int64" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xCreator" Type="Int64" />
+    <NavigationProperty Name="Admin" Relationship="Self.FK_xAdminID_AdminNotification_Admin" FromRole="AdminNotification" ToRole="Admin" />
+    <NavigationProperty Name="Admin1" Relationship="Self.FK_xCreator_AdminNotification_Admin" FromRole="AdminNotification" ToRole="Admin" />
+  </EntityType>
+  <EntityType Name="AdminRole">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xAdminID" Type="Int64" Nullable="false" />
+    <Property Name="xSectionType" Type="Byte" Nullable="false" />
+    <Property Name="xCrudPermission" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Admin" Relationship="Self.Fk_xAdminID_AdminRole_Admin" FromRole="AdminRole" ToRole="Admin" />
+  </EntityType>
+  <EntityType Name="BankCard">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xCardHolderName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xBankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xAccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xCardNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xInternetUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="xInternetPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="xMinToTransfer" Type="Int64" />
+    <Property Name="xSecondPassword" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="xCvv2" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+    <Property Name="xExpireMonth" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="xExpireYear" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="xBalance" Type="Int64" Nullable="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <Property Name="xDepositStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xLastLoginStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="xBannedAmount" Type="Int64" Nullable="false" />
+    <Property Name="xFailedLoginCount" Type="Int32" Nullable="false" />
+    <Property Name="xMinDeposit" Type="Int64" />
+    <Property Name="xLastUsageDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="CartTransferHistory" Relationship="Self.FK_BankCard_CartTransferHistory_xID" FromRole="BankCard" ToRole="CartTransferHistory" />
+    <Property Name="xSpecialConfigs" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="CartTransferHistory">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xTransactionID" Type="Int64" />
+    <Property Name="xBankCardID" Type="Int64" Nullable="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xAmountIn" Type="Int64" Nullable="false" />
+    <Property Name="xAmountOut" Type="Int64" Nullable="false" />
+    <Property Name="xCodePeigiri" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xCodeErja" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDescription" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDocumentNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDocumentDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xCardNumber" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="BankCard" Relationship="Self.FK_BankCard_CartTransferHistory_xID" FromRole="CartTransferHistory" ToRole="BankCard" />
+    <NavigationProperty Name="Transaction" Relationship="Saraf365Model.FK_xTransactionID_CartTransferHistory_Transaction" FromRole="CartTransferHistory" ToRole="Transaction" />
+  </EntityType>
+  <EntityType Name="Conversation">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xTicketID" Type="Int64" Nullable="false" />
+    <Property Name="xBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xResponse" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="xResponseDate" Type="DateTime" Precision="3" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Ticket" Relationship="Self.FK_xTicketID_Conversation_Ticket" FromRole="Conversation" ToRole="Ticket" />
+  </EntityType>
+  <EntityType Name="FileData">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xSystemnFileID" Type="Int64" Nullable="false" />
+    <Property Name="xData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="xIsThumbnail" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="SystemFile" Relationship="Self.FK_xSystemFileID_FileData_SystemFile" FromRole="FileData" ToRole="SystemFile" />
+  </EntityType>
+  <EntityType Name="ScheduleMessage">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xSystemFileID" Type="Int64" />
+    <Property Name="xTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xExpression" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="SystemFile" Relationship="Self.FK_xSystemFileID_ScheduleMessage_SystemFile" FromRole="ScheduleMessage" ToRole="SystemFile" />
+  </EntityType>
+  <EntityType Name="Setting">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xKey" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SystemFile">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xFileExtention" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xContentType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="xFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xAddingDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xMD5" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="FileData" Relationship="Self.FK_xSystemFileID_FileData_SystemFile" FromRole="SystemFile" ToRole="FileData" />
+    <NavigationProperty Name="ScheduleMessage" Relationship="Self.FK_xSystemFileID_ScheduleMessage_SystemFile" FromRole="SystemFile" ToRole="ScheduleMessage" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_NationalImageID_User_SystemFile" FromRole="SystemFile" ToRole="User" />
+    <NavigationProperty Name="TelegramSupport" Relationship="Saraf365Model.FK_xSystemFileID_TelegramSupport_SystemFile" FromRole="SystemFile" ToRole="TelegramSupport" />
+  </EntityType>
+  <EntityType Name="SystemLog">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xShortDetail" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xAdminID" Type="Int64" />
+    <NavigationProperty Name="Admin" Relationship="Self.FK_xAdminID_SystemLog_Admin" FromRole="SystemLog" ToRole="Admin" />
+  </EntityType>
+  <EntityType Name="Ticket">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xUserID" Type="Int64" Nullable="false" />
+    <Property Name="xTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xStatus" Type="Byte" Nullable="false" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="Conversation" Relationship="Self.FK_xTicketID_Conversation_Ticket" FromRole="Ticket" ToRole="Conversation" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_xUserID_Ticket_User" FromRole="Ticket" ToRole="User" />
+  </EntityType>
+  <EntityType Name="UserBankAccount">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xUserID" Type="Int64" Nullable="false" />
+    <Property Name="xBankType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="xCartNumber" Type="String" MaxLength="16" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="xShebaNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xAccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="xIsVerified" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Withdrawal" Relationship="Self.FK_xBankAccountID_Withdrawal_BankAccount" FromRole="UserBankAccount" ToRole="Withdrawal" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_User_UserBankAccount" FromRole="UserBankAccount" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Withdrawal">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xUserID" Type="Int64" Nullable="false" />
+    <Property Name="xUserBankAccountID" Type="Int64" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xAmount" Type="Int32" Nullable="false" />
+    <Property Name="xStatus" Type="Byte" Nullable="false" />
+    <Property Name="xDescription" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="xSettlementDate" Type="DateTime" Precision="3" />
+    <Property Name="xWithdrawalCost" Type="Int64" Nullable="false" />
+    <Property Name="xWithdrawalType" Type="Byte" Nullable="false" />
+    <Property Name="xSecondCurrencyAmmount" Type="Double" Nullable="false" />
+    <NavigationProperty Name="UserBankAccount" Relationship="Self.FK_xBankAccountID_Withdrawal_BankAccount" FromRole="Withdrawal" ToRole="UserBankAccount" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_xUserID_Withdrawal_User" FromRole="Withdrawal" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_xAdminID_AdminNotification_Admin">
+    <End Role="Admin" Type="Self.Admin" Multiplicity="0..1" />
+    <End Role="AdminNotification" Type="Self.AdminNotification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="AdminNotification">
+        <PropertyRef Name="xResponsibleAdmin" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Fk_xAdminID_AdminRole_Admin">
+    <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
+    <End Role="AdminRole" Type="Self.AdminRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="AdminRole">
+        <PropertyRef Name="xAdminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xAdminID_SystemLog_Admin">
+    <End Role="Admin" Type="Self.Admin" Multiplicity="0..1" />
+    <End Role="SystemLog" Type="Self.SystemLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="SystemLog">
+        <PropertyRef Name="xAdminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xCreator_AdminNotification_Admin">
+    <End Role="Admin" Type="Self.Admin" Multiplicity="0..1" />
+    <End Role="AdminNotification" Type="Self.AdminNotification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="AdminNotification">
+        <PropertyRef Name="xCreator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BankCard_CartTransferHistory_xID">
+    <End Role="BankCard" Type="Self.BankCard" Multiplicity="1" />
+    <End Role="CartTransferHistory" Type="Self.CartTransferHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BankCard">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="CartTransferHistory">
+        <PropertyRef Name="xBankCardID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xTicketID_Conversation_Ticket">
+    <End Role="Ticket" Type="Self.Ticket" Multiplicity="1" />
+    <End Role="Conversation" Type="Self.Conversation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ticket">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Conversation">
+        <PropertyRef Name="xTicketID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xSystemFileID_FileData_SystemFile">
+    <End Role="SystemFile" Type="Self.SystemFile" Multiplicity="1" />
+    <End Role="FileData" Type="Self.FileData" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SystemFile">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="FileData">
+        <PropertyRef Name="xSystemnFileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xSystemFileID_ScheduleMessage_SystemFile">
+    <End Role="SystemFile" Type="Self.SystemFile" Multiplicity="0..1" />
+    <End Role="ScheduleMessage" Type="Self.ScheduleMessage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SystemFile">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="ScheduleMessage">
+        <PropertyRef Name="xSystemFileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xBankAccountID_Withdrawal_BankAccount">
+    <End Role="UserBankAccount" Type="Self.UserBankAccount" Multiplicity="0..1" />
+    <End Role="Withdrawal" Type="Self.Withdrawal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserBankAccount">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Withdrawal">
+        <PropertyRef Name="xUserBankAccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Saraf365Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Admin" EntityType="Self.Admin" />
+    <EntitySet Name="AdminNotification" EntityType="Self.AdminNotification" />
+    <EntitySet Name="AdminRole" EntityType="Self.AdminRole" />
+    <EntitySet Name="BankCard" EntityType="Self.BankCard" />
+    <EntitySet Name="CartTransferHistory" EntityType="Self.CartTransferHistory" />
+    <EntitySet Name="Conversation" EntityType="Self.Conversation" />
+    <EntitySet Name="FileData" EntityType="Self.FileData" />
+    <EntitySet Name="ScheduleMessage" EntityType="Self.ScheduleMessage" />
+    <EntitySet Name="Setting" EntityType="Self.Setting" />
+    <EntitySet Name="SystemFile" EntityType="Self.SystemFile" />
+    <EntitySet Name="SystemLog" EntityType="Self.SystemLog" />
+    <EntitySet Name="Ticket" EntityType="Self.Ticket" />
+    <EntitySet Name="UserBankAccount" EntityType="Self.UserBankAccount" />
+    <EntitySet Name="Withdrawal" EntityType="Self.Withdrawal" />
+    <AssociationSet Name="FK_xAdminID_AdminNotification_Admin" Association="Self.FK_xAdminID_AdminNotification_Admin">
+      <End Role="Admin" EntitySet="Admin" />
+      <End Role="AdminNotification" EntitySet="AdminNotification" />
+    </AssociationSet>
+    <AssociationSet Name="Fk_xAdminID_AdminRole_Admin" Association="Self.Fk_xAdminID_AdminRole_Admin">
+      <End Role="Admin" EntitySet="Admin" />
+      <End Role="AdminRole" EntitySet="AdminRole" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xAdminID_SystemLog_Admin" Association="Self.FK_xAdminID_SystemLog_Admin">
+      <End Role="Admin" EntitySet="Admin" />
+      <End Role="SystemLog" EntitySet="SystemLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xCreator_AdminNotification_Admin" Association="Self.FK_xCreator_AdminNotification_Admin">
+      <End Role="Admin" EntitySet="Admin" />
+      <End Role="AdminNotification" EntitySet="AdminNotification" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BankCard_CartTransferHistory_xID" Association="Self.FK_BankCard_CartTransferHistory_xID">
+      <End Role="BankCard" EntitySet="BankCard" />
+      <End Role="CartTransferHistory" EntitySet="CartTransferHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xTicketID_Conversation_Ticket" Association="Self.FK_xTicketID_Conversation_Ticket">
+      <End Role="Ticket" EntitySet="Ticket" />
+      <End Role="Conversation" EntitySet="Conversation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xSystemFileID_FileData_SystemFile" Association="Self.FK_xSystemFileID_FileData_SystemFile">
+      <End Role="SystemFile" EntitySet="SystemFile" />
+      <End Role="FileData" EntitySet="FileData" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xSystemFileID_ScheduleMessage_SystemFile" Association="Self.FK_xSystemFileID_ScheduleMessage_SystemFile">
+      <End Role="SystemFile" EntitySet="SystemFile" />
+      <End Role="ScheduleMessage" EntitySet="ScheduleMessage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xBankAccountID_Withdrawal_BankAccount" Association="Self.FK_xBankAccountID_Withdrawal_BankAccount">
+      <End Role="UserBankAccount" EntitySet="UserBankAccount" />
+      <End Role="Withdrawal" EntitySet="Withdrawal" />
+    </AssociationSet>
+    <EntitySet Name="Transaction" EntityType="Saraf365Model.Transaction" />
+    <AssociationSet Name="FK_xTransactionID_CartTransferHistory_Transaction" Association="Saraf365Model.FK_xTransactionID_CartTransferHistory_Transaction">
+      <End Role="Transaction" EntitySet="Transaction" />
+      <End Role="CartTransferHistory" EntitySet="CartTransferHistory" />
+    </AssociationSet>
+    <EntitySet Name="FinancialLog" EntityType="Saraf365Model.FinancialLog" />
+    <EntitySet Name="Gateway" EntityType="Saraf365Model.Gateway" />
+    <AssociationSet Name="FK_xGatewayID_Transaction_Gateway" Association="Saraf365Model.FK_xGatewayID_Transaction_Gateway">
+      <End Role="Gateway" EntitySet="Gateway" />
+      <End Role="Transaction" EntitySet="Transaction" />
+    </AssociationSet>
+    <EntitySet Name="User" EntityType="Saraf365Model.User" />
+    <AssociationSet Name="FK_xUserID_FinancialLog_User" Association="Saraf365Model.FK_xUserID_FinancialLog_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="FinancialLog" EntitySet="FinancialLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NationalImageID_User_SystemFile" Association="Saraf365Model.FK_NationalImageID_User_SystemFile">
+      <End Role="SystemFile" EntitySet="SystemFile" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xUserID_Ticket_User" Association="Saraf365Model.FK_xUserID_Ticket_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Ticket" EntitySet="Ticket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xUserID_Transaction_User" Association="Saraf365Model.FK_xUserID_Transaction_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Transaction" EntitySet="Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_UserBankAccount" Association="Saraf365Model.FK_User_UserBankAccount">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserBankAccount" EntitySet="UserBankAccount" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xAgentID_User_User" Association="Saraf365Model.FK_xAgentID_User_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="User1" EntitySet="User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xUserID_Withdrawal_User" Association="Saraf365Model.FK_xUserID_Withdrawal_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Withdrawal" EntitySet="Withdrawal" />
+    </AssociationSet>
+    <EntitySet Name="TelegramSupport" EntityType="Saraf365Model.TelegramSupport" />
+    <AssociationSet Name="FK_xResponseAdmin_TelegramSupport_Admin" Association="Saraf365Model.FK_xResponseAdmin_TelegramSupport_Admin">
+      <End Role="Admin" EntitySet="Admin" />
+      <End Role="TelegramSupport" EntitySet="TelegramSupport" />
+    </AssociationSet>
+    <AssociationSet Name="FK_xSystemFileID_TelegramSupport_SystemFile" Association="Saraf365Model.FK_xSystemFileID_TelegramSupport_SystemFile">
+      <End Role="SystemFile" EntitySet="SystemFile" />
+      <End Role="TelegramSupport" EntitySet="TelegramSupport" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Transaction">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xUserID" Type="Int64" Nullable="false" />
+    <Property Name="xGatewayID" Type="Int64" Nullable="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xAmount" Type="Int64" Nullable="false" />
+    <Property Name="xVerified" Type="Boolean" Nullable="false" />
+    <Property Name="xPaymentInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="xComissionPercent" Type="Double" Nullable="false" />
+    <Property Name="xComissionAmount" Type="Double" Nullable="false" />
+    <Property Name="xBankRef" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="xInvoice_key" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="xCurrencyAmount" Type="Double" Nullable="false" />
+    <Property Name="xCurrencyExchangeRate" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="CartTransferHistory" Relationship="Saraf365Model.FK_xTransactionID_CartTransferHistory_Transaction" FromRole="Transaction" ToRole="CartTransferHistory" />
+    <NavigationProperty Name="Gateway" Relationship="Saraf365Model.FK_xGatewayID_Transaction_Gateway" FromRole="Transaction" ToRole="Gateway" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_xUserID_Transaction_User" FromRole="Transaction" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_xTransactionID_CartTransferHistory_Transaction">
+    <End Type="Saraf365Model.Transaction" Role="Transaction" Multiplicity="0..1" />
+    <End Type="Saraf365Model.CartTransferHistory" Role="CartTransferHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Transaction">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="CartTransferHistory">
+        <PropertyRef Name="xTransactionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="FinancialLog">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xUserID" Type="Int64" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xAmount" Type="Double" Nullable="false" />
+    <Property Name="xAddBy" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xDescription" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="Saraf365Model.FK_xUserID_FinancialLog_User" FromRole="FinancialLog" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Gateway">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="xType" Type="Byte" Nullable="false" />
+    <Property Name="xMaxDailyAmount" Type="Int64" Nullable="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <Property Name="xConfig" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="xActiveforLevelsAbove" Type="Double" Nullable="false" />
+    <Property Name="xIsPrimary" Type="Boolean" Nullable="false" />
+    <Property Name="xCommisionPercent" Type="Double" Nullable="false" />
+    <Property Name="xIsVip" Type="Boolean" Nullable="false" />
+    <Property Name="xMinBuyIn" Type="Int64" Nullable="false" />
+    <Property Name="xAllowCustomAmountForBuyIn" Type="Boolean" Nullable="false" />
+    <Property Name="xTodayTotalTransactionAmounts" Type="Int64" Nullable="false" />
+    <Property Name="xLastSuccessTransactionDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Transaction" Relationship="Saraf365Model.FK_xGatewayID_Transaction_Gateway" FromRole="Gateway" ToRole="Transaction" />
+  </EntityType>
+  <Association Name="FK_xGatewayID_Transaction_Gateway">
+    <End Type="Saraf365Model.Gateway" Role="Gateway" Multiplicity="1" />
+    <End Type="Saraf365Model.Transaction" Role="Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gateway">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Transaction">
+        <PropertyRef Name="xGatewayID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xNationalIDImage" Type="Int64" />
+    <Property Name="xNationalIDNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="xFullName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="xEmail" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="xPassword" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="xIsActive" Type="Boolean" Nullable="false" />
+    <Property Name="xDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="xIsEmailValidated" Type="Boolean" Nullable="false" />
+    <Property Name="xIsNationalIDValidated" Type="Boolean" Nullable="false" />
+    <Property Name="xLevel" Type="Double" Nullable="false" />
+    <Property Name="xSignupDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xLastSigninDate" Type="DateTime" Precision="3" />
+    <Property Name="xIsVip" Type="Boolean" Nullable="false" />
+    <Property Name="xCellphoneActivated" Type="Boolean" Nullable="false" />
+    <Property Name="xActivationCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="xCellphone" Type="String" Nullable="false" MaxLength="11" FixedLength="true" Unicode="false" />
+    <Property Name="xIPGRestriction" Type="DateTime" Precision="3" />
+    <Property Name="xSalt" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="xActivationCodeExpireAt" Type="DateTime" Precision="3" />
+    <Property Name="xCellphoneActivationCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="xLastSendEmailDate" Type="DateTime" Precision="3" />
+    <Property Name="xLastSendSmsDate" Type="DateTime" Precision="3" />
+    <Property Name="xWallet" Type="Int64" Nullable="false" />
+    <Property Name="xInviteID" Type="Int64" />
+    <Property Name="xAgentID" Type="Int64" />
+    <Property Name="xRefferalSharePercent" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="FinancialLog" Relationship="Saraf365Model.FK_xUserID_FinancialLog_User" FromRole="User" ToRole="FinancialLog" />
+    <NavigationProperty Name="SystemFile" Relationship="Saraf365Model.FK_NationalImageID_User_SystemFile" FromRole="User" ToRole="SystemFile" />
+    <NavigationProperty Name="Ticket" Relationship="Saraf365Model.FK_xUserID_Ticket_User" FromRole="User" ToRole="Ticket" />
+    <NavigationProperty Name="Transaction" Relationship="Saraf365Model.FK_xUserID_Transaction_User" FromRole="User" ToRole="Transaction" />
+    <NavigationProperty Name="UserBankAccount" Relationship="Saraf365Model.FK_User_UserBankAccount" FromRole="User" ToRole="UserBankAccount" />
+    <NavigationProperty Name="Users" Relationship="Saraf365Model.FK_xAgentID_User_User" FromRole="User" ToRole="User1" />
+    <NavigationProperty Name="Agent" Relationship="Saraf365Model.FK_xAgentID_User_User" FromRole="User1" ToRole="User" />
+    <NavigationProperty Name="Withdrawal" Relationship="Saraf365Model.FK_xUserID_Withdrawal_User" FromRole="User" ToRole="Withdrawal" />
+  </EntityType>
+  <Association Name="FK_xUserID_FinancialLog_User">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="0..1" />
+    <End Type="Saraf365Model.FinancialLog" Role="FinancialLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="FinancialLog">
+        <PropertyRef Name="xUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NationalImageID_User_SystemFile">
+    <End Type="Saraf365Model.SystemFile" Role="SystemFile" Multiplicity="0..1" />
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SystemFile">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="xNationalIDImage" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xUserID_Ticket_User">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="1" />
+    <End Type="Saraf365Model.Ticket" Role="Ticket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Ticket">
+        <PropertyRef Name="xUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xUserID_Transaction_User">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="1" />
+    <End Type="Saraf365Model.Transaction" Role="Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Transaction">
+        <PropertyRef Name="xUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_UserBankAccount">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="1" />
+    <End Type="Saraf365Model.UserBankAccount" Role="UserBankAccount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="UserBankAccount">
+        <PropertyRef Name="xUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xAgentID_User_User">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="0..1" />
+    <End Type="Saraf365Model.User" Role="User1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="User1">
+        <PropertyRef Name="xAgentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xUserID_Withdrawal_User">
+    <End Type="Saraf365Model.User" Role="User" Multiplicity="1" />
+    <End Type="Saraf365Model.Withdrawal" Role="Withdrawal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="Withdrawal">
+        <PropertyRef Name="xUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="TelegramSupport">
+    <Key>
+      <PropertyRef Name="xID" />
+    </Key>
+    <Property Name="xID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="xChatID" Type="Int64" Nullable="false" />
+    <Property Name="xMessage" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="xMessageID" Type="Int64" Nullable="false" />
+    <Property Name="xUsername" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="xDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="xResponse" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="xResponseAdmin" Type="Int64" />
+    <Property Name="xSystemFileID" Type="Int64" />
+    <Property Name="xResponseDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Admin" Relationship="Saraf365Model.FK_xResponseAdmin_TelegramSupport_Admin" FromRole="TelegramSupport" ToRole="Admin" />
+    <NavigationProperty Name="SystemFile" Relationship="Saraf365Model.FK_xSystemFileID_TelegramSupport_SystemFile" FromRole="TelegramSupport" ToRole="SystemFile" />
+  </EntityType>
+  <Association Name="FK_xResponseAdmin_TelegramSupport_Admin">
+    <End Type="Saraf365Model.Admin" Role="Admin" Multiplicity="0..1" />
+    <End Type="Saraf365Model.TelegramSupport" Role="TelegramSupport" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="TelegramSupport">
+        <PropertyRef Name="xResponseAdmin" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_xSystemFileID_TelegramSupport_SystemFile">
+    <End Type="Saraf365Model.SystemFile" Role="SystemFile" Multiplicity="0..1" />
+    <End Type="Saraf365Model.TelegramSupport" Role="TelegramSupport" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SystemFile">
+        <PropertyRef Name="xID" />
+      </Principal>
+      <Dependent Role="TelegramSupport">
+        <PropertyRef Name="xSystemFileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

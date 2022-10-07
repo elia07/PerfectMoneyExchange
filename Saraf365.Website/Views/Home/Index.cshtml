@@ -1,0 +1,417 @@
+﻿@using BotDetect.Web.Mvc;
+@{
+    Layout = null;
+    string LanguageCode = ViewBag.LanguageCode;
+}
+<!doctype html>
+<html lang="fa_IR" dir="rtl">
+<head>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138609180-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138609180-1');</script>
+    <meta name="description" content="سامانه خرید و فروش پرفکت مانی آماده ارائه خدمات به صورت کاملا هوشمند با تحویل آنی و خودکار و پشتیبانی 24 ساعته با قیمت مناسب و ارزان میباشد">
+    <meta name="keywords" content="پرفکت مانی,کارت شارژ پرفکت مانی,دلار پرفکت مانی,خرید پرفکت مانی,فروش پرفکت مانی,خدمات پرفکت مانی,PS Voucher,ووچر پرفکت مانی,Perfect Money,نقد کردن پرفکت مانی,PM Voucher,فروش ووچر,خرید ووچر">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="~/Resources/images/saraf365125.png">
+    <title>@SectionInfo.Setting.ApplicationName</title>
+
+    <!-- All CSS -->
+    <link rel="stylesheet" href="~/Resources/plugins/bootstrap-v4-rtl/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Resources/fonts/mdi/font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/Resources/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css" />
+    <link href="~/Resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Resources/css/style.css">
+</head>
+<body class="body-home">
+
+    <noscript>@SectionInfo.Setting.Languages[LanguageCode]["Txt_NoScript"]</noscript>
+    <header>
+
+        <!--Header-->
+        <section class="container-fluid bg-home">
+            <div class="container home">
+                <div class="right">
+                    <p data-toggle="modal" data-target="#LoginModal"><i class="d-inline-flex align-middle mdi mdi-account-key"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Login"]</p>
+                    <p data-toggle="modal" data-target="#RegisterModal"><i class="d-inline-flex align-middle mdi mdi-account-plus-outline"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Register"]</p>
+                </div>
+                <div class="left">
+                    <div class="social">
+                        <ul>
+                            @if (SectionInfo.Setting.InstaPage != "")
+                            {
+                                <li><a href="@SectionInfo.Setting.InstaPage" target="_blank"><i class="d-inline-flex align-middle mdi mdi-instagram"></i></a></li>
+                            }
+                            @if (SectionInfo.Setting.TelegramChannel != "")
+                            {
+                                <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramChannel)" target="_blank"><i class="d-inline-flex align-middle mdi mdi-telegram"></i></a></li>
+                            }
+                            @if (SectionInfo.Setting.TelegramSupportAccount != "")
+                            {
+                                <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramSupportAccount)" target="_blank"><i class="d-inline-flex align-middle mdi mdi-headset"></i></a></li>
+                            }
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--End Header-->
+
+    </header>
+
+    <main class="main-content">
+        <div class="marq">
+            <h3>برای خرید یا فروش نیاز به ایجاد حساب کاربری دارید  &nbsp|&nbsp امکان خرید پرفکت مانی در 24 ساعت شبانه روز و ایام تعطیل به صورت آنی  &nbsp|&nbsp تسویه حساب ها برای حساب های غیر بانک تجارت فقط در روز های کاری و ساعات اداری &nbsp</h3>
+        </div>
+        <div class="container-fluid">
+            <div class="container p-0">
+                <section class="row" style="margin-left:20px;margin-right:20px;margin-bottom:40px;">
+
+                    <!--Section Main Content-->
+                    <div class="col-lg-12">
+                        <div class="row priceContainer">
+                            <div class="col-lg-4">
+                                <img class="moneyItemLogo" src="~/Resources/images/PerfectMoney.png" />
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="bsAssetContainer" data-toggle="modal" data-target="#LoginModal" style="cursor:pointer">
+                                    <span class="assetInfo assetActivity">خرید پرفکت از شما</span>
+                                    <span class="assetInfo @(SectionInfo.Setting.PerfectBuyAvail?" assetAvail":" assetNotAvail")">@(SectionInfo.Setting.PerfectBuyAvail ? "درحال حاضر فعال می باشد" : "با پشتیبانی تماس بگیرید")</span>
+                                    <span class="assetInfo @(SectionInfo.Setting.PerfectBuyAvail?" assetAvail":" assetNotAvail")">@SectionInfo.Setting.PerfectMoneyBuyPrice @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"]</span>
+                                    <span class="assetInfo assetActivity" style="font-size:14px;font-weight:normal">پرداخت زیر 2 ساعت</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4"  style="cursor:pointer">
+                                <div class="bsAssetContainer" data-toggle="modal" data-target="#LoginModal">
+                                    <span class="assetInfo assetActivity">فروش پرفکت به شما</span>
+                                    <span class="assetInfo@(SectionInfo.Setting.PerfectSellAvail?" assetAvail":" assetNotAvail")">@(SectionInfo.Setting.PerfectSellAvail ? "درحال حاضر فعال می باشد" : "با پشتیبانی تماس بگیرید")</span>
+                                    <span class="assetInfo@(SectionInfo.Setting.PerfectSellAvail?" assetAvail":" assetNotAvail")">@SectionInfo.Setting.PerfectMoneySellPrice @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"]</span>
+                                    <span class="assetInfo assetActivity" style="font-size:14px;font-weight:normal">تحویل آنی</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--End Section Main Content-->
+                    <ul class="nav nav-tabs md-tabs" style="margin-top:30px;" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab-md" data-toggle="tab" href="#home-md" role="tab" aria-controls="home-md"
+                               aria-selected="true">سوالات متداول</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab-md" data-toggle="tab" href="#rules-md" role="tab" aria-controls="profile-md"
+                               aria-selected="false">قوانین و مقررات</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab-md" data-toggle="tab" href="#contact-md" role="tab" aria-controls="contact-md"
+                               aria-selected="false">تماس با ما</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content card pt-5" id="myTabContentMD">
+                        <div class="tab-pane fade show active" id="home-md" role="tabpanel">
+                            <p>
+                                - تأیید احراز هویت چقدر زمان می برد؟
+                                مدرک شناسایی ارسال شده ظرف چند دقیقه توسط کارشناسان ما بررسی می شود و نتیجه به اطلاع شما خواهد رسید. اگر در ساعات بین ۸ تا ۲۱ اقدام به ثبت نام نمایید همکاران همان روز و حداکثر ظرف ۲ ساعت مدارک شما را بررسی و در صورت تأیید حساب کاربری فعال خواهد شد.
+                            </p>
+                            <p>
+                                -آیا بدون حساب بانکی تأیید شده میتوانم از خدمات سایت استفاده کنم؟
+                                خیر،‌توجه بفرمایید حساب بانکی تأیید شده که به نام خود کاربر باشد جزو موارد ضروری استفاده از خدمات سایت می باشد
+                            </p>
+                            <p>
+                                -رمز عبور خود را فراموش کرده ام، چگونه وارد حساب کاربری شوم؟
+                                در بخش ورود به سایت لینکی برای این منظور درنظر گرفته شده است ، درصورت نیاز ایمیلی برای شما ارسال خواهد شد که از طریق آن می توانید رمز عبور را مجدد تعیین نمایید.
+                            </p>
+                            <p>
+                                -بدون داشتن ایمیل می توانم در سایت ثبت نام کنم؟
+                                خیر، در ضمن توجه داشته باشید هنگام ثبت نام از صحت آدرس ایمیل و امکان دسترسی به آن اطمینان کامل داشته باشید.
+                            </p>
+                            <p>
+                                -به چه دلیل باید احراز هویت انجام دهیم؟
+                                براساس تکلیفی که قوانین مطروحه جمهوری اسلامی علی الخصوص قوانین جرایم رایانه ای و تجارت الکترونیک و .... بر عهده فروشندگان فضای مجازی قرار داده است saraf365 خود را ملزم به احراز هویت متقاضیان خود در هر خرید و فروش می داند.
+                                دلیل دوم احراز هویت جلوگیری از سواستفاده و پولشویی می باشد.
+                            </p>
+                            <p>
+                                -آیا برای هر خرید باید احراز هویت انجام دهیم؟
+                                خیر احرازهویت فقط یکبار انجام می شود.
+                            </p>
+                            <p>
+                                -برای فروش به شما احرازهویت نیاز است؟
+                                بله برای فروش به ما نیاز به احراز هویت می باشد.
+                            </p>
+                            <p>
+                                -امکان خرید از کارت بانکی شخص ثالث رو دارم؟
+                                خیر پس از واریز مبلغ سفارش بلوکه و سفارش شما انجام نخواهد شد.
+                            </p>
+                        </div>
+                        <div class="tab-pane fade" id="rules-md" role="tabpanel">
+                            <p>۱. استفاده از خدمات saraf365 مشروط بر ثبت نام و ایجاد حساب کاربری بوده و تنها برای کاربران احراز هویت شده امکان پذیر می باشد.</p>
+                            <p>۲. کارت شناسایی ارسال شده توسط کاربر مؤید هویت واقعی صاحب حساب کاربری می باشد. مسئولیت صحت و اعتبار مدرک مورد نظر بر عهده کاربر می باشد. سایت saraf365 در قبال سوء استفاده های احتمالی و دستکاری در تصویر مدارک شناسایی مسئولیتی نخواهد داشت.</p>
+                            <p>۳. برای ثبت نام باید از اطلاعات حقیقی استفاده نمایید، صحت این اطلاعات توسط کارشناسان ما بررسی خواهد شد و در صورت مغایرت، از فعالیت کاربران با هویت جعلی یا پنهان جلوگیری خواهد شد.</p>
+                            <p>۴. پس از بررسی اطلاعات ورودی کاربر ( تلفن همراه، مدرک شناسایی معتبر، ایمیل و حساب بانکی ) و اطمینان از صحت آنها،‌ هویت تأیید و حساب کاربری فعال خواهد شد.</p>
+                            <p>۵. هرگونه پرداخت و تراکنشی که در سایت انجام می شود باید توسط حساب های بانکی ثبت شده صورت پذیرد، در غیر اینصورت برخلاف مقررات سایت بود و منجر به مسدود شدن حساب کاربری خواهد شد.</p>
+                            <p>۶. مسئولیت استفاده بعدی از خدمات تهیه شده از saraf365، از عهده این سایت خارج بود و چنانچه تخلفی در این راستا انجام شود مسئولیت آن بر عهده کاربر می باشد.</p>
+                            <p>۷. خدمات سایت saraf365 کاملا منطبق بر قوانین جهموری اسلامی ایران می باشد و در صورت بروز هرگونه تخلف توسط کاربران حساب کاربری معلق و مراتب به صورت قانونی و از طریق مراجع ذیصلاح پیگیری خواهد شد.</p>
+                            <p>۸. درصورت پرداخت توسط حساب بانکی ثبت نشده ، مبلغ واریزی توسط سایت saraf365 مسدود و سفارش لغو خواهد شد. عودت مبلغ تنها در صورت درخواست کتبی صاحب حساب بانکی و در ازای کسر مبلغ ۱۰۰۰۰۰ ریال انجام خواهد شد.</p>
+                            <p>۹. تمامی سفارشات در سایت saraf365 در صورت موجود بودن به صورت خودکار و در غیر اینصورت به صورت دستی و توسط کارشناسان فروش انجام میگردد. لذا بر اساس شرایط سفارش حداکثر ظرف مدت ۲۴ ساعت انجام خواهد شد. کاربران با علم به این موضوع اقدام به ثبت نام و درخواست سفارش می نمایند و این سایت تعهدی در قبال انجام سفارشات در زمانی کمتر از مدت اعلام شده ندارد.</p>
+                            <p>۱۰. در صورت بروز هرگونه اختلال در روند سفارش و کسر شدن مبلغ از حساب خریدار،‌ پیگیری سفارش پس از ۷۲ ساعت از طرف saraf365 قابل انجام است.</p>
+                            <p>۱۱. شماره تلفن درج شده در سایت برای پاسخگویی به سوالات کاربران نیست،‌پشتیبانی فقط و فقط از طریق تیکت در حساب کاربری یا پشتیبانی آنلاین در صفحه اصلی سایت صورت می پذیرد.</p>
+                            <p>۱۲. در صورت بروز هرگونه شکایت و اعلام درخواست از سمت پلیس فتا، مراجع قضایی و انتظامی کشور اطلاعات هویتی کاربر مورد نظر به آن مقام مسئول اعلام می گردد و همکاری لازم با ایشان تمام و کمال صورت خواهد پذیرفت.</p>
+                        </div>
+                        <div class="tab-pane fade" id="contact-md" role="tabpanel">
+                            <p>
+                                ساعت کاری مجموعه 8 صبح الی 21 می باشد ، اما برای دریافت خدماتی مانند پرفکت مانی که تحویل آنها به صورتی اتوماتیک می باشد می توانید از خدمات سایت به صورت 24 ساعته استفاده نمایید . در صورت بروز هرگونه مشکل در ساعات غیر اداری می توانید تیکت ثبت نمایید تا در شروع روز کاری بعد کارشناسان ما مشکل شما را رفع نمایند.
+                            </p>
+                            <p>
+                                09917073863 - این شماره تماس جهت سوالات متداول و سوالاتی از قبیل ایجاد حساب کاربری و... نمی باشد ، در صورت بروز هرگونه مشکلات مالی ویا تقاضای خرید عمده می توانید با این شماره تماس بگیرید
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+
+
+    <!-- Modal SendForgetPassword -->
+    <div class="modal fade auth-modal" id="SendForgetPasswordEmailModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LoginModalLabel">@SectionInfo.Setting.Languages[LanguageCode]["Txt_ForgetPassword"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-md-4">
+                    <form id="SendForgetPasswordEmail" name="SendForgetPasswordEmail" data-parsley-validate>
+                        <div class="form-group">
+                            <i class="mdi mdi-account"></i>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Email"]" data-parsley-type="email" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+
+                            <i class="mdi mdi-robot"></i>
+                            @Html.TextBox("SendForgetPasswordEmailCaptcha", null, new { @class = "form-control", @PlaceHolder = @SectionInfo.Setting.Languages[LanguageCode]["Txt_Captcha"], @id = "SendForgetPasswordEmailCaptcha", @autocomplete = "off", @required = "" })
+                        </div>
+
+                        @{MvcCaptcha SendForgetPasswordEmailCaptcha = new MvcCaptcha("SendForgetPasswordEmailCaptcha"); }
+                        @Html.Captcha(SendForgetPasswordEmailCaptcha)
+                        <br />
+                        <button type="submit" class="btn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_SendRecoveryEmail"]</button>
+                    </form><br />
+                    <button class="btn btn-auth btn-block" onclick="$('#SendForgetPasswordEmailModal').modal('hide');$('#ForgetPasswordModal').modal('show');">@SectionInfo.Setting.Languages[LanguageCode]["Txt_IhaveActivationCode"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal ForgetPasswordModal -->
+    <div class="modal fade auth-modal" id="ForgetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LoginModalLabel">@SectionInfo.Setting.Languages[LanguageCode]["Txt_ForgetPassword"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-md-4">
+                    <form id="ForgetPassword" name="ForgetPassword" data-parsley-validate>
+                        <div class="form-group">
+                            <i class="mdi mdi-account"></i>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Email"]" data-parsley-type="email" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-ticket-account"></i>
+                            <input type="text" class="form-control" id="activationCode" name="activationCode" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ValidationCode"]" data-parsley-type="digits" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-key"></i>
+                            <input type="password" class="form-control" id="forgetPassword_Password" name="password" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Password"]" data-parsley-minlength="5" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-key"></i>
+                            <input type="password" class="form-control" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_RepeatPassword"]" data-parsley-equalto="#forgetPassword_Password" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+
+                            <i class="mdi mdi-robot"></i>
+                            @Html.TextBox("ForgetPasswordCaptcha", null, new { @class = "form-control", @PlaceHolder = @SectionInfo.Setting.Languages[LanguageCode]["Txt_Captcha"], @id = "ForgetPasswordCaptcha", @autocomplete = "off", @required = "" })
+                        </div>
+
+                        @{MvcCaptcha ForgetPasswordCaptcha = new MvcCaptcha("ForgetPasswordCaptcha"); }
+                        @Html.Captcha(ForgetPasswordCaptcha)
+                        <br />
+                        <button type="submit" class="btn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Login -->
+    <div class="modal fade auth-modal" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LoginModalLabel">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Login"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-md-4">
+                    <form id="Login" name="Login" data-parsley-validate>
+                        <div class="form-group">
+                            <i class="mdi mdi-account"></i>
+                            <input type="text" class="form-control" id="xEmail" name="xEmail" data-parsley-required data-trigger="change" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Email"]">
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-key"></i>
+                            <input type="password" class="form-control" id="xPassword" name="xPassword" data-parsley-required data-trigger="change" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Password"]">
+                        </div>
+
+                        <div class="form-group">
+
+                            <i class="mdi mdi-robot"></i>
+                            @Html.TextBox("CaptchaLogin", null, new { @class = "form-control", @PlaceHolder = @SectionInfo.Setting.Languages[LanguageCode]["Txt_Captcha"], @id = "CaptchaLogin", @autocomplete = "off", @required = "" })
+                        </div>
+                        @{MvcCaptcha LoginCaptcha = new MvcCaptcha("CaptchaLogin"); }
+                        @Html.Captcha(LoginCaptcha)
+                        <br />
+                        <button type="submit" class="btn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Login"]</button>
+                    </form>
+                    <br />
+                    <button class="btn btn-auth btn-block" onclick="$('#LoginModal').modal('hide');$('#SendForgetPasswordEmailModal').modal('show');">@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecoverPassword"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Logout -->
+    <div class="modal fade auth-modal" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="LogoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LogoutModalLabel">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Register"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-md-4">
+                    <form id="Signup" name="Signup" data-parsley-validate>
+                        @if (ViewBag.InviteCode == "")
+                        {
+
+                        }
+                        else
+                        {
+                            <div class="form-group" style="display:none">
+                                <i class="mdi mdi-account-plus"></i>
+                                <input type="text" class="form-control" id="inviteCode" name="inviteCode" placeholder="شناسه معرف" value="@ViewBag.InviteCode">
+                            </div>
+                        }
+                        <div class="form-group">
+                            <i class="mdi mdi-account"></i>
+                            <input type="text" class="form-control" id="xFullName" name="xFullName" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Fullname"]" data-parsley-justPersianChars="justPersianChars" data-parsley-required data-trigger="change">
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-email"></i>
+                            <input type="text" class="form-control" id="xEmail" name="xEmail" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Email"]" data-parsley-type="email" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-phone"></i>
+                            <input type="text" class="form-control" id="xCellphone" name="xCellphone" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Cellphone"]" data-parsley-irCellphone="irCellphone" data-parsley-required data-trigger="change">
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-key"></i>
+                            <input type="password" class="form-control" id="singup_xPassword" name="xPassword" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_Password"]" data-parsley-minlength="5" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-key"></i>
+                            <input type="password" class="form-control" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_RepeatPassword"]" data-parsley-equalto="#singup_xPassword" data-trigger="change" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="mdi mdi-robot"></i>
+                            @Html.TextBox("CaptchaRegister", null, new { @class = "form-control", @PlaceHolder = @SectionInfo.Setting.Languages[LanguageCode]["Txt_Captcha"], @id = "CaptchaRegister", @name = "CaptchaRegister", @autocomplete = "off", @required = "" })
+                        </div>
+
+                        @{MvcCaptcha registerCaptcha = new MvcCaptcha("CaptchaRegister");
+
+                        }
+                        @Html.Captcha(registerCaptcha)
+                        <br />
+                        <button type="submit" class="btn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Register"]</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript">window.$crisp = []; window.CRISP_WEBSITE_ID = "c38f8e51-7910-421b-99d6-9702c53fdd54"; (function () { d = document; s = d.createElement("script"); s.src = "https://client.crisp.chat/l.js"; s.async = 1; d.getElementsByTagName("head")[0].appendChild(s); })();</script>
+    <script type="text/javascript" src="~/Resources/plugins/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/popper.js/dist/umd/popper.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/bootstrap-v4-rtl/js/bootstrap.min.js"></script>
+    <script src="~/Resources/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/persian-rex.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyCustomValidation.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsley.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyConfigs.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/@(ViewBag.LanguageCode).js"></script>
+    <script src="~/Resources/plugins/highcharts/highcharts.js"></script>
+
+
+    <script type="text/javascript" src="~/Resources/js/script.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".BDC_CaptchaDiv").removeAttr("style");
+            $(".BDC_CaptchaImageDiv").removeAttr("style");
+            $(".BDC_CaptchaIconsDiv").removeAttr("style");
+            $(".BDC_ReloadLink").removeAttr("style");
+
+
+            Swal({
+                title: "مشارکت در فروش",
+                text: "با معرفی ما به دوستان خود توسط لینک اختصاصی ثبت نام 20 % سود مشارکت در فروش دریافت کنید",
+                type: 'success',
+                showConfirmButton: true,
+            });
+
+
+        });
+                @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+
+    }
+
+
+
+        window.TokenHeaderValue = '@TokenHeaderValue()';
+        @if (Request.IsSecureConnection)
+        {
+            @:window.ProfileAddress = '@SectionInfo.Setting.ProfileAddress.Replace("http","https")';
+        }
+        else
+        {
+            @:window.ProfileAddress = '@SectionInfo.Setting.ProfileAddress';
+        }
+
+    </script>
+</body>
+</html>

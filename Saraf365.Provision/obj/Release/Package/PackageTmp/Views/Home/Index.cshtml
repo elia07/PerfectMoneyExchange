@@ -1,0 +1,109 @@
+﻿@using Quartz;
+@using Quartz.Impl;
+@using Quartz.Impl.Matchers;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style type="text/css">
+       .paddingg {
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <span>Scheduler Running : </span><span>@SectionInfo.SchedulerSetting.IsStarted</span><br />
+    <span>Curren Time : </span><span>@DateTime.Now.ToString()</span><br />
+    <span>dynamic TaskCount: </span><span>@SectionInfo.dynamicTasks.Count()</span><br />
+    <hr>
+    <h3>Executing Jobs : </h3>
+    <hr>
+    <table>
+        <thead>
+            <tr>
+                <th class="paddingg">JobName</th>
+                <th class="paddingg">State</th>
+                <th class="paddingg">NextFireTime</th>
+                <th class="paddingg">PrevFireTime</th>
+                <th class="paddingg">Run Manual</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (SectionInfo.SchedulerSetting.IsStarted)
+            {
+                foreach (string group in SectionInfo.SchedulerSetting.GetJobGroupNames())
+                {
+                    var groupMatcher = GroupMatcher<JobKey>.GroupContains(group);
+                    var jobKeys = SectionInfo.SchedulerSetting.GetJobKeys(groupMatcher);
+                    foreach (var jobKey in jobKeys)
+                    {
+                        var detail = SectionInfo.SchedulerSetting.GetJobDetail(jobKey);
+                        var triggers = SectionInfo.SchedulerSetting.GetTriggersOfJob(jobKey);
+
+                        <tr>
+                            @foreach (ITrigger trigger in triggers)
+                            {
+                                <td class="paddingg">@detail.JobType.Name</td>
+                                <td class="paddingg">@SectionInfo.SchedulerSetting.GetTriggerState(trigger.Key)</td>
+
+                                DateTimeOffset? nextFireTime = trigger.GetNextFireTimeUtc();
+                                if (nextFireTime.HasValue)
+                                {
+                                    <td class="paddingg">@nextFireTime.Value.LocalDateTime.ToString()</td>
+                                }
+                                else
+                                {
+                                    <td class="paddingg"></td>
+                                }
+
+                                DateTimeOffset? previousFireTime = trigger.GetPreviousFireTimeUtc();
+                                if (previousFireTime.HasValue)
+                                {
+                                    <td class="paddingg">@previousFireTime.Value.LocalDateTime.ToString()</td>
+                                }
+                                else
+                                {
+                                    <td class="paddingg"></td>
+                                }
+                                <td class="paddingg"><a href="/Home/FireJob?@(string.Format("jobName={0}&password={1}",detail.JobType.Name,"moolmaram!!koko15koko"))">Fire</a></td>
+                            }
+                        </tr>
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+
+
+    <hr>
+    <h3>Internet Banks : </h3>
+    <hr>
+    <table>
+        <thead>
+            <tr>
+                <th class="paddingg">Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in SectionInfo.InputCardsInternetBanks)
+            {
+
+                <tr>
+                    <td class="paddingg">@item.Value.GetInfo()</td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+</body>
+</html>

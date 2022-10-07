@@ -1,0 +1,116 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    FinancialLogRepository kr = new FinancialLogRepository();
+    FinancialLog instance = kr.GetByID(xID);
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/FinancialLog/Index?@queryString">مدیریت لاگ های مالی</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>لاگ جدید</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-insert" data-parsley-validate>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp مبلغ</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xAmount" id="xAmount" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp توضیحات</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xDescription" id="xDescription" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                        <div class="col-md-11">
+                            @(Html.RenderEnum<FinancialLogType>("xType"))
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-success" onclick="insert()">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script type="text/javascript">
+
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $("#form-insert").parsley();
+    });
+    function insert() {
+
+        if ($("#form-insert").parsley().validate()) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/FinancialLog/Insert',
+                data: JSON.stringify($("#form-insert").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.href = "/FinancialLog/Index";
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+
+</script>
+
+@{
+    kr.Dispose();
+}

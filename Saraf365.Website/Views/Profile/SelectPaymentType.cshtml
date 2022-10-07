@@ -1,0 +1,147 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Enumerations;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Models;
+@using Newtonsoft.Json;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using RockCandy.Web.Framework.Utilities;
+@using Saraf365.WebClient.Utils;
+
+@{
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = Convert.ToInt64(ViewBag.UserID);
+
+    GatewayRepository gr = new GatewayRepository();
+    UserRepository ur = new UserRepository();
+
+
+    var userInstance = ur.GetByIDAndLoadWithdrawalAndBankAccountAndSystemFile(UserID);
+    var gateWays = gr.GetGatewayForUser(UserID);
+
+    int MyProfileNotifs = ProfileValidation.Validate(userInstance);
+
+    SettingRepository sr = new SettingRepository();
+
+    int paymentValue = Convert.ToInt32(Request.QueryString["amount"]);
+}
+
+@if (SectionInfo.Setting.PerfectSellAvail)
+{
+    <p>روش پرداخت خود را انتخاب کنید</p>
+    <div class="payment-method">
+        @if (gateWays.Count == 0)
+        {
+            <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_NoGatewayFound"]</p>
+        }
+        else
+        {
+            foreach (var item in gateWays)
+            {
+            <a href="#" containerID="paymentTypeContainer_@item.xID" class="paymentType" style="max-width:250px;">
+                @switch (item.xType)
+                {
+                    case (byte)GatewayType.IPG:
+
+                        @SectionInfo.Setting.Languages[LanguageCode]["Txt_IPG"]
+                        <img src="~/Resources/images/pos.png">
+                        break;
+                    case (byte)GatewayType.CartBeCart:
+
+                        @SectionInfo.Setting.Languages[LanguageCode]["Txt_CartToCart"]
+                        <img src="~/Resources/images/card.png">
+                        break;
+                    case (byte)GatewayType.PerfectMoney:
+
+                        @SectionInfo.Setting.Languages[LanguageCode]["Txt_PerfectMoney"]
+                        break;
+                    case (byte)GatewayType.Voucher:
+
+                        @SectionInfo.Setting.Languages[LanguageCode]["Txt_Voucher"]
+                        break;
+                    case (byte)GatewayType.Bitcoin:
+
+                        @SectionInfo.Setting.Languages[LanguageCode]["Txt_Bitcoin"]
+                        break;
+                }
+
+            </a>
+            }
+        }
+
+    </div>
+
+    if (gateWays.Count != 0)
+    {
+
+        foreach (var item in gateWays)
+        {
+            GatewayConfigModel config = JsonConvert.DeserializeObject<GatewayConfigModel>(item.xConfig);
+
+            <div class="paymentTypeContainer" id="paymentTypeContainer_@item.xID" paymentType="@item.xType" style="display:none">
+                <hr>
+                @if (item.xType == (byte)GatewayType.CartBeCart)
+                {
+                    <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CartBeCartPaymentDetail"]</p>
+                    <p><span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CardHolderName"] :</span>@config.CardHolderName</p>
+                    <p><span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CardNumber"] :</span> <span dir="ltr"> @config.CardNumber</span></p>
+                    <hr>
+                }
+                @if (item.xType == (byte)GatewayType.CartBeCart || item.xType == (byte)GatewayType.IPG)
+                {
+                    <span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Amount"] @SectionInfo.Setting.Languages[LanguageCode]["Txt_In"] @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"]</span>
+                    <input type="text" class="form-control" id="value_@item.xID" placeholder="مبلغ واریزی به تومان" @(item.xAllowCustomAmountForBuyIn == false ? "readonly" : "") data-parsley-gt="@item.xMinBuyIn" data-parsley-type="digits" data-parsley-required data-trigger="change" readonly value="@paymentValue"><br />
+                }
+
+                @if (item.xType == (byte)GatewayType.CartBeCart)
+                {
+                    <span style="color:#b91f1f">تنها از کارتی عملیات کارت به کارت را انجام دهید که آنرا در پروفایل خود ثبت کرده اید و توسط مدیریت تایید شده است</span><br>
+                    
+
+                    <input style="display:none" type="text" class="form-control" id="payment_ToCartNumber" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ToCartNumber"]" data-parsley-required data-trigger="change" value="@config.CardNumber"><br />
+
+
+                }
+                <div class="action">
+                    @if (item.xType == (byte)GatewayType.IPG)
+                    {
+                        <button class="btn btn-success" style="width:100%" onclick="PaymentRequest();"><i class="mdi mdi-cash-multiple" style="font-size:20px;"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_Pay"]</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-success" style="width:100%" onclick="PaymentRequest();"><i class="mdi mdi-cash-multiple" style="font-size:20px;"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                    }
+
+                </div>
+            </div>
+        }
+
+    }
+}
+else
+{
+    <p>با پشتیبانی تماس بگیرید ، متاسفانه در حال حاضر فروش نداریم ساعاتی بعد لطفا مراجعه نمایید</p>
+}
+<script type="text/javascript">
+    $(".paymentType").click(function () {
+        $(".paymentType").removeClass("selected");
+        $(this).addClass("selected");
+        $(".paymentTypeContainer").css("display", "none");
+        $("#" + $(this).attr("containerID")).css("display", "block");
+        window.selectedGateway = $(this).attr("containerID").replace("paymentTypeContainer_", "");
+    });
+
+    $(".paymentValue").click(function () {
+        window.buyInValue = $(this).attr("value");
+        $("#value_" + window.selectedGateway).val($(this).attr("value"));
+        $(".paymentValue").removeClass("selected");
+        $(this).addClass("selected");
+
+    });
+</script>
+@{
+    gr.Dispose();
+    ur.Dispose();
+    sr.Dispose();
+}
+
+

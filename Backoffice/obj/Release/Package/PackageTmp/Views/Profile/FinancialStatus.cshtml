@@ -1,0 +1,198 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+
+    AdminNotificationRepository anr = new AdminNotificationRepository();
+    TicketRepository tr = new TicketRepository();
+    TelegramSupportRepository tsr = new TelegramSupportRepository();
+    CartTransferHistoryRepository cthr = new CartTransferHistoryRepository();
+    WithdrawalRepository wr = new WithdrawalRepository();
+    UserRepository ur = new UserRepository();
+    TransactionRepository tranR = new TransactionRepository();
+    FinancialLogRepository flr = new FinancialLogRepository();
+    GatewayRepository gr = new GatewayRepository();
+    SettingRepository sr = new SettingRepository();
+    UserBankAccountRepository ubar = new UserBankAccountRepository();
+
+
+
+    AdminRepository ar = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser = ar.GetByID(adminUser.xID);
+
+
+    AdminRole arWithdrawalManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.WithdrawalManagement).SingleOrDefault();
+    char[] withdrawalManagementPermissions = null;
+    if (arWithdrawalManagement == null)
+    {
+        arWithdrawalManagement = new AdminRole();
+        withdrawalManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        withdrawalManagementPermissions = arWithdrawalManagement.xCrudPermission.ToCharArray();
+    }
+
+
+
+
+    AdminRole arFinancialLogManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.FinancialLogManagement).SingleOrDefault();
+    char[] financialLogManagementPermissions = null;
+    if (arFinancialLogManagement == null)
+    {
+        arFinancialLogManagement = new AdminRole();
+        financialLogManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        financialLogManagementPermissions = arFinancialLogManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arTransactionManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TransactionManagement).SingleOrDefault();
+    char[] transactionManagementPermissions = null;
+    if (arTransactionManagement == null)
+    {
+        arTransactionManagement = new AdminRole();
+        transactionManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        transactionManagementPermissions = arTransactionManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arCartTransferHistoryManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.CartTransferHistoryManagement).SingleOrDefault();
+    char[] cartTransferHistoryManagementPermissions = null;
+    if (arCartTransferHistoryManagement == null)
+    {
+        arCartTransferHistoryManagement = new AdminRole();
+        cartTransferHistoryManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        cartTransferHistoryManagementPermissions = arCartTransferHistoryManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arGatewayManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.GatewayManagement).SingleOrDefault();
+    char[] gatewayManagementPermissions = null;
+    if (arGatewayManagement == null)
+    {
+        arGatewayManagement = new AdminRole();
+        gatewayManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        gatewayManagementPermissions = arGatewayManagement.xCrudPermission.ToCharArray();
+    }
+
+
+
+    AdminRole arUserManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserManagement).SingleOrDefault();
+    char[] userManagementPermissions = null;
+    if (arUserManagement == null)
+    {
+        arUserManagement = new AdminRole();
+        userManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        userManagementPermissions = arUserManagement.xCrudPermission.ToCharArray();
+    }
+
+
+
+
+
+}
+<ol class="breadcrumb">
+		<!--<li><a href="#">Home</a></li> -->
+		<li class="active">صفحه اصلی</li>
+</ol>
+<div id="content" style="direction:rtl;text-align:right;">
+
+    @if (adminUser.xType == (byte)AdminType.Supervisor)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="row align-lg-center">
+                            @{
+                                long userWalletTotal = ur.GetAll().Select(x => x.xWallet).Sum();
+                                long totalCashIn = tranR.GetAllVerifiedAmount();
+                                double totalComission = tranR.GetAllVerifiedCommisionAmount();
+                                long totalCashout = wr.GetAllNotRejectedValue();
+                                double ShareHolderWithdrawal = flr.GetShareHolderWithdrawalAmount(new DateTime(), DateTime.Now);
+                                double miscCost = flr.GetMiscCostAmount(new DateTime(), DateTime.Now);
+
+                            }
+                            <div class="col-sm-6">
+                                <div class="showcase showcase-pie-easy clearfix">
+                                    <h3>خلاصه وضعیت</h3>
+                                    <ul>
+                                        <li>@ShareHolderWithdrawal : <strong>مجموع تسویه با ذینفعان</strong></li>
+                                        <li>@miscCost : <strong>مجموع هزینه های جانبی</strong></li>
+                                        <li>@ur.GetSignUpCountByDate(DateTime.Now.Date, DateTime.Now) : <strong>ثبت نام های امروز</strong></li>
+                                        <li>@(((string[])(ViewBag.PerfectMoneyAmount))[1]) $ : <strong>پرفکت مانی به دلار</strong></li>
+                                        <li>@(Convert.ToDouble(((string[])(ViewBag.PerfectMoneyAmount))[1]) * SectionInfo.Setting.PerfectMoneySellPrice) : <strong>پرفکت مانی به تومان</strong></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
+                                <div class="showcase showcase-pie-easy clearfix">
+                                    <h3>خلاصه وضعیت</h3>
+                                    <ul>
+                                        <li>@(totalCashIn - (totalComission + userWalletTotal + totalCashout + ShareHolderWithdrawal + miscCost )) : <strong>تراز مالی</strong></li>
+                                        <li>@totalCashIn : <strong>مجموع واریزی ها</strong></li>
+                                        <li>@totalComission : <strong>مجموع کارمزد ها</strong></li>
+                                        <li>@totalCashout : <strong>مجموع تسویه حساب های ریجکت نشده</strong></li>
+                                        <li>@userWalletTotal : <strong>مجموع موجودی کاربران</strong></li>
+                                        <li>@ur.InActiveUserCount() : <strong>تعداد کاربران غیر فعال</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    }
+@{ 
+    anr.Dispose();
+    tr.Dispose();
+    tsr.Dispose();
+    cthr.Dispose();
+    wr.Dispose();
+    ur.Dispose();
+    tranR.Dispose();
+    flr.Dispose();
+    gr.Dispose();
+    sr.Dispose();
+    ar.Dispose();
+    ubar.Dispose();
+}

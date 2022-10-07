@@ -1,0 +1,325 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    AdminRepository kr = new AdminRepository();
+    Admin instance = kr.GetByID(xID);
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/Admin/Index?@queryString">مدیریت مدیر ها</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#edit" data-toggle="tab">ویرایش</a></li>
+                    <li><a href="#editPermissions" data-toggle="tab">ویرایش سطوح دسترسی</a></li>
+                </ul>
+                <div class="tab-content" style="border:solid 2px #d9dfe3;border-top:none;">
+                    <div class="tab-pane fade in active" id="edit">
+
+                        <div class="form-group clearfix">
+                            <form id="form-update" data-parsley-validate>
+                                <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(xID.ToString(), true,SectionInfo.Setting.SecurityKey)">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xName" id="xName" value="@instance.xName" data-trigger="change" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp پست الکترونیک</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xEmail" id="xEmail" value="@instance.xEmail" data-parsley-type="email" data-trigger="change" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمزعبور</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="password" name="xPassword" id="xPassword" value="" data-parsley-minlength="5" data-trigger="change">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام کاربری تلگرام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xTelegramUsername" id="xTelegramUsername"  data-trigger="change" value="@instance.xTelegramUsername">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp ChatID تلگرام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xTelegramID" id="xTelegramID"  data-trigger="change" value="@instance.xTelegramID">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                                    <div class="col-md-11">
+                                        @(Html.RenderEnum<AdminType>("xType"))
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp فعال</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="checkbox" id="xIsActive" name="xIsActive" value="true" @(instance.xIsActive == true ? "checked" : "") style="float:right;width:30px;">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سطوح دسترسی بخشی</label>
+                                    <div class="col-md-11">
+                                        @(MvcHtmlString.Create(Html.MultiAdminRoleSectionTypeDropDown("xSectionPermissions")))
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12">
+                                        <button type="button" id="UpdateConfirm" class="btn btn-success">ذخیره</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade in" id="editPermissions">
+
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                            <div class="col-md-11">
+                                @(Html.RenderEnum<AdminRoleSectionType>("xSectionType"))
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-md-12">
+                                <button type="button" id="CrudPermissionInsert" class="btn btn-success" style="width:100%;">ثبت</button>
+                            </div>
+                        </div>
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><label>نام قسمت</label></th>
+                                    <th><label>دسترسی خواندن</label></th>
+                                    <th><label>دسترسی نوشتن</label></th>
+                                    <th><label>دسترسی به روزرسانی</label></th>
+                                    <th><label>دسترسی حذف</label></th>
+                                    <th><label>دسترسی گزارش گیری</label></th>
+                                    <th><label>فعالیت ها</label></th>
+                                </tr>
+                            </thead>
+                            <tbody align="center">
+                                @{
+
+                                    List<AdminRole> records = instance.AdminRole.ToList();
+
+                                    foreach (var item in records)
+                                    {
+                                        char[] permistions = item.xCrudPermission.ToCharArray();
+                                        <tr id="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)">
+                                            <td ><label>@(EnumUtils.GetAttribute<DisplayAttribute>((AdminRoleSectionType)item.xSectionType).Name)</label></td>
+                                            <td ><label><input type="checkbox" @(permistions[(byte)CrudOperationType.Select] == '1' ? "checked" : "") disabled></label></td>
+                                            <td ><label><input type="checkbox" @(permistions[(byte)CrudOperationType.Insert] == '1' ? "checked" : "") disabled></label></td>
+                                            <td ><label><input type="checkbox" @(permistions[(byte)CrudOperationType.Update] == '1' ? "checked" : "") disabled></label></td>
+                                            <td ><label><input type="checkbox" @(permistions[(byte)CrudOperationType.Delete] == '1' ? "checked" : "") disabled></label></td>
+                                            <td ><label><input type="checkbox" @(permistions[(byte)CrudOperationType.Report] == '1' ? "checked" : "") disabled></label></td>
+                                            <td >
+                                                <span class="tooltip-area">
+                                                    <button onclick="UpdateRender('@MD5Encryption.Encrypt(item.xID.ToString(), true, SectionInfo.Setting.SecurityKey)','/Admin/CrudPermissionUpdateRender')" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="ویرایش"><i class='fa fa-pencil'></i></button>
+                                                    <button RowID="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)" type="button" class="btn btn-default DeleteConfirm" data-toggle="tooltip" data-placement="top" data-effect="md-slideUp" title="" data-original-title="حذف"><i class='fa fa-times'></i></button>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update()" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+<div id="md-DeleteConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید حذف</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای حذف رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Delete" OnClick="Delete($(this).attr('RowID'),'/Admin/CrudPermissionDelete')" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+<script type="text/javascript">
+
+    @{
+
+
+        string spa = "";
+
+        foreach (var item in instance.AdminRole.Select(x => x.xSectionType))
+        {
+            if (spa.Length != 0)
+            {
+                spa += ",";
+            }
+            spa += item.ToString();
+        }
+        if (spa.Length != 0)
+        {
+            spa = "-1," + spa;
+        }
+
+
+    }
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+    $("#CrudPermissionInsert").click(function () {
+        var args = {
+            "xSectionType": $("#xSectionType").val(),
+            "xAdminID": @instance.xID
+            }
+
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'RequestVerificationToken': '@TokenHeaderValue()'
+            },
+            contentType: "application/json; charset=utf-8",
+            url: '/Admin/CrudPermissionInsert',
+            data: JSON.stringify(args),
+            dataType: "json",
+            success: function (response) {
+                if (response.Status == true) {
+                    $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                    setTimeout("window.location.reload()",1000);
+                }
+                else {
+                    $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                }
+            },
+            statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+        });
+    });
+    $(document).ready(function () {
+
+        $("#xSectionPermissions").val(new Array(@spa));
+        $('.selectpicker').selectpicker();
+        $('#xType').val('@instance.xType');
+        $('.selectpicker').change();
+        $("#form-update").parsley();
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+        $(".DeleteConfirm").click(function (event) {
+            var data = $(this).data();
+            $("#md-DeleteConfrim .modal-body #Delete").attr("RowID", $(this).attr("RowID"));
+            $("#md-DeleteConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+    });
+    function Update()
+    {
+        if($("#form-update").parsley().validate())
+        {
+            var xSectionPermissions = "";
+            var xSPArray = $("#xSectionPermissions").val();
+            if (xSPArray != null) {
+                for (var i = 0; i < xSPArray.length; i++) {
+                    if (xSectionPermissions.length != 0)
+                        xSectionPermissions += ","
+                    xSectionPermissions += xSPArray[i];
+                }
+            }
+
+
+
+
+            var args = {
+                "xID": $("#xID").val(),
+                "xName": $("#xName").val(),
+                "xEmail": $("#xEmail").val(),
+                "xPassword": $("#xPassword").val(),
+                "xTelegramID": $("#xTelegramID").val(),
+                "xTelegramUsername": $("#xTelegramUsername").val(),
+                "xIsActive": $("#xIsActive").is(":checked"),
+                "xType": $("#xType").val(),
+                "xSectionPermissions": xSectionPermissions,
+            }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Admin/Update',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/Admin/Index'",1000);
+                        
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    kr.Dispose();
+}

@@ -1,0 +1,409 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Enumerations;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Models;
+@using Newtonsoft.Json;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using RockCandy.Web.Framework.Utilities;
+@using Saraf365.WebClient.Utils;
+
+@{
+    Layout = null;
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = Convert.ToInt64(ViewBag.UserID);
+
+    GatewayRepository gr = new GatewayRepository();
+    UserRepository ur = new UserRepository();
+
+
+    var userInstance = ur.GetByIDAndLoadWithdrawalAndBankAccountAndSystemFile(UserID);
+    var gateWays = gr.GetGatewayForUser(UserID);
+
+    int MyProfileNotifs = ProfileValidation.Validate(userInstance);
+
+    SettingRepository sr = new SettingRepository();
+
+
+    FinancialLogRepository flr = new FinancialLogRepository();
+    CartTransferHistoryRepository cthr = new CartTransferHistoryRepository();
+    long userWallet = 0;
+
+    foreach(var c in userInstance.UserBankAccount.Where(x=>x.xIsVerified))
+    {
+        var cthi = cthr.GetNoneTransactedByCardNumber(c.xCartNumber);
+        if(cthi !=null)
+        {
+            foreach(var cc in cthi)
+            {
+                userWallet += (cc.xAmountIn/10);
+            }
+        }
+    }
+}
+
+<!doctype html>
+<html lang="fa_IR" dir="rtl">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138609180-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138609180-1');
+    </script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="~/Resources/images/saraf365125.png">
+    <title>@SectionInfo.Setting.ApplicationName</title>
+
+    <!-- All CSS -->
+    <link rel="stylesheet" href="~/Resources/plugins/bootstrap-v4-rtl/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Resources/fonts/mdi/font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/Resources/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css" />
+    <link href="~/Resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/Resources/plugins/soon/soon.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Resources/css/style.css">
+</head>
+<body>
+    <header>
+
+        <!--Header-->
+        <section class="container-fluid bg-header" id="headerSection">
+            <div class="container header">
+                <div class="right">
+
+                </div>
+                <div class="center" id="account">
+                    <div class="panel-user">
+                        <div class="item">
+
+                        </div>
+                        <div class="item" style="cursor:pointer;" data-toggle="modal" data-target="#BuyChipsModal">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="left">
+                    <a class="btn" style="background-color:#00a5b4;border:none;" href="/Profile/Logout"><i class="d-inline-flex align-middle ml-2 mdi mdi-logout"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Exit"]</a>
+                    <div class="toggle-account mobileMenuBtn" onclick="$('.main-menu').toggleClass('active');"><i class="d-inline-flex align-middle mdi mdi-menu"></i></div>
+                    <div class="toggle-account" onclick="$('#stats').toggle();"><i class="d-inline-flex align-middle mdi mdi-chart-areaspline"></i></div>
+                    <div class="toggle-account" onclick="window.location.href='/Profile/Logout/'"><i class="d-inline-flex align-middle mdi mdi-logout"></i></div>
+
+                </div>
+            </div>
+        </section>
+        <!--End Header-->
+
+    </header>
+    <main class="main-content" style="background-image:url('../Resources/images/bg-home.jpg')">
+        <div class="container-fluid">
+            <div class="container p-0">
+                <section class="row mainviewContainer">
+
+
+                    <!--Section Main Content-->
+                    <div class="col-lg-12 col-md-12 p-0 position-relative">
+                        <div class="sidebar-right">
+                            <div class="menu">
+                            </div>
+                        </div>
+
+                        <!--Main Page-->
+                        <div class="main-page" onclick="CloseSideNavHeros();">
+                            <!--Main Header-->
+                            <div class="main-header" id="stats">
+                                <div class="logo"><img src="~/Resources/images/saraf365125.png" class="img-fluid m-auto" alt=""></div>
+                                <div class="points">
+                                    
+                                        <div class="item">
+                                            <p class="title"><i class="d-inline-flex align-middle ml-2 mdi mdi-account-multiple-plus"></i><a href="@(string.Format("{0}?InviteCode={1}", SectionInfo.Setting.DomainAddress, userInstance.xInviteID))" style="color:#c91112;">@(string.Format("{0}?InviteCode={1}", SectionInfo.Setting.DomainAddress, userInstance.xInviteID))</a></p>
+
+                                        </div>
+                                        <div class="item">
+                                            <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-account-multiple-plus" style="font-size:25px"></i> @userInstance.xInviteID شناسه دعوت شما</p>
+                                            <p class="value"></p>
+                                        </div>
+                                        <div class="item">
+                                            <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-account-multiple-plus" style="font-size:25px"></i> @userInstance.xRefferalSharePercent % سهم مشارکت در فروش شما</p>
+                                            <p class="value"></p>
+                                        </div>
+
+                                        <div class="item">
+                                            <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-wallet-outline" style="font-size:25px"></i> @userInstance.xWallet تومان موجودی ولت مشارکت در فروش شما</p>
+                                            <p class="value"></p>
+                                        </div>
+                                    
+
+                                    <div class="item">
+                                        <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-wallet-outline" style="font-size:25px"></i> @userWallet تومان موجودی ولت شما</p>
+                                        <p class="value"></p>
+                                    </div>
+                                    <div class="item">
+                                        <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-bank-transfer" style="font-size:25px"></i> @(Convert.ToDouble(((string[])(ViewBag.PerfectMoneyAmount))[1])) موجودی خرده فروشی ما</p>
+                                        <p class="value"></p>
+                                    </div>
+                                    <div class="item">
+                                        <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-cash-100" style="font-size:25px"></i> @SectionInfo.Setting.PerfectMoneyBuyPrice خرید از شما</p>
+                                        <p class="value"></p>
+                                    </div>
+                                    <div class="item">
+                                        <p class="title"><i class="d-inline-flex align-middle ml-1 mdi mdi-cash" style="font-size:25px"></i> @SectionInfo.Setting.PerfectMoneySellPrice فروش به شما</p>
+                                        <p class="value"></p>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <!--End Main Header-->
+                            <!--Main Body-->
+                            <div class="main-body">
+
+                                <!--Main Menu Right-->
+                                <div class="main-menu">
+                                    <div class="header">
+
+                                    </div>
+                                    <div class="body">
+                                        <div class="menu" id="mainMenu">
+                                            <ul>
+                                                <li>
+                                                    <a id="MyProfile" viewName="MyProfile">
+                                                        <i class="d-inline-flex align-middle ml-2 mdi mdi-account-box-outline"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_MyProfile"] @{if (MyProfileNotifs != 0)
+                                                            { <span class="menuNotif"><i class="d-inline-flex align-middle ml-2 mdi mdi-alert"></i> @MyProfileNotifs</span>} }
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a viewName="CashInAndHistory" class="active"><i class="d-inline-flex align-middle ml-2 mdi mdi mdi-cash"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CashInAndHistory"]</a>
+                                                </li>
+                                                <li>
+                                                    <a id="CashoutAndHistory" viewName="CashoutAndHistory"><i class="d-inline-flex align-middle ml-2 mdi mdi-cash-100"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CashoutAndHistory"]</a>
+                                                </li>
+                                                <li>
+                                                    <a id="SupportTicket" viewName="SupportTicket"><i class="d-inline-flex align-middle ml-2 mdi mdi-headset"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_SupportTicket"]</a>
+                                                </li>
+                                                
+                                                    <li>
+                                                        <a id="ReferralShare" viewName="ReferralShare"><i class="d-inline-flex align-middle ml-2 mdi mdi-history"></i>سوابق معرفی و مشارکت در فروش</a>
+                                                    </li>
+                                                
+
+
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End Main Menu Right-->
+                                <!--Content Game-->
+                                <div class="content" id="mask" style="border-radius:0 10px 0 0;background-color: #bbb;">
+                                    <div class="header">
+                                        <div class="right">
+                                            <p id="selectedMenu"><i class="d-inline-flex align-middle ml-2 mdi mdi-cash"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CashInAndHistory"]</p>
+                                        </div>
+                                    </div>
+                                    <div class="body" id="selectedSectionContainer" style="padding:10px;overflow:auto">
+                                        @RenderBody()
+
+                                    </div>
+                                </div>
+                                <!--End Content Game-->
+
+                            </div>
+                            <!--End Main Body-->
+
+                        </div>
+                        <!--End Main Page-->
+
+                    </div>
+                    <!--End Section Main Content-->
+                    <!--End Section Sidebar-->
+
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <div class="modal fade massage-modal" id="BuyChipsModal" tabindex="-1" role="dialog" aria-labelledby="MassageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="MassageModalLabel"><i class="d-inline-flex align-middle ml-1 mdi mdi-poker-chip"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_BuyPerfectMoney"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body add-credit">
+                    @if (SectionInfo.Setting.PerfectSellAvail)
+                    {
+                        <p>برای انجام عملیات کارت به کارت  می توانید از اپلیکشن های مثل همراه کارت استفاده کنید <a target="_blank" href="https://hamrahcard.ir/">دریافت برنامه همراه کارت</a></p>
+                        <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_PaymentType"]</p>
+                        <div class="payment-method">
+                            @if (gateWays.Count == 0)
+                            {
+                                <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_NoGatewayFound"]</p>
+                            }
+                            else
+                            {
+                                foreach (var item in gateWays)
+                                {
+                                    <a href="#" containerID="paymentTypeContainer_@item.xID" class="paymentType">
+                                        @switch (item.xType)
+                                        {
+                                            case (byte)GatewayType.IPG:
+                                                
+                                                @SectionInfo.Setting.Languages[LanguageCode]["Txt_IPG"]
+                                                break;
+                                            case (byte)GatewayType.CartBeCart:
+                                                
+                                                @SectionInfo.Setting.Languages[LanguageCode]["Txt_CartToCart"]
+                                                break;
+                                            case (byte)GatewayType.PerfectMoney:
+                                                
+                                                @SectionInfo.Setting.Languages[LanguageCode]["Txt_PerfectMoney"]
+                                                break;
+                                            case (byte)GatewayType.Voucher:
+                                                
+                                                @SectionInfo.Setting.Languages[LanguageCode]["Txt_Voucher"]
+                                                break;
+                                            case (byte)GatewayType.Bitcoin:
+                                                
+                                                @SectionInfo.Setting.Languages[LanguageCode]["Txt_Bitcoin"]
+                                                break;
+                                        }
+
+                                    </a>
+                                }
+                            }
+
+                        </div>
+
+                        if (gateWays.Count != 0)
+                        {
+
+                            foreach (var item in gateWays)
+                            {
+                                GatewayConfigModel config = JsonConvert.DeserializeObject<GatewayConfigModel>(item.xConfig);
+
+                                <div class="paymentTypeContainer" id="paymentTypeContainer_@item.xID" paymentType="@item.xType" style="display:none">
+                                    <hr>
+                                    @if (item.xType == (byte)GatewayType.CartBeCart)
+                                    {
+                                        <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CartBeCartPaymentDetail"]</p>
+                                        <p><span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CardHolderName"] :</span>@config.CardHolderName</p>
+                                        <p><span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CardNumber"] :</span> <span dir="ltr"> @config.CardNumber</span></p>
+                                        <hr>
+                                    }
+                                    @if (item.xType == (byte)GatewayType.CartBeCart || item.xType == (byte)GatewayType.IPG)
+                                    {
+                                        <span>@SectionInfo.Setting.Languages[LanguageCode]["Txt_Amount"] @SectionInfo.Setting.Languages[LanguageCode]["Txt_In"] @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"]</span>
+                                        <input type="text" class="form-control" id="value_@item.xID" placeholder="مبلغ واریزی به تومان" @(item.xAllowCustomAmountForBuyIn == false ? "readonly" : "") data-parsley-gt="@item.xMinBuyIn" data-parsley-type="digits" data-parsley-required data-trigger="change"><br />
+                                    }
+
+                                    @if (item.xType == (byte)GatewayType.CartBeCart)
+                                    {
+                                        <span style="color:#b91f1f">@SectionInfo.Setting.Languages[LanguageCode]["Txt_PaymentCartNumber"]</span><br>
+                                        <select class="form-control" id="payment_CartNumber">
+                                            @foreach (var ba in userInstance.UserBankAccount.Where(x => x.xIsVerified))
+                                            {
+                                                <option value="@ba.xCartNumber">@ba.xCartNumber</option>
+                                            }
+                                        </select>
+
+                                        <input style="display:none" type="text" class="form-control" id="payment_ToCartNumber" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ToCartNumber"]" data-parsley-required data-trigger="change" value="@config.CardNumber"><br />
+
+
+                                    }
+                                    <div class="action">
+                                        @if (item.xType == (byte)GatewayType.IPG)
+                                        {
+                                            <button class="btn btn-success" style="width:100%" onclick="PaymentRequest();"><i class="mdi mdi-cash-multiple" style="font-size:20px;"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_Pay"]</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success" style="width:100%" onclick="PaymentRequest();"><i class="mdi mdi-cash-multiple" style="font-size:20px;"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                                <p>با پشتیبانی تماس بگیرید ، متاسفانه در حال حاضر فروش نداریم ساعاتی بعد لطفا مراجعه نمایید</p>
+                    }
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="~/Resources/plugins/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/popper.js/dist/umd/popper.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/bootstrap-v4-rtl/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/Resources/plugins/highcharts/highcharts.js"></script>
+    <script src="~/Resources/plugins/soon/soon.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/persian-rex.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyCustomValidation.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsley.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyConfigs.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/@(ViewBag.LanguageCode).js"></script>
+    <script type="text/javascript" src="~/Resources/js/script.js"></script>
+    <script type="text/javascript">
+        @functions{
+        public string TokenHeaderValue()
+                    {
+                        string cookieToken, formToken;
+                        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                        return cookieToken + ":" + formToken;
+                    }
+
+                }
+        window.TokenHeaderValue = '@TokenHeaderValue()';
+        $(document).ready(function () {
+            $(".panel-user .item").each(function () {
+                $(this).width($($(this).children("div")[0]).width() + $($($(this).children("div")[0]).children("p")[0]).width()+20);
+            });
+            
+            if (($(".mainviewContainer").height() + $("#headerSection").height()) < window.innerHeight) {
+                $(".mainviewContainer").height(window.innerHeight - $("#headerSection").height());
+            }
+            if (window.innerWidth<=600)
+            {
+                $('#stats').toggle();
+            }
+            $(".payment-method:first").children()[0].click(); 
+        });
+        window.perfectMoneyFeePercent=@SectionInfo.Setting.PerfectWithdrawalCostPercent;
+
+
+    </script>
+</body>
+</html>
+
+@{
+    gr.Dispose();
+    ur.Dispose();
+    sr.Dispose();
+    flr.Dispose();
+    cthr.Dispose();
+}

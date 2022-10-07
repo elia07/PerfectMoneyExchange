@@ -1,0 +1,55 @@
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="jquery-latest.min.js"></script>
+	<script type="text/javascript" src="datetime.js"></script>
+		<script type="text/javascript" src="pwt-date.js"></script>
+		<script type="text/javascript" src="pwt-datepicker.js"></script>
+		<link href="pwt-datepicker.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript">
+            var dp;
+            $(document).ready(function() {
+                var options = {
+                    format : "YYYY/MM/DD",
+                    formatter : function(unix) {
+                        var pdate = new persianDate(unix);
+                        pdate.formatPersian = false;
+                        return pdate.format("YYYY/MM/DD");
+                        //return new persinDate(unix).format("YYYY/MM/DD");
+                    },
+                    daysTitleFormat : "YYYY MMMM",
+                    observer : true,
+                    sendOption : "p",
+                    //position : [2, 2],
+                    autoclose : true,
+                    toolbox : true,
+                    altField : "#alternateField",
+                    altFormat : "u",
+                    altFieldFormatter : function(unix) {
+                        var pdate = new persianDate(unix);
+                        pdate.formatPersian
+                        pdate.formatPersian = false;
+                        return pdate.format("YYYY MM DD");
+                    },
+                    onShow : function() {
+                        //console.log("user config onShow event ")
+                    },
+                    onHide : function() {
+                        //console.log("user config onHide event ")
+                    },
+                    onSelect : function(unix) {
+                        //console.log("user config onSelect event as : "+unix)
+
+                    }
+                };
+                $(".datePicker").persianDatepicker(options);
+                dp = $(".datePicker").data("datepicker");
+            });
+		</script>
+	</head>
+	<body>
+		<input type="text" class="datePicker"  value="08-22-2011" />
+		<input type="hidden" id="alternateField" name="startDate"  />
+	</body>
+</html>

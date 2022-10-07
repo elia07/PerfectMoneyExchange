@@ -1,0 +1,113 @@
+﻿
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+
+@{
+
+
+}
+<button type="button" class="btn btn-success" onclick="$('#uploadModal').modal('show')">بارگذاری فایل جدید</button>
+<div id="uploadModal" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">آپلود فایل</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <span class="btn btn-default btn-file">
+                <span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span>
+                <input type="file" name="file" id="file" required>
+            </span>
+            <span class="fileinput-filename"></span>
+            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+        </div>
+        <div class="progress progress-striped active"><span id="progressBarValue" style="margin-right: 50%;position: absolute;z-index: 1000;color: #000;"></span><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="uploadProgressBar"></div></div>
+
+
+        <button id="upload" OnClick="Upload()" type="button" class="btn btn-success">بارگذاری</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+
+
+<div class="col-md-5">
+    <div class="fileinput fileinput-new" data-provides="fileinput">
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+        @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+
+    var selectedFiles = new Array();
+    var filesMetadata = new Array();
+
+    $("#file").change(function (e) {
+        for (var i = 0; i < this.files.length; i++) {
+            selectedFiles.push(this.files[i]);
+            filesMetadata.push("file");
+        }
+    });
+
+    function Upload()
+    {
+
+        var data = new FormData();
+        console.log(selectedFiles);
+        console.log(filesMetadata);
+        if (selectedFiles.length != 0) {
+            for (var i = 0; i < selectedFiles.length; i++)
+            {
+                data.append(filesMetadata[i], selectedFiles[i]);
+
+            }
+
+        }
+
+        // Create our XMLHttpRequest Object
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function (event) {
+            if (event.lengthComputable) {  //evt.loaded the bytes browser receive
+                //evt.total the total bytes seted by the header
+                //
+                var percentComplete = Math.ceil((event.loaded / event.total) * 100);
+                $("#uploadProgressBar").css("width", percentComplete + "%");
+                $("#progressBarValue").text(percentComplete + "%");
+            }
+        });
+        // Open our connection using the POST method
+        xhr.open("POST", '/SystemFile/UploadImage');
+        xhr.setRequestHeader("RequestVerificationToken", '@TokenHeaderValue()');
+        xhr.addEventListener("readystatechange", function (e) {
+            if (this.readyState === 4) {
+                var e = JSON.parse(e.srcElement.response);
+                if (e.Status == true) {
+                    $.notific8(e.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                    setTimeout("window.location.reload()", 1000);
+                }
+                else {
+                    $.notific8(e.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                }
+
+            }
+        });
+
+        // Send the file
+        xhr.send(data);
+    }
+</script>

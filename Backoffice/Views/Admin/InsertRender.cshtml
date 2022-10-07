@@ -1,0 +1,168 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/Admin/Index">مدیریت مدیران</a></li>
+    <li class="active">جدید</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong> مدیر جدید</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#edit" data-toggle="tab">ویرایش</a></li>
+                    <li><a href="#updateTransactions" data-toggle="tab">دریافت گزارش تراکنش ها</a></li>
+                    <li><a href="#transfer" data-toggle="tab">انتقال</a></li>
+                </ul>
+                <div class="tab-content" style="border:solid 2px #d9dfe3;border-top:none;">
+                    <div class="tab-pane fade in active" id="edit">
+                        <div class="form-group clearfix">
+                            <form id="form-insert" data-parsley-validate>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xName" id="xName" data-parsley-minlength="6" data-trigger="change" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp پست الکترونیک</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xEmail" id="xEmail" data-parsley-type="email" data-trigger="change" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمز عبور</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="password" name="xPassword" id="xPassword" data-parsley-minlength="5" data-trigger="change" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام کاربری تلگرام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xTelegramUsername" id="xTelegramUsername" data-parsley-minlength="6" data-trigger="change">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp ChatID تلگرام</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xTelegramID" id="xTelegramID" data-parsley-minlength="6" data-trigger="change">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                                    <div class="col-md-11">
+                                        @(Html.RenderEnum<AdminType>("xType"))
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سطوح دسترسی بخشی</label>
+                                    <div class="col-md-11">
+                                        @(MvcHtmlString.Create(Html.MultiAdminRoleSectionTypeDropDown("xSectionPermissions")))
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-success" onclick="insert()">ثبت</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade in" id="edit">
+                    </div>
+                    <div class="tab-pane fade in" id="edit">
+                    </div>
+                </div>
+            </div>
+                        
+                    </div>
+
+</section>
+</div>
+
+<script type="text/javascript">
+
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $("#form-insert").parsley();
+    });
+    function insert() {
+        if ($("#form-insert").parsley().validate()) {
+            var xSectionPermissions = "";
+            var xSPArray = $("#xSectionPermissions").val();
+            if (xSPArray != null) {
+                for (var i = 0; i < xSPArray.length; i++) {
+                    if (xSectionPermissions.length != 0)
+                        xSectionPermissions += ","
+                    xSectionPermissions += xSPArray[i];
+                }
+            }
+
+
+        
+
+
+            var args = {
+                "xName": $("#xName").val(),
+                "xEmail": $("#xEmail").val(),
+                "xPassword": $("#xPassword").val(),
+                "xType": $("#xType").val(),
+                "xTelegramID": $("#xTelegramID").val(),
+                "xTelegramUsername": $("#xTelegramUsername").val(),
+                "xSectionPermissions": xSectionPermissions,
+            }
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Admin/Insert',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.href = "/Admin/Index";
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+
+</script>

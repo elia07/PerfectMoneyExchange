@@ -1,0 +1,557 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities;
+@using System.Text;
+@{
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = ViewBag.UserID;
+
+    UserRepository ur = new UserRepository();
+    var UserInsatnce = ur.GetByIDAndLoadWithdrawalAndBankAccountAndSystemFile(UserID);
+
+    int verifiedUserbankAccounts = UserInsatnce.UserBankAccount.Where(x => x.xIsVerified).Count();
+    CartTransferHistoryRepository cthr = new CartTransferHistoryRepository();
+    long userWallet = 0;
+
+    foreach (var c in UserInsatnce.UserBankAccount.Where(x => x.xIsVerified))
+    {
+        var cthi = cthr.GetNoneTransactedByCardNumber(c.xCartNumber);
+        if (cthi != null)
+        {
+            foreach (var cc in cthi)
+            {
+                userWallet += (cc.xAmountIn / 10);
+            }
+        }
+    }
+}
+<div class="payment-method">
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px">
+        <img src="~/Resources/images/wallet.png">
+        موجودی ولت ریالی : @(UserInsatnce.xWallet+ userWallet) تومان
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px" data-toggle="modal" data-target="#ChangePasswordModal">
+        <img src="~/Resources/images/lock.png">
+        تغییر رمز عبور
+    </a>
+    <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px" data-toggle="modal" data-target="#AddBankAccountModal">
+        <img src="~/Resources/images/bank.png">
+       ثبت حساب بانکی ریالی
+    </a>
+</div>
+<div>
+    <br>
+    <span style="font-weight:bold">وضعیت تایید حساب</span>
+    <div class="payment-method" style="margin-top:10px;border:1px solid #000000;padding:10px;border-radius:5px;">
+
+        <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px">
+            @if (SectionInfo.Setting.UserBankAccountCountForVerification >= verifiedUserbankAccounts)
+            {
+                <img src="~/Resources/images/greencheck.png">
+            }
+            else
+            {
+                <img src="~/Resources/images/redcross.png">
+            }
+            دوکارت بانکی
+        </a>
+
+        @if (SectionInfo.Setting.EmailActivation)
+        {
+            <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px">
+                @if (UserInsatnce.xIsEmailValidated)
+                {
+                    <img src="~/Resources/images/greencheck.png">
+                }
+                else
+                {
+                    <img src="~/Resources/images/redcross.png">
+                }
+                تایید ایمیل
+            </a>
+        }
+        @if (SectionInfo.Setting.CellphoneActivation)
+        {
+            <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px">
+                @if (UserInsatnce.xCellphoneActivated)
+                {
+                    <img src="~/Resources/images/greencheck.png">
+                }
+                else
+                {
+                    <img src="~/Resources/images/redcross.png">
+                }
+                تایید شماره همراه
+            </a>
+        }
+        @if (SectionInfo.Setting.IDCartVerification)
+        {
+            <a href="#" containerID="paymentTypeContainer_1" class="paymentType selected" style="max-width:150px">
+                @if (UserInsatnce.xIsNationalIDValidated)
+                {
+                    <img src="~/Resources/images/greencheck.png">
+                }
+                else
+                {
+                    <img src="~/Resources/images/redcross.png">
+                }
+                تایید کارت ملی
+            </a>
+        }
+
+
+    </div>
+</div>
+
+<div style="width:100% ; height:100%">
+
+
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-bank-transfer"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankAccount"] <span style="float:left;cursor:pointer" data-toggle="modal" data-target="#AddBankAccountModal"><i class="d-inline-flex align-middle ml-2 mdi mdi-credit-card-plus"></i></span></p><hr class="bodyTitleSperator">
+    <p>دو کارت بانکی وارد کنید(الزامی)</p>
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankName"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_CartNumber"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankAccountNumber"]</th>
+                    <th class="text-center">@SectionInfo.Setting.Languages[LanguageCode]["Txt_ShebaNumber"]</th>
+                    <th class="text-center">وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in UserInsatnce.UserBankAccount)
+                    {
+                        <tr>
+                            <td>@item.xBankType</td>
+                            <td>@item.xCartNumber</td>
+                            <td>@item.xAccountNumber</td>
+                            <td>@item.xShebaNumber</td>
+                            <td>@(item.xIsVerified ? "تایید شده" : "در انتظار تایید")</td>
+                        </tr>
+                    }
+                    if (UserInsatnce.UserBankAccount.Count() == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div><br />
+
+    @if (SectionInfo.Setting.IDCartVerification && UserInsatnce.xNationalIDImage == null)
+    {
+        <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-account-card-details"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_PersonalDocumentUpload"]</p><hr class="bodyTitleSperator">
+        <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_IDcardUploadGuide"]</p>
+        <p><img style="width:100%" src="~/Resources/images/uploadDocGuide.jpg" /></p>
+        <form id="IDCardVerifcation" name="IDCardVerifcation" data-parsley-validate>
+            <div class="form-group">
+                <input type="file" class="form-control" id="file" name="file" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_SelectImage"]" data-trigger="change" data-parsley-required>
+            </div>
+            <div class="form-group">
+                <div class="progress" style="direction:ltr;">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%" id="progress-bar-IDCard">
+                        0%
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-block formBtn">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+        </form><br /><br />
+    }
+
+    @if (SectionInfo.Setting.EmailActivation && UserInsatnce.xIsEmailValidated == false)
+    {
+        <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-email-alert"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_EmailValidation"]</p><hr class="bodyTitleSperator">
+        <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_EmailValidationDescription"]</p>
+
+        <form id="emailValidation" name="emailValidation" action="#" data-parsley-validate>
+            <div class="form-group">
+                <i class="mdi mdi-ticket-account"></i>
+                <input type="text" class="form-control" id="emailActivationCode" name="emailActivationCode" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ValidationCode"]" data-trigger="change" data-parsley-required>
+            </div>
+            <button type="submit" class="btn btn-block formBtn">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+        </form>
+        <br />
+        <button onclick="SendActivationEmail()" id="resendEmailActivation" class="btn btn-block formBtn">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Resend"] <span id="emailActivationResendIn"></span></button>
+        <br /><br />
+    }
+
+    @if (SectionInfo.Setting.CellphoneActivation && UserInsatnce.xCellphoneActivated == false)
+    {
+        <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-email-alert"></i> @SectionInfo.Setting.Languages[LanguageCode]["Txt_CellphoneValidation"]</p><hr class="bodyTitleSperator">
+        <p>@SectionInfo.Setting.Languages[LanguageCode]["Txt_CellphoneValidationDescription"]</p>
+
+        <form id="cellphoneValidation" name="cellphoneValidationCode" action="#" data-parsley-validate>
+            <div class="form-group">
+                <i class="mdi mdi-ticket-account"></i>
+                <input type="text" class="form-control" id="smsActivationCode" name="smsActivationCode" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ValidationCode"]" data-trigger="change" data-parsley-required>
+            </div>
+            <button type="submit" class="btn btn-block formBtn">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+        </form>
+        <br />
+        <button type="submit" onclick="SendActivationSms()" id="resendCellphoneActivation" class="btn btn-block formBtn">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Resend"] <span id="cellphoneActivationResendIn"></span></button>
+        <br /><br />
+    }
+
+
+    
+
+</div>
+
+
+
+<div class="modal fade massage-modal" id="ChangePasswordModal" tabindex="-1" role="dialog" aria-labelledby="MassageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MassageModalLabel"><i class="d-inline-flex align-middle ml-1 mdi  mdi-account-key-outline"></i>تغییر رمز عبور</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="ChangePassword" data-parsley-validate>
+                    <div class="form-group">
+                        <i class="mdi mdi-account-key-outline"></i>
+                        <input type="text" class="form-control" id="currentPassword" name="currentPassword" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrentPassword"]" data-parsley-minlength="5" data-parsley-required data-trigger="change">
+                    </div>
+                    <div class="form-group">
+                        <i class="mdi mdi-account-key"></i>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_NewPassword"]" data-parsley-minlength="5" data-parsley-required data-trigger="change">
+                    </div>
+                    <div class="form-group">
+                        <i class="mdi mdi-account-key"></i>
+                        <input type="password" class="form-control" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_RepeatNewPassword"]" data-parsley-equalto="#newPassword" data-trigger="change" data-parsley-required>
+                    </div>
+                    <button type="submit" class="btn formBtn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade massage-modal" id="AddBankAccountModal" tabindex="-1" role="dialog" aria-labelledby="MassageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MassageModalLabel"><i class="d-inline-flex align-middle ml-1 mdi mdi-credit-card-plus"></i>@SectionInfo.Setting.Languages[LanguageCode]["Txt_NewBankAccount"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="NewBankAccount" name="NewBankAccount"  data-parsley-validate>
+                    <div class="form-group">
+                        <i class="mdi mdi-bank"></i>
+                        <select class="form-control" id="xBankType" name="xBankType" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankName"]">
+                            @foreach (var item in SectionInfo.Setting.BankTypes)
+                            {
+                                <option>@item</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <i class="mdi mdi-credit-card"></i>
+                        <input type="text" class="form-control" id="xCartNumber" name="xCartNumber" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_CartNumber"]" data-parsley-type="digits" data-parsley-length="[16,16]" data-parsley-required data-trigger="change">
+                    </div>
+                    <div class="form-group">
+                        <i class="mdi mdi-barcode"></i>
+                        <input type="text" class="form-control" id="xAccountNumber" name="xAccountNumber" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_BankAccountNumber"]" data-parsley-required data-trigger="change">
+                    </div>
+                    <div class="form-group">
+                        <i class="mdi mdi-barcode"></i>
+                        <input type="text" class="form-control" id="xShebaNumber" name="xShebaNumber" placeholder="@SectionInfo.Setting.Languages[LanguageCode]["Txt_ShebaNumber"]" data-parsley-type="digits" data-parsley-length="[24,24]" data-parsley-required data-trigger="change">
+                    </div>
+
+                    <button type="submit" class="btn formBtn btn-auth btn-block">@SectionInfo.Setting.Languages[LanguageCode]["Txt_Submit"]</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    var selectedFiles = new Array();
+    var filesMetadata = new Array();
+
+    $("#file").change(function (e) {
+        selectedFiles = new Array();
+        filesMetadata = new Array();
+        $("#progress-bar-IDCard").css("width", 0 + "%");
+        $("#progress-bar-IDCard").attr("aria-valuenow", 0)
+        $("#progress-bar-IDCard").text("0%");
+        for (var i = 0; i < this.files.length; i++) {
+            selectedFiles.push(this.files[i]);
+            filesMetadata.push("file");
+        }
+    });
+
+    $("#IDCardVerifcation").submit(function (event) {
+        event.preventDefault();
+        if (!$("#IDCardVerifcation").parsley().validate()) {
+            return;
+        }
+        Upload();
+    });
+
+    function Upload() {
+        
+        var data = new FormData();
+        if (selectedFiles.length != 0) {
+            for (var i = 0; i < selectedFiles.length; i++) {
+                data.append(filesMetadata[i], selectedFiles[i]);
+
+            }
+
+        }
+
+        // Create our XMLHttpRequest Object
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function (event) {
+            if (event.lengthComputable) {  //evt.loaded the bytes browser receive
+                //evt.total the total bytes seted by the header
+                //
+                var percentComplete = Math.ceil((event.loaded / event.total) * 100);
+                $("#progress-bar-IDCard").css("width", percentComplete + "%");
+                $("#progress-bar-IDCard").attr("aria-valuenow", percentComplete)
+                $("#progress-bar-IDCard").text(percentComplete + "%");
+            }
+        });
+        // Open our connection using the POST method
+        xhr.open("POST", '/Profile/UploadIDCard');
+        xhr.setRequestHeader("RequestVerificationToken", window.TokenHeaderValue);
+        xhr.addEventListener("readystatechange", function (e) {
+            if (this.readyState === 4) {
+                var e = JSON.parse(e.srcElement.response);
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () { window.location.reload(); }
+                    });
+
+                }
+
+            }
+        });
+
+        // Send the file
+        xhr.send(data);
+    }
+
+    
+    $("#ChangePassword").submit(function (event) {
+        
+        event.preventDefault();
+        if (!$("#ChangePassword").parsley().validate()) {
+            return;
+        }
+        $("#ChangePasswordModal").modal("hide");
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/ChangePassword", data: $(this).serialize(), type: "POST", dataType: 'json',
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () {
+                            window.location.reload();
+                        }
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () {
+                            window.location.reload();
+                        }
+                    });
+
+                }
+            }
+        });
+
+    });
+
+
+
+    $("#NewBankAccount").submit(function (event) {
+        event.preventDefault();
+        if (!$("#NewBankAccount").parsley().validate()) {
+            return;
+        }
+        $("#AddBankAccountModal").modal("hide");
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/AddBankAccount", data: $(this).serialize(), type: "POST", dataType: 'json',
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                @if(UserInsatnce.UserBankAccount.Count()==0)
+                {
+                    @:window.location.reload();
+                }
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () {
+                            $("#MyProfile").click();
+                        }
+                    });
+
+                }
+            }
+        });
+
+    });
+
+
+    $("#emailValidation").submit(function (event) {
+        event.preventDefault();
+        if (!$("#emailValidation").parsley().validate()) {
+            return;
+        }
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/ActivationEmail", data: $(this).serialize(), type: "POST", dataType: 'json',
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                        onClose: function () { $("#emailActivationCode").text(''); }
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () { window.location.reload(); }
+                    });
+
+                }
+            }
+        });
+
+    });
+
+
+
+    $("#cellphoneValidation").submit(function (event) {
+        event.preventDefault();
+        if (!$("#cellphoneValidation").parsley().validate()) {
+            return;
+        }
+        $.ajax({
+            headers: { 'RequestVerificationToken': window.TokenHeaderValue },
+            url: "/Profile/ActivationCellphone", data: $(this).serialize(), type: "POST", dataType: 'json',
+            error: function (request, status, error) {
+                unhanddleError();
+            },
+            success: function (e) {
+                if (e.CustomFields != undefined && e.CustomFields.Redirect != undefined) {
+                    window.location.href = e.CustomFields.Redirect;
+                    return;
+                }
+                if (!e.Status) {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'error',
+                        confirmButtonText: e.CustomFields.confirmButtonText,
+                        onClose: function () { $("#cellphoneValidationCode").text(''); }
+                    });
+                }
+                else {
+                    Swal({
+                        title: e.CustomFields.title,
+                        text: e.Message,
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        onClose: function () { window.location.reload(); }
+                    });
+
+                }
+            }
+        });
+
+    });
+
+
+
+
+</script>
+@{
+    ur.Dispose();
+}

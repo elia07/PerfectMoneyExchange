@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html lang="zxx" class="js">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="سامانه خرید و فروش پرفکت مانی آماده ارائه خدمات به صورت کاملا هوشمند با تحویل آنی و خودکار و پشتیبانی 24 ساعته با قیمت مناسب و ارزان میباشد">
+    <meta name="keywords" content="پرفکت مانی,کارت شارژ پرفکت مانی,دلار پرفکت مانی,خرید پرفکت مانی,فروش پرفکت مانی,خدمات پرفکت مانی,PS Voucher,ووچر پرفکت مانی,Perfect Money,نقد کردن پرفکت مانی,PM Voucher,فروش ووچر,خرید ووچر">
+    <!-- Fav Icon  -->
+    <link rel="icon" type="image/x-icon" href="~/Resources/images/saraf365125.png">
+    <!-- Site Title  -->
+    <title>@SectionInfo.Setting.ApplicationName</title>
+    <!-- Vendor Bundle CSS -->
+    <link rel="stylesheet" href="~/Resources/css/vendor.bundle.css">
+    <!-- Custom styles for this template -->
+    <link href="~/Resources/css/style.css" rel="stylesheet">
+    <link href="~/Resources/css/theme-red.css" rel="stylesheet">
+    <link href="~/Resources/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header header-s1 is-sticky">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="social">
+                            @if (SectionInfo.Setting.InstaPage != "")
+                            {
+                                <li><a href="@SectionInfo.Setting.InstaPage"><em class="fa fa-instagram"></em></a></li>
+                            }
+                            @if (SectionInfo.Setting.TelegramChannel != "")
+                            {
+                                <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramChannel)"><em class="fa fa-telegram"></em></a></li>
+                            }
+                            @if (SectionInfo.Setting.TelegramSupportAccount != "")
+                            {
+                                <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramSupportAccount)"><em class="fa fa-headphones"></em></a></li>
+                            }
+
+
+
+
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 al-right">
+                        <ul class="top-nav">
+                            <li><a href="/Home/Login/" class="IRANSans">ورود</a></li>
+                            <li><a href="signup.html" class="IRANSans">ثبت نام</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Topbar -->
+        <!-- Navbar -->
+        <div class="navbar navbar-primary">
+            <div class="container relative">
+                <!-- Logo -->
+                <a class="navbar-brand" href="index.html">
+                    <!--<img class="logo logo-dark" alt="logo" src="~/Resources/images/saraf365125.png">
+                    <img class="logo logo-light" alt="logo" src="~/Resources/images/saraf365125.png">-->
+                </a>
+                <!-- #end Logo -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainnav" aria-expanded="false">
+                        <span class="sr-only">Menu</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="quote-btn"><a class="btn" href="contact.html"><span>ثبت نام راحت</span></a></div>
+                </div>
+                <!-- MainNav -->
+                <nav class="navbar-collapse collapse" id="mainnav">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/Home/ContactUS" class="IRANSans">تماس با ما</a></li>
+                        <li><a href="/Home/Rules" class="IRANSans">قوانین و قررات</a></li>
+                        <li><a href="/Home/Faq" class="IRANSans">سوالات متداول</a></li>
+                        <li><a href="/" class="IRANSans">خانه</a></li>
+                        <li class="quote-btn hidden-xs hidden-sm "><a class="btn IRANSans" style="font-size:18px;" href="contact.html">ثبت نام راحت</a></li>
+                    </ul>
+                </nav>
+                <!-- #end MainNav -->
+            </div>
+        </div>
+        <!-- End Navbar -->
+        @RenderSection("Header", false)
+    </header>
+    <!-- End Header -->
+    @RenderBody()
+    <!-- Section Footer -->
+    <div class="footer-section section section-pad-md light bg-footer">
+        <div class="imagebg footerbg">
+            <img src="~/Resources/images/footer-bg.png" alt="footer-bg">
+        </div>
+        <div class="container">
+            <div class="row" style="direction:rtl;">
+                <div class="col-md-3 col-sm-6 wgs-box res-m-bttm-lg">
+                </div>
+                <div class="col-md-3 col-sm-6 wgs-box res-m-bttm-lg">
+                    <!-- Each Widget -->
+                    <div class="wgs-footer wgs-menu">
+                        <h5 class="wgs-title ucap IRANSans">خدمات</h5>
+                        <div class="wgs-content">
+                            <ul class="menu">
+                                <li><a href="#" class="IRANSans">خرید پرفکت از شما</a></li>
+                                <li><a href="#" class="IRANSans">فروش پرفکت به شما</a></li>
+                                <li><a href="#" class="IRANSans">خرید و فروش ارز های دیگر به زودی</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Widget -->
+                </div>
+                <div class="col-md-3 col-sm-6 wgs-box res-m-bttm-lg">
+                    <!-- Each Widget -->
+                    <div class="wgs-footer wgs-menu">
+                        <h5 class="wgs-title ucap IRANSans">سوالات متداول</h5>
+                        <div class="wgs-content">
+                            <ul class="menu">
+                                <li><a href="/Home/Faq" class="IRANSans">چگونه ثبت نام کنم؟</a></li>
+                                <li><a href="/Home/Faq" class="IRANSans">چپونه احراز هویت کنم؟</a></li>
+                                <li><a href="/Home/Faq" class="IRANSans">چگونه خرید کنم ؟</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Widget -->
+                </div>
+
+                <div class="col-md-3 col-sm-6 wgs-box res-m-bttm">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Section -->
+    <!-- Copyright -->
+    <div class="copyright light">
+        <div class="container">
+            <div class="row">
+                <div class="site-copy col-sm-7">
+                    <p>Copyright &copy; saraf365</p>
+                </div>
+                <div class="col-sm-5 text-right mobile-left">
+                    <ul class="social">
+                        @if (SectionInfo.Setting.InstaPage != "")
+                        {
+                            <li><a href="@SectionInfo.Setting.InstaPage"><em class="fa fa-instagram"></em></a></li>
+                        }
+                        @if (SectionInfo.Setting.TelegramChannel != "")
+                        {
+                            <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramChannel)"><em class="fa fa-telegram"></em></a></li>
+                        }
+                        @if (SectionInfo.Setting.TelegramSupportAccount != "")
+                        {
+                            <li><a href="@("http://t.me/"+SectionInfo.Setting.TelegramSupportAccount)"><em class="fa fa-headphones"></em></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Copyright -->
+    <!-- Preloader !remove please if you do not want -->
+    <div id="preloader"><div id="status">&nbsp;</div></div>
+    <!-- Preloader End -->
+    <!-- JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="~/Resources/js/jquery.bundle.js"></script>
+    <script src="~/Resources/js/script.js"></script>
+    <script src="~/Resources/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/persian-rex.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyCustomValidation.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsley.min.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/parsleyConfigs.js"></script>
+    <script type="text/javascript" src="~/Resources/plugins/parsley/@(ViewBag.LanguageCode).js"></script>
+    <script src="~/Resources/js/site.js"></script>
+    <script type="text/javascript">
+                        @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+
+    }
+
+
+
+        window.TokenHeaderValue = '@TokenHeaderValue()';
+        @if (Request.IsSecureConnection)
+        {
+            @:window.ProfileAddress = '@SectionInfo.Setting.ProfileAddress.Replace("http","https")';
+        }
+        else
+        {
+            @:window.ProfileAddress = '@SectionInfo.Setting.ProfileAddress';
+        }
+
+    </script>
+    @RenderSection("Scripts", false)
+</body>
+</html>

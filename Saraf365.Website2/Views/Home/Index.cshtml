@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string LanguageCode = ViewBag.LanguageCode;
+}
+@section Header{
+
+    <!-- Banner/Slider -->
+    <div id="header" class="banner header-slider">
+        <div class="single-slide light row-vm" style="background-image:url(/Resources/images/header-bg-a.jpg)">
+            <div class="container">
+                <div class="banner-content">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3 text-center">
+                            <h1 class="animate-bottom delayms5 IRANSans">صراف 365 <br /><span class="ucap">خرید و فروش آنی پرفکت مانی</span></h1>
+                            <ul class="btns animate-bottom delayms9">
+                                <li><a href="#" class="btn btnGreen IRANSans" style="font-size:18px">خرید از شما <br> @SectionInfo.Setting.PerfectMoneyBuyPrice @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"] <br> </a></li>
+                                <li><a href="#" class="btn btnGreen btn-outline IRANSans"  style="font-size:18px">فروش به  شما <br> @SectionInfo.Setting.PerfectMoneySellPrice @SectionInfo.Setting.Languages[LanguageCode]["Txt_CurrencyText"] <br> </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="single-slide light row-vm" style="background-image:url(/Resources/images/header-bg-b.jpg)">
+            <div class="container">
+                <div class="banner-content">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3 text-center">
+                            <h1 class="animate-bottom delayms5 IRANSans">خرید و فروش ارز های دیگر <br /><span class="ucap">به زودی</span></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Banner/Slider -->
+
+}
+
+
+<!-- BTC Ticker -->
+<div class="btc-ticker">
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="usd"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="eur"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="jpy"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="gbp"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="chf"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="aud"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="cad"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="nzd"></div>
+    </div>
+    <div class="ticker-item">
+        <div class="btcwdgt-price" bw-cur="nzd"></div>
+    </div>
+</div>
+<!-- End BTC Ticker -->
+<!-- Features Box -->
+<div class="features-box section section-pad">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 res-m-bttm">
+                <div class="box box-alt-bg round shadow">
+                    <img src="~/Resources/images/box-icon-b.png" alt="box-icon" class="box-icon">
+                    <h6 class="ucap IRANSans">احراز هویت دلخواه</h6>
+                    <p class="small IRANSans">دو کارت بانکی یا مدرک شناسایی</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 res-m-bttm">
+                <div class="box box-alt-bg round shadow">
+                    <img src="~/Resources/images/box-icon-a.png" alt="box-icon" class="box-icon">
+                    <h6 class="ucap IRANSans">پشتیبانی 24 ساعته</h6>
+                    <p class="small IRANSans">خرید و فروش در تمامی روز های هفته</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 res-m-bttm">
+                <div class="box box-alt-bg round shadow">
+                    <img src="~/Resources/images/box-icon-c.png" alt="box-icon" class="box-icon">
+                    <h6 class="ucap IRANSans">سرعت بالا</h6>
+                    <p class="small IRANSans">فروش آنی ، واریز زیر 2 ساعت در ساعات کاری</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="box box-alt-bg round shadow">
+                    <img src="~/Resources/images/box-icon-d.png" alt="box-icon" class="box-icon">
+                    <h6 class="ucap IRANSans">امنیت بالا</h6>
+                    <p class="small IRANSans" style="direction:rtl;">استفاده از پروتکل امن Https</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Features Box -->
+
+@section Scripts
+{
+    <script>
+        (function (b, i, t, C, O, I, N) {
+            window.addEventListener('load', function () {
+                if (b.getElementById(C)) return;
+                I = b.createElement(i), N = b.getElementsByTagName(i)[0];
+                I.src = t; I.id = C; N.parentNode.insertBefore(I, N);
+            }, false)
+        })(document, 'script', 'https://widgets.bitcoin.com/widget.js', 'btcwdgt');
+    </script>
+}

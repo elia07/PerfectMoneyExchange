@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "ContactUs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Section -->
+<div class="section section-pad">
+    <div class="container">
+        <div class="row" style="direction:rtl;">
+            <div class="col-md-10 res-m-bttm">
+                <div class="contact-information">
+                    <h4 class="IRANSans">اطلاعات تماس</h4>
+                    <div class="row">
+                        <div class="col-sm-4 res-m-bttm">
+                            <div class="contact-entry">
+                                <h6 class="IRANSans">شبکه های اجتماعی ما</h6>
+                                <p class="IRANSans">ما را در شبکه های اجتماعی دنبال کنید</p>
+                                @if (SectionInfo.Setting.InstaPage != "")
+                                {
+                                <a href="@SectionInfo.Setting.InstaPage"><em class="fa fa-instagram"></em> @SectionInfo.Setting.InstaPage</a><br>
+                                }
+                                @if (SectionInfo.Setting.TelegramChannel != "")
+                                {
+                                <a href="@("http://t.me/"+SectionInfo.Setting.TelegramChannel)"><em class="fa fa-telegram"></em> @("http://t.me/" + SectionInfo.Setting.TelegramChannel)</a><br>
+                                }
+                                @if (SectionInfo.Setting.TelegramSupportAccount != "")
+                                {
+                                <a href="@("http://t.me/"+SectionInfo.Setting.TelegramSupportAccount)"><em class="fa fa-headphones"></em> @("http://t.me/" + SectionInfo.Setting.TelegramSupportAccount)</a><br>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-4 res-m-bttm">
+                            <div class="contact-entry">
+                                <h6 class="IRANSans">اطلاعات تماس به مدیریت</h6>
+                                <p class="IRANSans">phone:  09917073863 <br />این شماره جهت انجام امور معمول و پشتیبانی نمی باشد ، فقط در صورت بروز مشکل خاص و یا سوال جهت فروش عمده تماس گرفته شود</p>
+                                
+                            </div>
+                        </div>
+                        <div class="col-sm-4 res-m-bttm">
+                            <div class="contact-entry">
+                                <h6 class="IRANSans">اطلاعات تماس</h6>
+                                <p class="IRANSans">شنبه تا پنجشنبه<br />9 صبح تا 9 شب</p>
+                                <p class="IRANSans">جمعه ها <br />12 ظهر تا 5 عصر</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- .col  -->
+        </div>
+    </div>
+</div>
+<!-- End Section -->

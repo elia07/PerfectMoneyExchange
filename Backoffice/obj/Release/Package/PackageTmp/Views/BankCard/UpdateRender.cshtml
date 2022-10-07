@@ -1,0 +1,397 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    BankCardRepository kr = new BankCardRepository();
+    BankCard instance = kr.GetByID(xID);
+
+    TransactionRepository tr = new TransactionRepository();
+}
+<script type="text/javascript" src="/Resources/assets/plugins/bootstrap/SelectPickerAjaxExtention.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/calendar.all.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.css" />
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/BankCard/Index?@queryString">مدیریت کارت های بانکی</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#edit" data-toggle="tab">ویرایش</a></li>
+                    <li><a href="#transfer" data-toggle="tab">جابجایی</a></li>
+                    <li><a href="#getAdnUpdateHistory" data-toggle="tab">دریافت و به روز رسانی صورت حساب</a></li>
+                </ul>
+                <div class="tab-content" style="border:solid 2px #d9dfe3;border-top:none;">
+                    <div class="tab-pane fade in active" id="edit">
+                        <div class="form-group clearfix">
+                            <form id="form-update" data-parsley-validate>
+                                <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(xID.ToString(), true, SectionInfo.Setting.SecurityKey)">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام صاحب کارت</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xCardHolderName" id="xCardHolderName" data-trigger="change" value="@instance.xCardHolderName" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                                    <div class="col-md-11">
+                                        @(Html.RenderEnum<BankCardType>("xType"))
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام بانک</label>
+                                    <div class="col-md-11">
+                                        <select class="form-control" id="xBankName" name="xBankName">
+                                            @foreach (var item in SectionInfo.Setting.BankTypes)
+                                            {
+                                                <option value="@item">@item</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره حساب</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xAccountNumber" id="xAccountNumber" data-trigger="change" value="@instance.xAccountNumber" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره کارت</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xCardNumber" id="xCardNumber" data-trigger="change" data-parsley-length="[16, 16]" value="@instance.xCardNumber" required>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام کاربری اینترنت بانک</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xInternetUsername" id="xInternetUsername" data-trigger="change" value="@instance.xInternetUsername">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمزعبور اینترنت بانک</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xInternetPassword" id="xInternetPassword" data-trigger="change" value="@instance.xInternetPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat1">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp حداقل سپرده</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xMinDeposit" id="xMinDeposit" data-trigger="change" value="@instance.xMinDeposit">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat1">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp  کف میزان برای جابجایی</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xMinToTransfer" id="xMinToTransfer" data-parsley-type="digits" data-trigger="change" value="@instance.xMinToTransfer">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat2">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمز دوم</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xSecondPassword" id="xSecondPassword" data-trigger="change" value="@instance.xSecondPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat2">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp Cvv2</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xCvv2" id="xCvv2" data-trigger="change" value="@instance.xCvv2">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat2">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp ماه انقضا</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xExpireMonth" id="xExpireMonth" data-trigger="change" data-parsley-length="[2, 2]" value="@instance.xExpireMonth">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix cat2">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سال انقضا</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xExpireYear" id="xExpireYear" data-parsley-length="[2,2]" data-trigger="change" value="@instance.xExpireYear">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تنظیمات ویژه</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="text" name="xSpecialConfigs" id="xSpecialConfigs" value="@instance.xSpecialConfigs">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp فعال</label>
+                                    <div class="col-md-11">
+                                        <input class="form-control" type="checkbox" id="xIsActive" name="xIsActive" value="true" style="float:right;width:30px;" @(instance.xIsActive == true ? "checked" : "")>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12">
+                                        <button type="button" id="UpdateConfirm" class="btn btn-success">ذخیره</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade in" id="normalTransfer">
+
+                        <div class="form-group clearfix cat2">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع انتقال</label>
+                            <div class="col-md-11">
+                                <input type="radio" name="transferType" value="NormalTransfer" checked> عادی<br>
+                                <input type="radio" name="transferType" value="CardTransfer"> کارت به کارت<br>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp به حساب</label>
+                            <div class="col-md-11">
+                                <select class="form-control" id="toID" name="toID">
+                                    @foreach (var item in kr.GetNoneInputCards())
+                                    {
+                                        if (item.xID != instance.xID)
+                                        {
+                                            <option value="@item.xID">@item.xCardHolderName | @item.xCardNumber | @item.xAccountNumber</option>
+                                        }
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix cat2">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp مبلغ</label>
+                            <div class="col-md-11">
+                                <input class="form-control" type="text" name="trnasferAmount" id="trnasferAmount" data-parsley-type="digits" data-trigger="change">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-md-12">
+                                <button type="button" onclick="Transfer()" class="btn btn-success">انتقال</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade in" id="getAdnUpdateHistory">
+                        <div class="form-group clearfix">
+                            <div class="form-group clearfix">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp از تاریخ</label>
+
+                                <div id="datepicker_xFromDate" class="input-group date form_datetime col-md-11" style="padding-right:17px;padding-left:17px;" data-picker-position="bottom-left" data-date-format="dd MM yyyy - HH:ii p" style="display:inline-flex;">
+                                    <input id="xFromDate" name="xFromDate" type="text" class="form-control" readonly />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تا تاریخ</label>
+
+                                <div id="datepicker_xToDate" class="input-group date form_datetime col-md-11" style="padding-right:17px;padding-left:17px;" data-picker-position="bottom-left" data-date-format="dd MM yyyy - HH:ii p" style="display:inline-flex;">
+                                    <input id="xToDate" name="xToDate" type="text" class="form-control" readonly />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-default" style="width:50%" type="button" tabindex="-1"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <div class="col-md-12">
+                                    <button type="button" onclick="GetAdnUpdateHistory()" class="btn btn-success">دریافت به روزرسانی</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update()" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+
+<script type="text/javascript">
+
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker();
+
+        $('#xType').val(@instance.xType);
+        $('#xBankName').val('@instance.xBankName');
+        $('.selectpicker').change();
+        $("#form-update").parsley();
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+        $("#xType").change(function () {
+            ManageFields($(this).val());
+        });
+        ManageFields(0);
+
+        $('#datepicker_xFromDate').datepicker({
+            preventPastSelect: false,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            format: "dd MM yyyy",
+            isRTL: false
+        });
+
+        $('#datepicker_xToDate').datepicker({
+            preventPastSelect: false,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            format: "dd MM yyyy",
+            isRTL: false
+        });
+    });
+
+    function GetAdnUpdateHistory() {
+        var args = {
+            "id":@instance.xID,
+            "fromDate": $("#xFromDate").val(),
+            "toDate": $("#xToDate").val()
+
+        }
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/BankCard/GetAdnUpdateHistory',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+
+    function Transfer() {
+        if ($("#trnasferAmount").parsley().validate()) {
+             args = {
+            "id": @instance.xID,
+            "toID": $("#toID").val(),
+            "amount": $("#trnasferAmount").val()
+        }
+        $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/BankCard/' + $("input[name=transferType]").val(),
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        setTimeout("window.location.reload()",5000);
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+
+    }
+
+    function ManageFields(id) {
+        $(".cat0").hide();
+        $(".cat1").hide();
+        $(".cat2").hide();
+        $(".cat" + id).show();
+    }
+    function Update()
+    {
+        if($("#form-update").parsley().validate())
+        {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/BankCard/Update',
+                data: JSON.stringify($("#form-update").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        setTimeout("window.location.href = '/BankCard/Index'",1000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    kr.Dispose();
+}

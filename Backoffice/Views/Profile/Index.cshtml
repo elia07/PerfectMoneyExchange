@@ -1,0 +1,265 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+
+    AdminNotificationRepository anr = new AdminNotificationRepository();
+    TicketRepository tr = new TicketRepository();
+    TelegramSupportRepository tsr = new TelegramSupportRepository();
+    CartTransferHistoryRepository cthr = new CartTransferHistoryRepository();
+    WithdrawalRepository wr = new WithdrawalRepository();
+    UserRepository ur = new UserRepository();
+    TransactionRepository tranR = new TransactionRepository();
+    FinancialLogRepository flr = new FinancialLogRepository();
+    GatewayRepository gr = new GatewayRepository();
+    SettingRepository sr = new SettingRepository();
+    UserBankAccountRepository ubar = new UserBankAccountRepository();
+
+
+
+    AdminRepository ar = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser = ar.GetByID(adminUser.xID);
+
+
+    AdminRole arWithdrawalManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.WithdrawalManagement).SingleOrDefault();
+    char[] withdrawalManagementPermissions = null;
+    if (arWithdrawalManagement == null)
+    {
+        arWithdrawalManagement = new AdminRole();
+        withdrawalManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        withdrawalManagementPermissions = arWithdrawalManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arFinancialLogManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.FinancialLogManagement).SingleOrDefault();
+    char[] financialLogManagementPermissions = null;
+    if (arFinancialLogManagement == null)
+    {
+        arFinancialLogManagement = new AdminRole();
+        financialLogManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        financialLogManagementPermissions = arFinancialLogManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arTransactionManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TransactionManagement).SingleOrDefault();
+    char[] transactionManagementPermissions = null;
+    if (arTransactionManagement == null)
+    {
+        arTransactionManagement = new AdminRole();
+        transactionManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        transactionManagementPermissions = arTransactionManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arCartTransferHistoryManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.CartTransferHistoryManagement).SingleOrDefault();
+    char[] cartTransferHistoryManagementPermissions = null;
+    if (arCartTransferHistoryManagement == null)
+    {
+        arCartTransferHistoryManagement = new AdminRole();
+        cartTransferHistoryManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        cartTransferHistoryManagementPermissions = arCartTransferHistoryManagement.xCrudPermission.ToCharArray();
+    }
+
+
+    AdminRole arGatewayManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.GatewayManagement).SingleOrDefault();
+    char[] gatewayManagementPermissions = null;
+    if (arGatewayManagement == null)
+    {
+        arGatewayManagement = new AdminRole();
+        gatewayManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        gatewayManagementPermissions = arGatewayManagement.xCrudPermission.ToCharArray();
+    }
+
+
+
+    AdminRole arUserManagement = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserManagement).SingleOrDefault();
+    char[] userManagementPermissions = null;
+    if (arUserManagement == null)
+    {
+        arUserManagement = new AdminRole();
+        userManagementPermissions = "00000".ToCharArray();
+    }
+    else
+    {
+        userManagementPermissions = arUserManagement.xCrudPermission.ToCharArray();
+    }
+
+
+
+
+
+}
+<ol class="breadcrumb">
+		<!--<li><a href="#">Home</a></li> -->
+		<li class="active">صفحه اصلی</li>
+</ol>
+<div id="content" style="direction:rtl;text-align:right;">
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="well bg-info">
+                <div class="widget-tile">
+                    <section>
+                        <h3>وظایف انجام نشده شما </h3>
+                        <h4>تعداد : @anr.GetAdminUndoneJobsCount(((Admin)(Session["Admin"])).xID)</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-check-square-o"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="well bg-theme-inverse">
+                <div class="widget-tile">
+                    <section>
+                        <h3>وظایف انتصاب نیافته</h3>
+                        <h4>تعداد : @anr.GetAdminUnAttachedJobsCount()</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-check-square-o"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="well bg-inverse">
+                <div class="widget-tile">
+                    <section>
+                        <h3>تعداد تیکت های بدون پاسخ</h3>
+                        <h4>تعداد : @tr.GetOpenTicketsCount()</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-window-maximize"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="well bg-theme">
+                <div class="widget-tile">
+                    <section>
+                        <h3>پیام های بدون پاسخ تلگرام</h3>
+                        <h4>تعداد : @tsr.GetOpenTicketsCount()</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-telegram"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="well bg-info">
+                <div class="widget-tile">
+                    <section>
+                        <h3>ک ب ک های معلق </h3>
+                        <h4>تعداد : @cthr.GetUnTransactionedItemsCount()</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-credit-card"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="well bg-theme-inverse">
+                <div class="widget-tile">
+                    <section>
+                        <h3>کش اوت های انجام نشده</h3>
+                        <h4>تعداد : @wr.GetTotalWaitings()</h4>
+                    </section>
+                    <div class="hold-icon"><i class="fa fa-university"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="row">
+        @if (adminUser.xType == (byte)AdminType.Supervisor || gatewayManagementPermissions[(byte)CrudOperationType.Select] == '1')
+        {
+            <div class="col-md-2">
+                <div class="well bg-info">
+                    <div class="widget-tile">
+                        <section>
+                            <h3>درگاه های فعال و پر نشده </h3>
+                            <h4>تعداد : @gr.GetAvailAndUnFilledGateways()</h4>
+                            <h4>تعداد اصلی : @gr.GetPrimaryGatewaysCount()</h4>
+                        </section>
+                        <div class="hold-icon"><i class="fa fa-university"></i></div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+
+    <div class="row">
+        @if (adminUser.xType == (byte)AdminType.Supervisor || userManagementPermissions[(byte)CrudOperationType.Select] == '1')
+        {
+            <div class="col-md-2">
+                <div class="well bg-info">
+                    <div class="widget-tile">
+                        <section>
+                            <h3>کارت های تایید نشده </h3>
+                            <h4>تعداد : @ubar.InActiveUserBankAccounts()</h4>
+                        </section>
+                        <div class="hold-icon"><i class="fa fa-credit-card"></i></div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+
+
+
+
+</div>
+
+@{ 
+    anr.Dispose();
+    tr.Dispose();
+    tsr.Dispose();
+    cthr.Dispose();
+    wr.Dispose();
+    ur.Dispose();
+    tranR.Dispose();
+    flr.Dispose();
+    gr.Dispose();
+    sr.Dispose();
+    ar.Dispose();
+    ubar.Dispose();
+}

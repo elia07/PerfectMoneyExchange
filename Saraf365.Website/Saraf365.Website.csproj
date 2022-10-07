@@ -1,0 +1,653 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{95A84406-0FCD-4FFF-BAF5-3B348661A44C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Saraf365.Website</RootNamespace>
+    <AssemblyName>Saraf365.Website</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BotDetect, Version=4.2.0.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.2.0\lib\net46\BotDetect.dll</HintPath>
+    </Reference>
+    <Reference Include="BotDetect.Web.Mvc, Version=4.2.0.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.2.0\lib\net46\BotDetect.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="RockCandy.Web.Framework.Core">
+      <HintPath>..\Libraries\RockCandy.Web.Framework.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="RockCandy.Web.Framework.Utilities">
+      <HintPath>..\Libraries\RockCandy.Web.Framework.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Resources\css\style.css" />
+    <Content Include="Resources\files\index\game1.png" />
+    <Content Include="Resources\files\index\game2.png" />
+    <Content Include="Resources\files\index\game3.png" />
+    <Content Include="Resources\files\index\poster1.jpg" />
+    <Content Include="Resources\files\index\poster2.jpg" />
+    <Content Include="Resources\files\index\user.jpg" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.css" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.min.css" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.svg" />
+    <Content Include="Resources\fonts\mdi\font\preview.html" />
+    <Content Include="Resources\images\AAbanner.jpg" />
+    <Content Include="Resources\images\androidlogo.jpg" />
+    <Content Include="Resources\images\bank.png" />
+    <Content Include="Resources\images\bg-home - Copy.jpg" />
+    <Content Include="Resources\images\bg-home.jpg" />
+    <Content Include="Resources\images\bg-modal.jpg" />
+    <Content Include="Resources\images\bitcoin.png" />
+    <Content Include="Resources\images\card.png" />
+    <Content Include="Resources\images\emailTemplateBanner.jpg" />
+    <Content Include="Resources\images\greencheck.png" />
+    <Content Include="Resources\images\icon\credit.png" />
+    <Content Include="Resources\images\icon\gift.png" />
+    <Content Include="Resources\images\icon\score.png" />
+    <Content Include="Resources\images\lock.png" />
+    <Content Include="Resources\images\page404.jpg" />
+    <Content Include="Resources\images\page500.jpg" />
+    <Content Include="Resources\images\PagMaintenance.jpg" />
+    <Content Include="Resources\images\perfect10usd.png" />
+    <Content Include="Resources\images\perfect25usd.png" />
+    <Content Include="Resources\images\perfect50usd.jpg" />
+    <Content Include="Resources\images\perfect5usd.png" />
+    <Content Include="Resources\images\perfectcustomusd.png" />
+    <Content Include="Resources\images\PerfectMoney.png" />
+    <Content Include="Resources\images\perfectMoneyForSocial.png" />
+    <Content Include="Resources\images\perfectVoucher.png" />
+    <Content Include="Resources\images\pos.png" />
+    <Content Include="Resources\images\redcross.png" />
+    <Content Include="Resources\images\reload.png" />
+    <Content Include="Resources\images\saraf365125.png" />
+    <Content Include="Resources\images\uploadDocGuide.jpg" />
+    <Content Include="Resources\images\voucher.png" />
+    <Content Include="Resources\images\wallet.png" />
+    <Content Include="Resources\js\script.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\css\bootstrap.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-grid.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-grid.min.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-reboot.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-reboot.min.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-rtl.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-rtl.min.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap.min.css" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.bundle.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.bundle.min.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.min.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\bootstrap.min.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\alert.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\button.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\carousel.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\collapse.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\dropdown.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\index.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\modal.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\popover.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\scrollspy.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\tab.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\tooltip.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\util.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\alert.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\button.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\carousel.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\collapse.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\dropdown.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\index.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\modal.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\popover.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\scrollspy.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\tab.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\tooltip.js" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\src\util.js" />
+    <Content Include="Resources\plugins\highcharts\highcharts.js" />
+    <Content Include="Resources\plugins\jquery\AUTHORS.txt" />
+    <Content Include="Resources\plugins\jquery\dist\core.js" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.js" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.min.js" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.slim.js" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.slim.min.js" />
+    <Content Include="Resources\plugins\jquery\external\sizzle\dist\sizzle.js" />
+    <Content Include="Resources\plugins\jquery\external\sizzle\dist\sizzle.min.js" />
+    <Content Include="Resources\plugins\jquery\external\sizzle\LICENSE.txt" />
+    <Content Include="Resources\plugins\jquery\LICENSE.txt" />
+    <Content Include="Resources\plugins\jquery\src\ajax.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\jsonp.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\load.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\parseXML.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\script.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\var\location.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\var\nonce.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\var\rquery.js" />
+    <Content Include="Resources\plugins\jquery\src\ajax\xhr.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes\attr.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes\classes.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes\prop.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes\support.js" />
+    <Content Include="Resources\plugins\jquery\src\attributes\val.js" />
+    <Content Include="Resources\plugins\jquery\src\callbacks.js" />
+    <Content Include="Resources\plugins\jquery\src\core.js" />
+    <Content Include="Resources\plugins\jquery\src\core\access.js" />
+    <Content Include="Resources\plugins\jquery\src\core\camelCase.js" />
+    <Content Include="Resources\plugins\jquery\src\core\DOMEval.js" />
+    <Content Include="Resources\plugins\jquery\src\core\init.js" />
+    <Content Include="Resources\plugins\jquery\src\core\nodeName.js" />
+    <Content Include="Resources\plugins\jquery\src\core\parseHTML.js" />
+    <Content Include="Resources\plugins\jquery\src\core\ready-no-deferred.js" />
+    <Content Include="Resources\plugins\jquery\src\core\ready.js" />
+    <Content Include="Resources\plugins\jquery\src\core\readyException.js" />
+    <Content Include="Resources\plugins\jquery\src\core\stripAndCollapse.js" />
+    <Content Include="Resources\plugins\jquery\src\core\support.js" />
+    <Content Include="Resources\plugins\jquery\src\core\toType.js" />
+    <Content Include="Resources\plugins\jquery\src\core\var\rsingleTag.js" />
+    <Content Include="Resources\plugins\jquery\src\css.js" />
+    <Content Include="Resources\plugins\jquery\src\css\addGetHookIf.js" />
+    <Content Include="Resources\plugins\jquery\src\css\adjustCSS.js" />
+    <Content Include="Resources\plugins\jquery\src\css\curCSS.js" />
+    <Content Include="Resources\plugins\jquery\src\css\hiddenVisibleSelectors.js" />
+    <Content Include="Resources\plugins\jquery\src\css\showHide.js" />
+    <Content Include="Resources\plugins\jquery\src\css\support.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\cssExpand.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\getStyles.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\isHiddenWithinTree.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\rboxStyle.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\rnumnonpx.js" />
+    <Content Include="Resources\plugins\jquery\src\css\var\swap.js" />
+    <Content Include="Resources\plugins\jquery\src\data.js" />
+    <Content Include="Resources\plugins\jquery\src\data\Data.js" />
+    <Content Include="Resources\plugins\jquery\src\data\var\acceptData.js" />
+    <Content Include="Resources\plugins\jquery\src\data\var\dataPriv.js" />
+    <Content Include="Resources\plugins\jquery\src\data\var\dataUser.js" />
+    <Content Include="Resources\plugins\jquery\src\deferred.js" />
+    <Content Include="Resources\plugins\jquery\src\deferred\exceptionHook.js" />
+    <Content Include="Resources\plugins\jquery\src\deprecated.js" />
+    <Content Include="Resources\plugins\jquery\src\dimensions.js" />
+    <Content Include="Resources\plugins\jquery\src\effects.js" />
+    <Content Include="Resources\plugins\jquery\src\effects\animatedSelector.js" />
+    <Content Include="Resources\plugins\jquery\src\effects\Tween.js" />
+    <Content Include="Resources\plugins\jquery\src\event.js" />
+    <Content Include="Resources\plugins\jquery\src\event\ajax.js" />
+    <Content Include="Resources\plugins\jquery\src\event\alias.js" />
+    <Content Include="Resources\plugins\jquery\src\event\focusin.js" />
+    <Content Include="Resources\plugins\jquery\src\event\support.js" />
+    <Content Include="Resources\plugins\jquery\src\event\trigger.js" />
+    <Content Include="Resources\plugins\jquery\src\exports\amd.js" />
+    <Content Include="Resources\plugins\jquery\src\exports\global.js" />
+    <Content Include="Resources\plugins\jquery\src\jquery.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\buildFragment.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\getAll.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\setGlobalEval.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\support.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\var\rcheckableType.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\var\rscriptType.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\var\rtagName.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\wrapMap.js" />
+    <Content Include="Resources\plugins\jquery\src\manipulation\_evalUrl.js" />
+    <Content Include="Resources\plugins\jquery\src\offset.js" />
+    <Content Include="Resources\plugins\jquery\src\queue.js" />
+    <Content Include="Resources\plugins\jquery\src\queue\delay.js" />
+    <Content Include="Resources\plugins\jquery\src\selector-native.js" />
+    <Content Include="Resources\plugins\jquery\src\selector-sizzle.js" />
+    <Content Include="Resources\plugins\jquery\src\selector.js" />
+    <Content Include="Resources\plugins\jquery\src\serialize.js" />
+    <Content Include="Resources\plugins\jquery\src\traversing.js" />
+    <Content Include="Resources\plugins\jquery\src\traversing\findFilter.js" />
+    <Content Include="Resources\plugins\jquery\src\traversing\var\dir.js" />
+    <Content Include="Resources\plugins\jquery\src\traversing\var\rneedsContext.js" />
+    <Content Include="Resources\plugins\jquery\src\traversing\var\siblings.js" />
+    <Content Include="Resources\plugins\jquery\src\var\arr.js" />
+    <Content Include="Resources\plugins\jquery\src\var\class2type.js" />
+    <Content Include="Resources\plugins\jquery\src\var\concat.js" />
+    <Content Include="Resources\plugins\jquery\src\var\document.js" />
+    <Content Include="Resources\plugins\jquery\src\var\documentElement.js" />
+    <Content Include="Resources\plugins\jquery\src\var\fnToString.js" />
+    <Content Include="Resources\plugins\jquery\src\var\getProto.js" />
+    <Content Include="Resources\plugins\jquery\src\var\hasOwn.js" />
+    <Content Include="Resources\plugins\jquery\src\var\indexOf.js" />
+    <Content Include="Resources\plugins\jquery\src\var\isFunction.js" />
+    <Content Include="Resources\plugins\jquery\src\var\isWindow.js" />
+    <Content Include="Resources\plugins\jquery\src\var\ObjectFunctionString.js" />
+    <Content Include="Resources\plugins\jquery\src\var\pnum.js" />
+    <Content Include="Resources\plugins\jquery\src\var\push.js" />
+    <Content Include="Resources\plugins\jquery\src\var\rcssNum.js" />
+    <Content Include="Resources\plugins\jquery\src\var\rnothtmlwhite.js" />
+    <Content Include="Resources\plugins\jquery\src\var\slice.js" />
+    <Content Include="Resources\plugins\jquery\src\var\support.js" />
+    <Content Include="Resources\plugins\jquery\src\var\toString.js" />
+    <Content Include="Resources\plugins\jquery\src\wrap.js" />
+    <Content Include="Resources\plugins\mCustomScrollbar\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="Resources\plugins\mCustomScrollbar\jquery.mCustomScrollbar.min.css" />
+    <Content Include="Resources\plugins\Parsley\fa.js" />
+    <Content Include="Resources\plugins\Parsley\parsley.min.js" />
+    <Content Include="Resources\plugins\Parsley\parsleyConfigs.js" />
+    <Content Include="Resources\plugins\Parsley\parsleyCustomValidation.js" />
+    <Content Include="Resources\plugins\Parsley\persian-rex.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper-utils.js" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper-utils.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper.js" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\popper-utils.js" />
+    <Content Include="Resources\plugins\popper.js\dist\popper-utils.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\popper.js" />
+    <Content Include="Resources\plugins\popper.js\dist\popper.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper-utils.js" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper-utils.min.js" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper.js" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper.min.js" />
+    <Content Include="Resources\plugins\soon\soon.min.css" />
+    <Content Include="Resources\plugins\soon\soon.min.js" />
+    <Content Include="Resources\plugins\sweetalert2\sweetalert2.all.min.js" />
+    <Content Include="Resources\plugins\sweetalert2\sweetalert2.min.css" />
+    <Content Include="Resources\templates\fa\ActivationTemplate.html" />
+    <Content Include="Resources\templates\fa\RecoverPasswordActivationCodeTemplate.html" />
+    <Content Include="Resources\templates\fa\WelcomeTemplate.html" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Filters\UserAuthorize.cs" />
+    <Compile Include="Filters\ViewBagInitalizer.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SectionInfo.cs" />
+    <Compile Include="SettingUpdater.cs" />
+    <Compile Include="Utils\CookieUtils.cs" />
+    <Compile Include="Utils\CryptoUtils.cs" />
+    <Compile Include="Utils\EmailWrapper.cs" />
+    <Compile Include="Utils\G8Interface.cs" />
+    <Compile Include="Utils\IPUtils.cs" />
+    <Compile Include="Utils\ProfileValidation.cs" />
+    <Compile Include="Utils\SessionUtils.cs" />
+    <Compile Include="Utils\SmsUtils.cs" />
+    <Compile Include="Utils\TConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Bold.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Light.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_Medium.eot" />
+    <Content Include="Resources\fonts\eot\IRANSansWeb_UltraLight.eot" />
+    <Content Include="Resources\fonts\mdi\font\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Resources\fonts\mdi\font\bower.json" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.css.map" />
+    <Content Include="Resources\fonts\mdi\font\css\materialdesignicons.min.css.map" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.eot" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.ttf" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Resources\fonts\mdi\font\fonts\materialdesignicons-webfont.woff2" />
+    <Content Include="Resources\fonts\mdi\font\license.md" />
+    <Content Include="Resources\fonts\mdi\font\package.json" />
+    <Content Include="Resources\fonts\mdi\font\README.md" />
+    <Content Include="Resources\fonts\mdi\font\scss\materialdesignicons.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_animated.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_core.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_extras.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_functions.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_icons.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_path.scss" />
+    <Content Include="Resources\fonts\mdi\font\scss\_variables.scss" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Bold.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Light.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_Medium.ttf" />
+    <Content Include="Resources\fonts\ttf\IRANSansWeb_UltraLight.ttf" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Bold.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Light.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_Medium.woff2" />
+    <Content Include="Resources\fonts\woff2\IRANSansWeb_UltraLight.woff2" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Bold.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Light.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_Medium.woff" />
+    <Content Include="Resources\fonts\woff\IRANSansWeb_UltraLight.woff" />
+    <Content Include="Resources\languages\fa.json" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\.DS_Store" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-grid.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-grid.min.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-reboot.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-rtl.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap-rtl.min.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\css\bootstrap.min.css.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.bundle.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\dist\js\bootstrap.min.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\bootstrap.min.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\alert.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\button.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\carousel.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\collapse.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\dropdown.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\index.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\modal.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\popover.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\scrollspy.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\tab.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\tooltip.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\js\dist\util.js.map" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\package.json" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\README.md" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\.DS_Store" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\bootstrap-grid.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\bootstrap-reboot.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\bootstrap-rtl.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\bootstrap.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_alert.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_background-variant.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_badge.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_border-radius.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_box-shadow.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_breakpoints.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_buttons.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_caret.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_clearfix.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_float.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_forms.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_gradients.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_grid-framework.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_grid.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_hover.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_image.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_list-group.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_lists.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_nav-divider.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_pagination.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_reset-text.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_resize.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_screen-reader.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_size.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_table-row.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_text-hide.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_text-truncate.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_transition.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\mixins\_visibility.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_align.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_background.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_borders.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_clearfix.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_display.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_embed.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_flex.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_float.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_position.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_screenreaders.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_shadows.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_sizing.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_spacing.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_text.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\utilities\_visibility.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_alert.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_badge.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_breadcrumb.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_button-group.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_buttons.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_card.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_carousel.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_close.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_code.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_custom-forms.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_dropdown.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_forms.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_functions.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_grid.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_images.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_input-group.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_jumbotron.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_list-group.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_media.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_mixins.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_modal.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_nav.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_navbar.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_pagination.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_popover.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_print.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_progress.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_reboot.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_root.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_rtl.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_tables.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_tooltip.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_transitions.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_type.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_utilities.scss" />
+    <Content Include="Resources\plugins\bootstrap-v4-rtl\scss\_variables.scss" />
+    <Content Include="Resources\plugins\jquery\bower.json" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.min.map" />
+    <Content Include="Resources\plugins\jquery\dist\jquery.slim.min.map" />
+    <Content Include="Resources\plugins\jquery\external\sizzle\dist\sizzle.min.map" />
+    <Content Include="Resources\plugins\jquery\package.json" />
+    <Content Include="Resources\plugins\jquery\README.md" />
+    <Content Include="Resources\plugins\jquery\src\.eslintrc.json" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper-utils.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper-utils.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\popper.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\esm\poppper.js.flow" />
+    <Content Include="Resources\plugins\popper.js\dist\popper-utils.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\popper-utils.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\popper.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\popper.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper-utils.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper-utils.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper.js.map" />
+    <Content Include="Resources\plugins\popper.js\dist\umd\popper.min.js.map" />
+    <Content Include="Resources\plugins\popper.js\index.js.flow" />
+    <Content Include="Resources\plugins\popper.js\package.json" />
+    <Content Include="Resources\plugins\popper.js\README.md" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\MaintenanceMode.cshtml" />
+    <Content Include="Views\Home\Notify.cshtml" />
+    <Content Include="Views\Home\Page404.cshtml" />
+    <Content Include="Views\Home\Page500.cshtml" />
+    <Content Include="Views\ProfileMaster.cshtml" />
+    <Content Include="Views\Profile\CashInAndHistory.cshtml" />
+    <Content Include="Views\Profile\CashoutAndHistory.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Profile\MyProfile.cshtml" />
+    <Content Include="Views\Profile\ShowConversation.cshtml" />
+    <Content Include="Views\Profile\SupportTicket.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Resources\Apps\Saraf365.apk" />
+    <Content Include="Views\Profile\ReferralShare.cshtml" />
+    <Content Include="Resources\images\sarafBanner.psd" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Profile\SelectPaymentType.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Resources\plugins\popper.js\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Saraf365.Core\Saraf365.Core.csproj">
+      <Project>{a768b489-a8a4-470f-9711-b60c28e419f4}</Project>
+      <Name>Saraf365.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51103</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51103/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

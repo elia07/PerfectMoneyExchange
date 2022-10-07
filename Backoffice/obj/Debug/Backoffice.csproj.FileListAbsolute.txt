@@ -1,0 +1,2 @@
+D:\Saraf365\Saraf365\Saraf365\Backoffice\obj\Debug\Backoffice.csprojAssemblyReference.cache
+D:\Saraf365\Saraf365\Saraf365\Backoffice\obj\Debug\Backoffice.csproj.CoreCompileInputs.cache

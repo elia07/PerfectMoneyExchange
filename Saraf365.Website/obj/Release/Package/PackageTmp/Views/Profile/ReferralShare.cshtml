@@ -1,0 +1,89 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using RockCandy.Web.Framework.Utilities;
+@using System.Text;
+
+@{
+    string LanguageCode = ViewBag.LanguageCode;
+    long UserID = ViewBag.UserID;
+    FinancialLogRepository flr = new FinancialLogRepository();
+    UserRepository ur = new UserRepository();
+
+}
+<div style="width:100% ; height:100%">
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-account-child"></i>معرفی های شما</p><hr class="bodyTitleSperator">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">ایمیل</th>
+                    <th class="text-center">تاریخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var records = ur.GetAgentUSers(UserID);
+                    foreach (var item in records)
+                    {
+                        <tr>
+                            <td>@item.xEmail</td>
+                            <td>@DateConvertor.MiladiToShamsi(item.xSignupDate)</td>
+                        </tr>
+                    }
+                    if (records.Count() == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                        </tr>
+                    }
+
+
+                }
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <p class="bodyTitle"><i class="d-inline-flex align-middle ml-2 mdi mdi-account-child"></i>50 رکورد آخر سهم فروش شما</p><hr class="bodyTitleSperator">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped color-table success-table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">مبلغ</th>
+                    <th class="text-center">تاریخ</th>
+                    <th class="text-center">توضیحات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var rRecords = flr.GetRefferalShareRecords(UserID);
+                    foreach (var item in rRecords)
+                    {
+                    <tr>
+                        <td>@item.xAmount</td>
+                        <td>@DateConvertor.MiladiToShamsi(item.xDate)</td>
+                        <td>@item.xDescription</td>
+                    </tr>
+                    }
+                    if (rRecords.Count() == 0)
+                    {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>@SectionInfo.Setting.Languages[LanguageCode]["Txt_RecordNotFound"]</td>
+                    </tr>
+                    }
+
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+@{
+    flr.Dispose();
+    ur.Dispose();
+
+}

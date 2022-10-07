@@ -1,0 +1,134 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    int currentPage = Convert.ToInt32(ViewBag.currentPage);
+    int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ItemsPerPage"));
+    Pagination pagination = null;
+    SearchModelManager searchModelManager = ViewBag.searchModelManager;
+    string queryString = ViewBag.queryString;
+
+
+    AdminRepository ur = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+
+    if(adminUser.xType!=(byte)AdminType.Supervisor)
+    {
+        searchModelManager.SearchModels.Add(new SearchModel(new MentionField("xResponsibleAdmin", "", typeof(long)), adminUser.xID, true, LogicalOperatorType.Equal, NoneNumericalOperationType.Equal));
+    }
+
+
+
+}
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li>مدیریت پیام به مدیران</li>
+    <li class="active">اطلاعات جاری</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>مدیریت پیام به مدیران</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><label>برای</label></th>
+                        <th><label>نوع</label></th>
+                        <th><label>پیام</label></th>
+                        <th><label>تاریخ</label></th>
+                        <th><label>ایجاد کننده</label></th>
+                        <th><label>فعالیت ها</label></th>
+                    </tr>
+                </thead>
+                <tbody align="center">
+                    @using (AdminNotificationRepository opr = new AdminNotificationRepository())
+                    {
+                        pagination = new Pagination(currentPage, itemsPerPage, 0);
+                        IQueryable<AdminNotification> records = opr.FilterByParam(searchModelManager, opr.GetPredicate(searchModelManager.SearchModels), pagination, searchModelManager.OrderByType, searchModelManager.OrderByFieldName);
+                        pagination = new Pagination(currentPage, itemsPerPage, opr.Count(opr.GetPredicate(searchModelManager.SearchModels)));
+
+                        foreach (var item in records)
+                        {
+                    <tr id="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)">
+                        <td ><label>@item.xResponsibleAdmin</label></td>
+                        <td ><label>@(EnumUtils.GetAttribute<DisplayAttribute>((AdminNotificationType)item.xType).Name)</label></td>
+                        <td ><label>@(item.xDescription.Length > 20 ? item.xDescription.Substring(0, 20) + " ..." : item.xDescription)</label></td>
+                        <td ><label>@DateConvertor.MiladiToShamsi(item.xDate) - @item.xDate.ToShortTimeString()</label></td>
+                        <td ><label>@item.xCreator</label></td>
+
+                        <td >
+                            <span class="tooltip-area">
+                                <button onclick="UpdateRender('@MD5Encryption.Encrypt(item.xID.ToString(), true, SectionInfo.Setting.SecurityKey)','/AdminNotification/UpdateRender')" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="ویرایش"><i class='fa fa-pencil'></i></button>
+                                <button RowID="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)" type="button" class="btn btn-default DeleteConfirm" data-toggle="tooltip" data-placement="top" data-effect="md-slideUp" title="" data-original-title="حذف"><i class='fa fa-times'></i></button>
+                            </span>
+                        </td>
+                    </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @MvcHtmlString.Create(pagination.Render("/AdminNotification/Index", queryString))
+        </div>
+    </section>
+</div>
+
+<div id="md-DeleteConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید حذف</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای حذف رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Delete" OnClick="Delete($(this).attr('RowID'), '/AdminNotification/Delete')" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+<script type="text/javascript">
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+
+        $(".DeleteConfirm").click(function (event) {
+            var data = $(this).data();
+            $("#md-DeleteConfrim .modal-body #Delete").attr("RowID", $(this).attr("RowID"));
+            $("#md-DeleteConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+    });
+
+</script>
+@{
+    ur.Dispose();
+}

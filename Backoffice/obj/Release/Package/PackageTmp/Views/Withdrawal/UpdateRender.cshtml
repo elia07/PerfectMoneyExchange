@@ -1,0 +1,303 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    WithdrawalRepository kr = new WithdrawalRepository();
+    Withdrawal instance = kr.GetByID(xID);
+
+    BankCardRepository bcr = new BankCardRepository();
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/Withdrawal/Index?@queryString">مدیریت تسویه ها</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#edit" data-toggle="tab">ویرایش</a></li>
+                    @if (instance.xStatus != (byte)WithdrawalStatusType.Rejected || instance.xStatus != (byte)WithdrawalStatusType.Paied)
+                    {
+                        if (instance.xWithdrawalType == (byte)WithdrawalType.PerfectMoney)
+                        {
+                            <li><a href="#pay" data-toggle="tab">پرداخت با پرفکت</a></li>
+                        }
+                        else
+                        {
+                            if (bcr.GetOutputCards().Count() != 0)
+                            {
+                                <li><a href="#pay" data-toggle="tab">پراخت شتابی</a></li>
+                            }
+                        }
+
+                    }
+
+
+                </ul>
+                <div class="tab-content" style="border:solid 2px #d9dfe3;border-top:none;">
+                    <div class="tab-pane fade in active" id="edit">
+
+                        <div class="form-group clearfix">
+                            <form id="form-update" data-parsley-validate>
+                                <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(xID.ToString(), true,SectionInfo.Setting.SecurityKey)">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp توضیحات</label>
+                                    <div class="col-md-11">
+                                        <textarea class="form-control" type="text" name="xDescription" id="xDescription" data-trigger="change" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp وضعیت</label>
+                                    <div class="col-md-11">
+                                        @(Html.RenderEnum<WithdrawalStatusType>("xStatus"))
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12">
+                                        <button type="button" id="UpdateConfirm" class="btn btn-success">ثبت بدون کارمزد</button>
+                                        <button type="button" id="UpdateConfirm2" class="btn btn-success">ثبت با کارمزد</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    @if (instance.xStatus != (byte)WithdrawalStatusType.Rejected || instance.xStatus != (byte)WithdrawalStatusType.Paied)
+                    {
+                    <div class="tab-pane fade in" id="pay">
+                        @if (instance.xWithdrawalType == (byte)WithdrawalType.Cash)
+                        {
+                            <div class="col-md-11">
+                                <select class="form-control" id="fromDeposit" name="fromDeposit">
+                                    @foreach (var item in bcr.GetOutputCards())
+                                    {
+                                        if (item.xID != instance.xID)
+                                        {
+                                            <option value="@item.xID" allowNormalTransfer="@(instance.UserBankAccount.xAccountNumber.Substring(0,8)==item.xAccountNumber.Substring(0,8))">@item.xCardHolderName | @item.xCardNumber | @item.xAccountNumber</option>
+                                        }
+
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group clearfix cat2">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع پرداخت</label>
+                                <div class="col-md-11">
+                                    <input type="radio" id="NormalTransferRadio" name="transferType" value="NormalTransfer" checked> حساب به حساب<br>
+                                    <input type="radio" id="CardTransferRadio" name="transferType" value="CardTransfer"> کارت به کارت<br>
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <div class="col-md-12">
+                                    <button type="button" onclick="PayByShetab();" class="btn btn-success">پرداخت</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group clearfix">
+                                <div class="col-md-12">
+                                    <button type="button" onclick="PayByPerfectMoney();" class="btn btn-success">پرداخت از کیف پول به شناسه </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    }
+
+                </div>
+            </div>
+
+
+                    </div>
+</section>
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update(false)" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+<div id="md-UpdateConfrim2" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update(true)" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+
+<script type="text/javascript">
+
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker();
+        $('.selectpicker').change();
+        $('#xStatus').val('@instance.xStatus');
+        $("#form-update").parsley();
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+        $("#UpdateConfirm2").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim2").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+        $("#fromDeposit").change(function () {
+            if ($('#fromDeposit>option:selected').attr("allowNormalTransfer") == "true") {
+                $("#NormalTransferRadio").show();
+            }
+            else {
+                $("#NormalTransferRadio").hide();
+            }
+        });
+    });
+
+
+    function PayByShetab() {
+        var args = {
+            "xID": $("#xID").val(),
+            "fromDeposit": $("#fromDeposit").val(),
+            "method": $("input[name=transferType]").val(),
+
+        }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Withdrawal/PayByShetab',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/Withdrawal/Index'",2000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+
+    function PayByPerfectMoney() {
+        var args = {
+                "xID": $("#xID").val()
+            }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Withdrawal/PayByPerfectMoney',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/Withdrawal/Index'", 1000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+    }
+    function Update(calculateCost) {
+        if ($("#form-update").parsley().validate()) {
+            var args = {
+                "xID": $("#xID").val(),
+                "xDescription": $("#xDescription").val(),
+                "xStatus": $("#xStatus").val(),
+                "calculateCost": calculateCost,
+            }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Withdrawal/Update',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/Withdrawal/Index'", 1000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    kr.Dispose();
+    bcr.Dispose();
+}

@@ -1,0 +1,114 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/CartTransferHistory/Index">مدیریت کارت به کارت ها</a></li>
+    <li class="active">جدید</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong> کارت به کارت جدید</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-insert" data-parsley-validate>
+
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام</label>
+                        <div class="col-md-11">
+                            <select class="form-control" name="xBankCardID" id="xBankCardID">
+                                @using(BankCardRepository bcr = new BankCardRepository())
+                                {
+                                    foreach(var item in bcr.GetAll())
+                                    {
+                                        <option value="@item.xID">@item.xCardHolderName @item.xCardNumber</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp مبلغ</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xAmountIn" id="xAmountIn" data-parsley-type="integer" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره کارت</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xCardNumber" id="xCardNumber" data-trigger="change" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-success" onclick="insert()">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<script type="text/javascript">
+
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $("#form-insert").parsley();
+    });
+    function insert() {
+       //data: JSON.stringify($(this).serialize()),
+        if ($("#form-insert").parsley().validate()) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/CartTransferHistory/Insert',
+                data: JSON.stringify($("#form-insert").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.href = "/CartTransferHistory/Index";
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+
+</script>

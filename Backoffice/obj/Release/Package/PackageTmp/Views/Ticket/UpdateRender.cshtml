@@ -1,0 +1,190 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    string queryString = ViewBag.queryString;
+    long xID = Convert.ToInt64(ViewBag.xID);
+
+    TicketRepository kr = new TicketRepository();
+    Ticket instance = kr.GetByID(xID);
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/Ticket/Index?@queryString">مدیریت تیکت ها</a></li>
+    <li class="active">ویرایش</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>ویرایش</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-update" data-parsley-validate>
+                    <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(instance.xID.ToString(), true,SectionInfo.Setting.SecurityKey)">
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp کاربر</label>
+                        <div class="col-md-11">
+                            <a href="@("/User/UpdateRender?xID="+MD5Encryption.Encrypt(instance.User.xID.ToString(),true,SectionInfo.Setting.SecurityKey))" target="_blank">@instance.User.xEmail</a>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp عنوان</label>
+                        <div class="col-md-11">
+                            <span>@instance.xTitle</span>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاریخ</label>
+                        <div class="col-md-11">
+                            <span>@DateConvertor.MiladiToShamsi(instance.xDate)</span>
+                        </div>
+                    </div>
+                    @foreach (var item in instance.Conversation.Reverse())
+                    {
+                        <input class="form-control" type="hidden" name="xID" id="xID" value="@MD5Encryption.Encrypt(item.xID.ToString(), true,SectionInfo.Setting.SecurityKey)">
+                        <hr>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاریخ</label>
+                            <div class="col-md-11">
+                                <span>@DateConvertor.MiladiToShamsi(item.xDate) | @item.xDate.ToShortTimeString()</span>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp کاربر</label>
+                            <div class="col-md-11">
+                                <span>@item.xBody</span>
+                            </div>
+                        </div>
+
+                        if (item.xResponse != null)
+                        {
+                            <div class="form-group clearfix">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تاریخ پاسخ</label>
+                                <div class="col-md-11">
+                                    <span>@DateConvertor.MiladiToShamsi(item.xResponseDate) | @Convert.ToDateTime(item.xResponseDate).ToShortTimeString()</span>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp مدیر</label>
+                                <div class="col-md-11">
+                                    <span>@item.xResponse</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group clearfix">
+                                <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp پاسخ</label>
+                                <div class="col-md-11">
+                                    <textarea class="form-control" type="text" name="response" id="response" data-trigger="change"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <div class="col-md-12">
+                                    <button type="button" id="UpdateConfirm" class="btn btn-success" onclick="window.conversationID='@MD5Encryption.Encrypt(item.xID.ToString(), true,SectionInfo.Setting.SecurityKey)'">ثبت پاسخ</button>
+                                </div>
+                            </div>
+                        }
+
+                    }
+
+
+                </form>
+            </div>
+
+        </div>
+    </section>
+</div>
+<div id="md-UpdateConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید ذخیره</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای ذخیره رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Update" OnClick="Update()" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+
+<script type="text/javascript">
+
+    @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker();
+        $('.selectpicker').change();
+        $("#form-update").parsley();
+
+        $("#UpdateConfirm").click(function (event) {
+            event.preventDefault();
+            var data = $(this).data();
+            $("#md-UpdateConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+
+    });
+    function Update()
+    {
+        if($("#form-update").parsley().validate())
+        {
+            var args = {
+                "xID":window.conversationID,
+                "response": $("#response").val(),
+            }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Ticket/Update',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        //window.location.reload();
+                        setTimeout("window.location.href = '/Ticket/Index'",1000);
+
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    kr.Dispose();
+}

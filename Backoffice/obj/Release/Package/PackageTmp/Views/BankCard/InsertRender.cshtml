@@ -1,0 +1,198 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+@{
+    ViewBag.Title = "InsertRender";
+    Layout = "~/Views/PanelMaster.cshtml";
+}
+<script type="text/javascript" src="/Resources/assets/plugins/bootstrap/SelectPickerAjaxExtention.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/calendar.all.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.css" />
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li><a href="/BankCard/Index">مدیریت کارت های بانکی</a></li>
+    <li class="active">جدید</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong> کارت بانکی جدید</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <div class="form-group clearfix">
+                <form id="form-insert" data-parsley-validate>
+
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام صاحب کارت</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xCardHolderName" id="xCardHolderName" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نوع</label>
+                        <div class="col-md-11">
+                            @(Html.RenderEnum<BankCardType>("xType"))
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام بانک</label>
+                        <div class="col-md-11">
+                            <select class="form-control" id="xBankName" name="xBankName">
+                                @foreach (var item in SectionInfo.Setting.BankTypes)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره حساب</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xAccountNumber" id="xAccountNumber" data-trigger="change" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp شماره کارت</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xCardNumber" id="xCardNumber" data-trigger="change" data-parsley-length="[16, 16]" required>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp نام کاربری اینترنت بانک</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xInternetUsername" id="xInternetUsername" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمزعبور اینترنت بانک</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xInternetPassword" id="xInternetPassword" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat1">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp حداقل سپرده</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xMinDeposit" id="xMinDeposit" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat1">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp  کف میزان برای جابجایی</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xMinToTransfer" id="xMinToTransfer" data-parsley-type="digits" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat2">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp رمز دوم</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xSecondPassword" id="xSecondPassword" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat2">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp Cvv2</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xCvv2" id="xCvv2" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat2">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp ماه انقضا</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xExpireMonth" id="xExpireMonth" data-trigger="change" data-parsley-length="[2, 2]">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix cat2">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp سال انقضا</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xExpireYear" id="xExpireYear" data-parsley-length="[2,2]" data-trigger="change">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp تنظیمات ویژه</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="text" name="xSpecialConfigs" id="xSpecialConfigs">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp فعال</label>
+                        <div class="col-md-11">
+                            <input class="form-control" type="checkbox" id="xIsActive" name="xIsActive" value="true" style="float:right;width:30px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-success" onclick="insert()">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<script type="text/javascript">
+
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $("#form-insert").parsley();
+
+        $("#xType").change(function () {
+            ManageFields($(this).val());
+        });
+        ManageFields(0);
+    });
+    function ManageFields(id) {
+        $(".cat0").hide();
+        $(".cat1").hide();
+        $(".cat2").hide();
+        $(".cat" + id).show();
+    }
+    function insert() {
+       //data: JSON.stringify($(this).serialize()),
+        if ($("#form-insert").parsley().validate()) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/BankCard/Insert',
+                data: JSON.stringify($("#form-insert").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.href = "/BankCard/Index";
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+
+</script>

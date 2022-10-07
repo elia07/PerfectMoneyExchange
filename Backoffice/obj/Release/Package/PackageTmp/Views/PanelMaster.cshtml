@@ -1,0 +1,686 @@
+﻿@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@{
+    AdminRepository ur = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser=ur.GetByID(adminUser.xID);
+    
+}
+<!DOCTYPE html>
+<html dir="rtl">
+	<head>
+		<!-- Meta information -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<!-- Title-->
+		<title></title>
+		<!-- Favicons -->
+		    <link rel="shortcut icon" href="~/Resources/assets/ico/favicon.ico" type="image/x-icon" />
+            <!--<link rel="apple-touch-icon" href="~/Resources/assets/ico/apple-touch-icon.png" />
+            <link rel="apple-touch-icon" sizes="57x57" href="~/Resources/assets/ico/apple-touch-icon-57x57.png" />
+            <link rel="apple-touch-icon" sizes="72x72" href="~/Resources/assets/ico/apple-touch-icon-72x72.png" />
+            <link rel="apple-touch-icon" sizes="76x76" href="~/Resources/assets/ico/apple-touch-icon-76x76.png" />
+            <link rel="apple-touch-icon" sizes="114x114" href="~/Resources/assets/ico/apple-touch-icon-114x114.png" />
+            <link rel="apple-touch-icon" sizes="120x120" href="~/Resources/assets/ico/apple-touch-icon-120x120.png" />
+            <link rel="apple-touch-icon" sizes="144x144" href="~/Resources/assets/ico/apple-touch-icon-144x144.png" />
+            <link rel="apple-touch-icon" sizes="152x152" href="~/Resources/assets/ico/apple-touch-icon-152x152.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="~/Resources/assets/ico/apple-touch-icon-180x180.png" />-->
+		<!-- CSS Stylesheet-->
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/bootstrap/bootstrap.min.css" />
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/bootstrap/bootstrap-themes.css" />
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/style.css" />
+		<link type="text/css" rel="stylesheet" href="/Resources/assets/css/overwrite/Overwrite.css" />
+
+        <!-- Jquery Library -->
+		 <script type="text/javascript" src="/Resources/assets/js/jquery.min.js"></script>
+		 <script type="text/javascript" src="/Resources/assets/js/jquery.ui.min.js"></script> 
+		 <script type="text/javascript" src="/Resources/assets/plugins/bootstrap/bootstrap.min.js"></script> 
+        <script type="text/javascript" src="~/Resources/assets/plugins/form/parsley/parsleyCustomValidation.js"></script>
+        <script type="text/javascript" src="~/Resources/assets/plugins/form/parsley/parsley.min.js"></script>
+        <script type="text/javascript" src="~/Resources/assets/plugins/form/parsley/fr.js"></script>
+
+
+
+		<SCRIPT type="JavaScript">wside = (window.sidebar) ? true : false; var isOff = false; function mt_cm() { return false } function mt_md(e) { mac = navigator.userAgent.indexOf('Mac') != -1; if (document.all) { if (event.button == 2 || (mac && (event.ctrlKey || event.keyCode == 91))) { return false } } else { if (e.which == 3 || (mac && (e.modifiers == 2 || e.ctrlKey))) { return false } } } if (navigator.appName.indexOf('Internet Explorer') == -1 || (navigator.userAgent.indexOf('MSIE') != -1 && document.all.length != 0)) { if (document.all) { mac = navigator.userAgent.indexOf('Mac') != -1; version = parseFloat('0' + navigator.userAgent.substr(navigator.userAgent.indexOf('MSIE') + 5), 10); if (!mac && version > 4) { document.oncontextmenu = mt_cm } else { document.onmousedown = mt_md; document.onkeydown = mt_md } } else if (document.layers) { window.captureEvents(Event.MOUSEDOWN | Event.modifiers | Event.KEYDOWN); window.onmousedown = mt_md; window.onkeydown = mt_md } else if (document.getElementById && !document.all) { document.oncontextmenu = mt_cm } } function mt_dn(a) { return false }; function mt_de(e) { return (e.target.tagName != null && e.target.tagName.search('^(INPUT|TEXTAREA|BUTTON|SELECT)$') != -1) }; function mt_md(e) { if (e.which == 1) { window.captureEvents(Event.MOUSEMOVE); window.onmousemove = mt_dn } } function mt_mu(e) { if (e.which == 1) { window.releaseEvents(Event.MOUSEMOVE); window.onmousemove = null } } if (navigator.appName.indexOf('Internet Explorer') == -1 || (navigator.userAgent.indexOf('MSIE') != -1 && document.all.length != 0)) { if (document.all) { document.onselectstart = mt_dn } else if (document.layers) { window.captureEvents(Event.MOUSEUP | Event.MOUSEDOWN); window.onmousedown = mt_md; window.onmouseup = mt_mu } else if (document.getElementById && !document.all) { document.onmousedown = mt_de } } function mt_nls() { window.status = ''; return true } function mt_nlsl() { mt_nls(); setTimeout('mt_nlsl()', 10) } if (document.layers) document.captureEvents(Event.MOUSEOVER | Event.MOUSEOUT); document.onmouseover = mt_nls; document.onmouseout = mt_nls; mt_nlsl();</SCRIPT>
+        <style type="text/css">
+            body,h1,h2,h3,h4,h5,h6,*,main{
+                font-family:BBCNassim;
+		    }
+            .dropzone .dz-default.dz-message {
+                background-image: none;
+            }
+        </style>
+	</head>
+	
+    <body>
+
+        <div id="wrapper">
+            <!--
+        /////////////////////////////////////////////////////////////////////////
+        ////////// HEADER CONTENT ///////////////
+        //////////////////////////////////////////////////////////////////////
+        -->
+            <div id="header">
+                <div class="logo-area clearfix">
+                    <a href="#" class="logo"></a>
+                </div>
+                <!-- //logo-area-->
+
+                <div class="tools-bar">
+                    <ul class="nav navbar-nav navbar-right nav-main-xs">
+                        <li><a href="#menu-right" class="icon-toolsbar"><i class="fa fa-bars"></i></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav tooltip-area">
+                        <li class="visible-lg">
+                            <a href="#" class="fullscreen" data-toggle="tooltip" title="Full Screen" data-container="body" data-placement="right">
+                                <i class="fa fa-expand"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-collapse avatar-header" data-toggle="tooltip" title="Show / hide menu" data-container="body" data-placement="bottom">
+                                <img alt="" src="/Resources/assets/img/avatar7.png" class="circle" />
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                <i class="dropdown-icon fa fa-angle-down"></i><em>@adminUser.xName </em>
+                            </a>
+                            <ul class="dropdown-menu pull-left icon-right arrow">
+                                <li><a href="/Profile/AdminProfile">&nbsp<i class="fa fa-cogs"></i>&nbsp پروفایل من</a></li>
+                                <li><a href="/Profile/Charts">&nbsp<i class="fa fa-area-chart"></i>&nbsp آمار ها</a></li>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor)
+                                {
+                                    <li><a href="/Profile/FinancialStatus">&nbsp<i class="fa fa-area-chart"></i>&nbsp خلاصه وضعیت</a></li>
+                                }
+                                <li class="divider"></li>
+                                <li><a href="/Profile/Exit">&nbsp<i class="fa fa-sign-out"></i>&nbsp خروج </a></li>
+                            </ul>
+                            <!-- //dropdown-menu-->
+                        </li>
+                    </ul>
+                </div>
+                <!-- //tools-bar-->
+            </div>
+            <!-- //header-->
+            <!--
+        /////////////////////////////////////////////////////////////////////////
+        ////////// MAIN SHOW CONTENT //////////
+        //////////////////////////////////////////////////////////////////////
+        -->
+            <div id="main">
+                @RenderBody()
+                <!-- <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li class="active">صفحه اصلی</li>
+    </ol>
+    <div id="content">
+
+
+
+    </div>
+    -->
+
+
+                <div id="md-SendToSocial" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                        <h4 class="modal-title">ارسال به شبکه های اجتماعی</h4>
+                    </div>
+                    <!-- //modal-header-->
+                    <div class="modal-body">
+                        <input class="form-control" type="hidden" name="sendToSocailFileID" id="sendToSocailFileID" value="" />
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp متن</label>
+                            <div class="col-md-11">
+                                <textarea class="form-control" type="text" name="sts_description" id="sts_description" data-trigger="change" required></textarea>
+                            </div>
+                        </div>
+                        <button id="SendToSocialBtn" OnClick="SendToSocial()" type="button" class="btn btn-success">ارسال</button>
+                    </div>
+                    <!-- //modal-body-->
+                </div>
+                <div id="md-SendMessageToPlayer" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                        <h4 class="modal-title">ارسال پیام به کاربر</h4>
+                    </div>
+                    <!-- //modal-header-->
+                    <div class="modal-body">
+                        <input class="form-control" type="hidden" name="playerUsername" id="playerUsername" value="" />
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp پیام</label>
+                            <div class="col-md-11">
+                                <textarea class="form-control" type="text" name="smp_text" id="smp_text" data-trigger="change" required></textarea>
+                            </div>
+                        </div>
+                        <button id="SendToSocialBtn" OnClick="SendMessageToPlayer()" type="button" class="btn btn-success">ارسال</button>
+                    </div>
+                    <!-- //modal-body-->
+                </div>
+            </div>
+            <!-- //main-->
+            <!--
+        //////////////////////////////////////////////////////////////
+        ////////// RIGHT NAV MENU //////////
+        ///////////////////////////////////////////////////////////
+        -->
+            <nav id="menu-right">
+                <ul>
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.AdminManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.AdminManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-gavel"></i> مدیریت مدیران </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Admin/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/Admin/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    <li>
+                        <span><i class="icon fa fa-check-square-o"></i> مدیریت پیام به مدیران </span>
+                        <ul>
+                            <li><a href="/AdminNotification/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                            <li><a href="/AdminNotification/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                        </ul>
+                    </li>
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.UserManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-users"></i> مدیریت کاربران </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/User/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TicketManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TicketManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-headphones"></i> مدیریت تیکت ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Ticket/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.WithdrawalManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.WithdrawalManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-university"></i> مدیریت تسویه ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Withdrawal/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                  
+
+                 
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SystemFileManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SystemFileManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-file-o"></i> مدیریت فایل ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/SystemFile/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.GatewayManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.GatewayManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-university "></i> مدیریت درگاه ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Gateway/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/Gateway/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.BankCardManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.BankCardManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-credit-card-alt"></i> مدیریت کارت های بانکی </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/BankCard/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/BankCard/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.CartTransferHistoryManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.CartTransferHistoryManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-credit-card"></i> مدیریت کارت به کارت ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/CartTransferHistory/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/CartTransferHistory/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TransactionManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TransactionManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-american-sign-language-interpreting"></i> مدیریت تراکنش ها </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Transaction/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SystemLogManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SystemLogManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-binoculars"></i> مدیریت لاگ های سیستم </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/SystemLog/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.FinancialLogManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.FinancialLogManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-calculator"></i> مدیریت لاگ های مالی </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/FinancialLog/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/FinancialLog/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.ScheduleMessageManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.ScheduleMessageManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-calendar"></i> مدیریت پیام های زمانبندی شده </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/ScheduleMessage/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/ScheduleMessage/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TelegramSupportManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TelegramSupportManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-telegram"></i> مدیریت ساپورت تلگرام </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/TelegramSupport/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+                    @if (adminUser.xType == (byte)AdminType.Supervisor || adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SettingManagement).Count() == 1)
+                    {
+                        AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SettingManagement).SingleOrDefault();
+                        char[] permissions = null;
+                        if (arInstance == null)
+                        {
+                            arInstance = new AdminRole();
+                            permissions = "00000".ToCharArray();
+                        }
+                        else
+                        {
+                            permissions = arInstance.xCrudPermission.ToCharArray();
+                        }
+                        <li>
+                            <span><i class="icon fa fa-cogs"></i> مدیریت تنظیمات </span>
+                            <ul>
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Select] == '1')
+                                {
+                                    <li><a href="/Setting/Index"><i class="icon fa fa-info-circle"></i>اطلاعات جاری</a></li>
+                                }
+                                @if (adminUser.xType == (byte)AdminType.Supervisor || permissions[(byte)CrudOperationType.Insert] == '1')
+                                {
+                                    <li><a href="/Setting/InsertRender"><i class="icon fa fa-pencil-square-o"></i>جدید</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+
+
+                  
+
+
+                </ul>
+
+            </nav>
+            <!-- //nav right menu-->
+
+
+        </div>
+        <!-- //wrapper-->
+        <!--
+    ////////////////////////////////////////////////////////////////////////
+    ////////// JAVASCRIPT LIBRARY //////////
+    /////////////////////////////////////////////////////////////////////
+    -->
+        <script type="text/javascript" src="/Resources/assets/js/JavascriptPrototype.js"></script>
+
+
+        <!-- Modernizr Library For HTML5 And CSS3 -->
+
+        <script type="text/javascript" src="/Resources/assets/js/modernizr/modernizr.js"></script>
+        <script type="text/javascript" src="/Resources/assets/plugins/mmenu/jquery.mmenu.js"></script>
+
+        <!-- Holder Images -->
+
+        <script type="text/javascript" src="/Resources/assets/plugins/holder/holder.js"></script>
+
+        <!-- Form plugins -->
+        <script type="text/javascript" src="/Resources/assets/plugins/form/form.js"></script>
+
+
+
+
+
+        <script src="~/Resources/assets/js/jquery.serializeToJSON.js"></script>
+        <!-- Library Chart-->
+
+        <script type="text/javascript" src="/Resources/assets/plugins/chart/chart.js"></script>
+        <!-- Library Themes Customize-->
+
+        <script type="text/javascript" src="/Resources/assets/js/caplet.custom.js"></script>
+
+        <script type="text/javascript" src="/Resources/assets/js/FrameworkCore.js"></script>
+
+        <script type="text/javascript">
+             @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
+
+            var main = $("#nav,#main");
+            main.toggleClass("nav-collapse-out");
+            function showSendMessageModal(player) {
+                $("#playerUsername").val(player);
+                $("#md-SendMessageToPlayer").modal("show");
+            }
+             function SendMessageToPlayer()
+            {
+                var args = {
+                    "message": $("#smp_text").val(),
+                    "player": $("#playerUsername").val(),
+                }
+                 $.ajax({
+                        type: "POST",
+                        headers: {
+                            'RequestVerificationToken': '@TokenHeaderValue()'
+                        },
+                        contentType: "application/json; charset=utf-8",
+                     url: '/User/SendMessageToPlayer',
+                        data: JSON.stringify(args),
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.Status == true) {
+                                $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                            }
+                            else {
+                                $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                            }
+                        },
+                        statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+                    });
+            }
+
+            function SendToSocialModal(id) {
+                $("#md-SendToSocial").modal("show");
+                $("#sendToSocailFileID").val(id);
+            }
+            function SendToSocial() {
+
+                  var args = {
+                      "description": $("#sts_description").val(),
+                      "systemFileID": $("#sendToSocailFileID").val(),
+            }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/SendToSocial/SendPhoto',
+                data: JSON.stringify(args),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        $("#sendToSocailFileID").val('');
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+            }
+
+        </script>
+
+    </body>
+</html>
+@{
+    ur.Dispose();
+    }

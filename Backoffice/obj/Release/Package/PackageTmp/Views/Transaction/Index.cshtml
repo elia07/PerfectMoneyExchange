@@ -1,0 +1,143 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    int currentPage = Convert.ToInt32(ViewBag.currentPage);
+    int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ItemsPerPage"));
+    Pagination pagination = null;
+    SearchModelManager searchModelManager = ViewBag.searchModelManager;
+    string queryString = ViewBag.queryString;
+
+
+    AdminRepository ur = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser = ur.GetByID(adminUser.xID);
+    AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.TransactionManagement).SingleOrDefault();
+    char[] permissions = null;
+    if (arInstance == null)
+    {
+        arInstance = new AdminRole();
+        permissions = "00000".ToCharArray();
+    }
+    else
+    {
+        permissions = arInstance.xCrudPermission.ToCharArray();
+    }
+
+}
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li>مدیریت تراکنش ها</li>
+    <li class="active">اطلاعات جاری</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>مدیریت تراکنش ها</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <section class="panel">
+                <header class="panel-heading md" data-color="#F0C449">
+                    <h3 style="color: rgb(255, 255, 255);"><strong>جستجو</strong></h3>
+                    <div class="panel-tools color" align="left" data-toolscolor="#F4AD41" style="width:0px;float:left;position: relative;top: -30px;left: 125px;">
+                        <ul class="tooltip-area">
+                            <li style="position:relative;left:-100px;"><a href="javascript:void(0)" class="btn btn-collapse in" title="" data-original-title="Collapse"><i class="fa fa-sort-amount-asc"></i></a></li>
+                        </ul>
+                    </div>
+                </header>
+                <div class="panel-body" style="direction:rtl;display:none">
+                    @Html.Partial("~/Views/Partial/SearchForm.cshtml")
+
+                </div>
+
+            </section>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><label>شناسه</label></th>
+                        <th><label>کاربر</label></th>
+                        <th><label>درگاه</label></th>
+                        <th><label>نوع درگاه</label></th>
+                        <th><label>تاریخ</label></th>
+                        <th><label>مبلغ</label></th>
+                        <th><label>میزان ارز</label></th>
+                        <th><label>نرخ مبادله</label></th>
+                        <th><label>درصد کارمزد</label></th>
+                        <th><label>میزان کار مزد</label></th>
+                        <th><label>شناسه پرداخت</label></th>
+                        <th><label>شناسه IPG</label></th>
+                        <th><label>تایید شده</label></th>
+                    </tr>
+                </thead>
+                <tbody align="center">
+                    @using (TransactionRepository opr = new TransactionRepository())
+                    {
+                        pagination = new Pagination(currentPage, itemsPerPage, 0);
+                        IQueryable<Transaction> records = opr.FilterByParam(searchModelManager, opr.GetPredicate(searchModelManager.SearchModels), pagination, searchModelManager.OrderByType, searchModelManager.OrderByFieldName);
+                        pagination = new Pagination(currentPage, itemsPerPage, opr.Count(opr.GetPredicate(searchModelManager.SearchModels)));
+
+                        foreach (var item in records)
+                        {
+                            <tr id="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)">
+                                <td><label>@item.xID</label></td>
+                                <td><a href="@("/User/UpdateRender?xID="+MD5Encryption.Encrypt(item.User.xID.ToString(),true,SectionInfo.Setting.SecurityKey))" target="_blank">@item.User.xEmail</a></td>
+                                <td><label>@item.Gateway.xName</label></td>
+                                <td><label>@(SectionInfo.Setting.Languages[SectionInfo.Setting.DefaultLanguage][EnumUtils.GetAttribute<DisplayAttribute>((GatewayType)item.Gateway.xType).Name])</label></td>
+                                <td><label>@DateConvertor.MiladiToShamsi(item.xDate) - @item.xDate.ToShortTimeString()</label></td>
+                                <td><label>@item.xAmount</label></td>
+                                <td><label>@item.xCurrencyAmount</label></td>
+                                <td><label>@item.xCurrencyExchangeRate</label></td>
+                                <td><label>@item.xComissionPercent</label></td>
+                                <td><label>@item.xComissionAmount</label></td>
+                                <td><label>@item.xBankRef</label></td>
+                                <td><label>@item.xInvoice_key</label></td>
+                                <td><label><input type="checkbox" @(item.xVerified == true ? "checked" : "") disabled></label></td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @MvcHtmlString.Create(pagination.Render("/Transaction/Index", queryString))
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+
+</script>
+@{
+    ur.Dispose();
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="57e31bd35af54bd9a2265a8a96376ab3" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="Saraf365Model.Admin" Width="1.5" PointX="0.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.AdminNotification" Width="1.5" PointX="3" PointY="29.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.AdminRole" Width="1.5" PointX="3" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.BankCard" Width="1.5" PointX="10.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.CartTransferHistory" Width="1.5" PointX="12.5" PointY="23.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.Conversation" Width="1.5" PointX="7.5" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.FileData" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.ScheduleMessage" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.Setting" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.SystemFile" Width="1.5" PointX="0.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.SystemLog" Width="1.5" PointX="3" PointY="35.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.Ticket" Width="1.5" PointX="5.25" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.UserBankAccount" Width="1.5" PointX="5.25" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Saraf365Model.Withdrawal" Width="1.5" PointX="7.5" PointY="27.875" IsExpanded="true" />
+        <AssociationConnector Association="Saraf365Model.FK_xAdminID_AdminNotification_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.Fk_xAdminID_AdminRole_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xAdminID_SystemLog_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xCreator_AdminNotification_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_BankCard_CartTransferHistory_xID" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xTicketID_Conversation_Ticket" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xSystemFileID_FileData_SystemFile" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xSystemFileID_ScheduleMessage_SystemFile" ManuallyRouted="false" />
+        <AssociationConnector Association="Saraf365Model.FK_xBankAccountID_Withdrawal_BankAccount" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Saraf365Model.Transaction" Width="1.5" PointX="10.25" PointY="23" />
+        <AssociationConnector Association="Saraf365Model.FK_xTransactionID_CartTransferHistory_Transaction" />
+        <EntityTypeShape EntityType="Saraf365Model.FinancialLog" Width="1.5" PointX="5.25" PointY="20.5" />
+        <EntityTypeShape EntityType="Saraf365Model.Gateway" Width="1.5" PointX="3.375" PointY="1" />
+        <AssociationConnector Association="Saraf365Model.FK_xGatewayID_Transaction_Gateway" />
+        <EntityTypeShape EntityType="Saraf365Model.User" Width="1.5" PointX="3" PointY="38.75" />
+        <AssociationConnector Association="Saraf365Model.FK_xUserID_FinancialLog_User" />
+        <AssociationConnector Association="Saraf365Model.FK_NationalImageID_User_SystemFile" />
+        <AssociationConnector Association="Saraf365Model.FK_xUserID_Ticket_User" />
+        <AssociationConnector Association="Saraf365Model.FK_xUserID_Transaction_User" />
+        <AssociationConnector Association="Saraf365Model.FK_User_UserBankAccount" />
+        <AssociationConnector Association="Saraf365Model.FK_xAgentID_User_User" />
+        <AssociationConnector Association="Saraf365Model.FK_xUserID_Withdrawal_User" />
+        <EntityTypeShape EntityType="Saraf365Model.TelegramSupport" Width="1.5" PointX="3" PointY="17.625" />
+        <AssociationConnector Association="Saraf365Model.FK_xResponseAdmin_TelegramSupport_Admin" />
+        <AssociationConnector Association="Saraf365Model.FK_xSystemFileID_TelegramSupport_SystemFile" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

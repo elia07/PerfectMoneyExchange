@@ -1,0 +1,193 @@
+﻿
+@using System.Configuration;
+@using System.ComponentModel.DataAnnotations;
+@using System.Web.Mvc;
+@using System.Linq;
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using Saraf365.Core;
+@using Saraf365.Core.Repositories;
+@using Saraf365.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+@using RockCandy.Web.Framework.Utilities.Encryption;
+@using Saraf365.Backoffice.DomainUtils;
+
+
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/PanelMaster.cshtml";
+
+    int currentPage = Convert.ToInt32(ViewBag.currentPage);
+    int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ItemsPerPage"));
+    Pagination pagination = null;
+    SearchModelManager searchModelManager = ViewBag.searchModelManager;
+    string queryString = ViewBag.queryString;
+
+
+    AdminRepository ur = new AdminRepository();
+    Admin adminUser = (Admin)Session["Admin"];
+    adminUser = ur.GetByID(adminUser.xID);
+    AdminRole arInstance = adminUser.AdminRole.Where(x => x.xSectionType == (byte)AdminRoleSectionType.SettingManagement).SingleOrDefault();
+    char[] permissions = null;
+    if (arInstance == null)
+    {
+        arInstance = new AdminRole();
+        permissions = "00000".ToCharArray();
+    }
+    else
+    {
+        permissions = arInstance.xCrudPermission.ToCharArray();
+    }
+
+}
+}
+
+<ol class="breadcrumb">
+    <li><a href="/Profile">صفحه اصلی</a></li>
+    <li>مدیریت تنظیمات</li>
+    <li class="active">اطلاعات جاری</li>
+</ol>
+<div id="content">
+    <section class="panel">
+        <header class="panel-heading md" data-color="theme-inverse" style="background-color: rgb(10, 166, 153);">
+            <h3 style="color: rgb(255, 255, 255);"><strong>مدیریت تنظیمات</strong></h3>
+        </header>
+        <div class="panel-body" style="direction:rtl;">
+            <section class="panel">
+                <header class="panel-heading md" data-color="#F0C449">
+                    <h3 style="color: rgb(255, 255, 255);"><strong>جستجو</strong></h3>
+                    <div class="panel-tools color" align="left" data-toolscolor="#F4AD41" style="width:0px;float:left;position: relative;top: -30px;left: 125px;">
+                        <ul class="tooltip-area">
+                            <li style="position:relative;left:-100px;"><a href="javascript:void(0)" class="btn btn-collapse in" title="" data-original-title="Collapse"><i class="fa fa-sort-amount-asc"></i></a></li>
+                        </ul>
+                    </div>
+                </header>
+                <div class="panel-body" style="direction:rtl;display:none">
+                    @Html.Partial("~/Views/Partial/SearchForm.cshtml")
+
+                </div>
+
+            </section>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><label>نام</label></th>
+                        <th><label>مقدار</label></th>
+                        <th><label>فعالیت ها</label></th>
+                    </tr>
+                </thead>
+                <tbody align="center">
+                    @using (SettingRepository opr = new SettingRepository())
+                    {
+                        pagination = new Pagination(currentPage, itemsPerPage, 0);
+                        IQueryable<Setting> records = opr.FilterByParam(searchModelManager, opr.GetPredicate(searchModelManager.SearchModels), pagination, searchModelManager.OrderByType, searchModelManager.OrderByFieldName);
+                        pagination = new Pagination(currentPage, itemsPerPage, opr.Count(opr.GetPredicate(searchModelManager.SearchModels)));
+
+                        foreach (var item in records)
+                        {
+                            <tr id="@MD5Encryption.Encrypt(item.xID.ToString(),true,SectionInfo.Setting.SecurityKey)">
+
+                                <td><label>@item.xKey</label></td>
+                                <td><label>@(item.xValue.Length > 20 ? item.xValue.Substring(0, 20) + " ..." : item.xValue)</label></td>
+
+                                <td>
+                                    <span class="tooltip-area">
+                                        @if (permissions[(byte)CrudOperationType.Update] == '1' || adminUser.xType == (byte)AdminType.Supervisor)
+                                        {
+                                            <button onclick="UpdateRender('@MD5Encryption.Encrypt(item.xID.ToString(), true, SectionInfo.Setting.SecurityKey)','/Setting/UpdateRender')" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="ویرایش"><i class='fa fa-pencil'></i></button>
+                                        }
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @MvcHtmlString.Create(pagination.Render("/Setting/Index", queryString))
+            <br><h3>به روز رسانی DupeIPWhitelist</h3><br><hr>
+            <form id="form-UpdateDuplicateIpWhiteList" data-parsley-validate>
+
+                <div class="form-group clearfix">
+                    <label class="control-label col-md-1 pull-right" style="text-align: right;font-size:18px;">&nbsp DupeIPWhitelist</label>
+                    <div class="col-md-11">
+                        <textarea class="form-control" name="whilteList" id="whilteList" required>@ViewBag.DupeIPWhitelist</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group clearfix">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success" onclick="UpdateDuplicateIpWhiteList()">به روز رسانی</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<div id="md-DeleteConfrim" class="modal fade" tabindex="-1" data-width="450" data-header-color="inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">تایید حذف</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body">
+        <p>برای حذف رکورد بر روی دکمه تایید کلیک کنید.</p>
+        <button id="Delete" OnClick="Delete($(this).attr('RowID'), '/Setting/Delete')" type="button" class="btn btn-success">تایید</button>
+    </div>
+    <!-- //modal-body-->
+</div>
+
+
+
+<script type="text/javascript">
+    @functions{
+        public string TokenHeaderValue()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    var TokenHeaderValue = '@TokenHeaderValue()';
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+
+        $(".DeleteConfirm").click(function (event) {
+            var data = $(this).data();
+            $("#md-DeleteConfrim .modal-body #Delete").attr("RowID", $(this).attr("RowID"));
+            $("#md-DeleteConfrim").attr('class', 'modal fade').addClass(data.effect).modal('show')
+        });
+
+    });
+    function UpdateDuplicateIpWhiteList() {
+        if ($("#form-UpdateDuplicateIpWhiteList").parsley().validate())
+        {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'RequestVerificationToken': '@TokenHeaderValue()'
+                },
+                contentType: "application/json; charset=utf-8",
+                url: '/Setting/UpdateDuplicateIpWhiteList',
+                data: JSON.stringify($("#form-UpdateDuplicateIpWhiteList").serializeToJSON()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.Status == true) {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "success" });
+                        window.location.reload();
+                    }
+                    else {
+                        $.notific8(response.Message, { life: 5000, horizontalEdge: "top", theme: "danger" });
+                    }
+                },
+                statusCode: { 404: ajaxError_404, 505: ajaxError_505 }, error: ajaxError_error
+            });
+        }
+    }
+</script>
+@{
+    ur.Dispose();
+}

@@ -1,0 +1,58 @@
+﻿@using BotDetect.Web.Mvc;
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Section -->
+<div class="section section-pad">
+    <div class="container">
+        <div class="row" style="direction:rtl;">
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                <h3 class="heading-lead center IRANSans">ورود به حساب کاربری</h3>
+                <form id="Login" class="form-signup">
+                    <div class="form-results"></div>
+                    <div class="form-group">
+                        <div class="form-field form-m-bttm">
+                            <input name="xEmail" type="email" placeholder="پست الکترونیک *" class="form-control required email IRANSans" aria-required="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-field">
+                            <input name="xPassword" type="password" placeholder="رمز عبور *" class="form-control required IRANSans" aria-required="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-field form-m-bttm">
+                            <input id="CaptchaLogin" type="text" placeholder="کد امنیتی *" class="form-control required IRANSans" aria-required="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @{MvcCaptcha LoginCaptcha = new MvcCaptcha("CaptchaLogin");
+                            LoginCaptcha.UserInputID = "CaptchaLogin";
+                            }
+                        @Html.Captcha(LoginCaptcha)
+                    </div>
+
+                    <button type="submit" class="btn btn-alt IRANSans">ورود</button>
+                    <span class="gaps"></span>
+                    <p class="small IRANSans"><a class="switch-tab" data-tabnav="loginreg-form" href="#tab2" data-toggle="tab">بازیابی رمز عبور</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Section -->
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".BDC_CaptchaDiv").removeAttr("style");
+            $(".BDC_CaptchaImageDiv").removeAttr("style");
+            $(".BDC_CaptchaIconsDiv").removeAttr("style");
+            $(".BDC_ReloadLink").removeAttr("style");
+        });
+
+    </script>
+
+}

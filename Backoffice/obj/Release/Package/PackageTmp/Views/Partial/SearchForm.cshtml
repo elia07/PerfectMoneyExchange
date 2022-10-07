@@ -1,0 +1,206 @@
+﻿
+
+@using RockCandy.Web.Framework.Core.Models;
+@using RockCandy.Web.Framework.Core;
+@using RockCandy.Web.Framework.Core.Enumerations;
+@using RockCandy.Web.Framework.Utilities;
+
+@{
+    List<MentionField> MentionFields = DomainInfo.ControllerMentionFields[ViewBag.currentController];
+    SearchModelManager searchModelManager = ViewBag.searchModelManager;
+
+    string[] additionalSearchParam = new string[] { };
+    try
+    {
+        additionalSearchParam = ((string)(ViewBag.AdditionalSearchParams)).Split(new string[] { "#" }, StringSplitOptions.None);
+    }
+    catch { }
+
+}
+<script type="text/javascript" src="/Resources/assets/plugins/bootstrap/SelectPickerAjaxExtention.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/calendar.all.js"></script>
+<script type="text/javascript" src="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/Resources/assets/plugins/datetime/rezvan/bootstrap-datepicker.css" />
+<form action="/@ViewBag.currentController/Index" enctype="multipart/form-data" method="Get" id="searchForm">
+    @foreach (var item in additionalSearchParam)
+    {
+        string[] temp = item.Split(new string[] { "," }, StringSplitOptions.None);
+        <input class="form-control" type="hidden" name="@temp[0]" id="@temp[0]" value="@temp[1]">
+    }
+    <div class="col-md-3">
+        @(Html.RenderEnum<OrderByType>("OrderByType"))
+    </div>
+    <div class="col-md-6">
+        <select class="selectpicker form-control show-menu-arrow" style="display: none;" id="OrderByFieldName" name="OrderByFieldName">
+            <option value="xID">پیش فرض</option>
+            @foreach (var item in MentionFields.Where(x => x.SortAble == true))
+            {
+                <option value="@item.Name">@item.Caption</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="control-label pull-right" style="text-align: right;font-size:18px;">مرتب سازی بر روی </label>
+    </div>
+    <div class="form-group clearfix"></div>
+    @foreach (var item in MentionFields)
+    {
+        SearchModel sm = searchModelManager.SearchModels.Where(x => x.MentionField.Name == item.Name).SingleOrDefault();
+        if (sm != null)
+        {
+            <div class="col-md-3">
+                <div class="input-icon">
+                    @if (item.Type.IsEnum || item.Type == typeof(string) || item.Type==typeof(bool))
+                    {
+                        @(Html.RenderEnum<NoneNumericalOperationType>(item.Name + "_NO"))
+                        <script type="text/javascript">
+                            $("#@item.Name" + "_NO").val("@((byte)sm.NoneNumericalOperation)");
+                            $("#@item.Name" + "_NO").change();
+                        </script>
+
+                    }
+                    else
+                    {
+                        @(Html.RenderEnum<LogicalOperatorType>(item.Name + "_LO"))
+                        <script type="text/javascript">
+                            $("#@item.Name" + "_LO").val(@((byte)sm.LogicalOperator));
+                            $("#@item.Name" + "_LO").change();
+                        </script>
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-icon">
+                    @if (item.Type.IsEnum)
+                    {
+
+                        @Html.RenderEnum(item.Name, item.Type, true);
+                        <script type="text/javascript">
+                                $("#@item.Name").val(@sm.Value);
+                                $("#@item.Name").change();
+                        </script>
+                    }
+                    else if (item.Type == typeof(DateTime))
+                    {
+
+                        <div id="datepicker_@item.Name" class="input-group date form_datetime col-md-8" data-picker-position="bottom-left" data-date-format="dd MM yyyy - HH:ii p" style="display:inline-flex;">
+                            <input id="@item.Name" name="@item.Name" type="text" class="form-control" readonly />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><i class="fa fa-times"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                            </span>
+                        </div>
+
+                        <script type="text/javascript">
+                                $('#datepicker_@item.Name').datepicker('setDate', new Date("@Convert.ToDateTime(sm.Value).ToShortDateString()"));
+                        </script>
+                    }
+                    else
+                    {
+                        <input class="form-control " type="text" name="@item.Name" id="@item.Name" value="@sm.Value">
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="control-label pull-right" style="text-align: right;font-size:18px;"><input type="checkbox" id="@(item.Name + "_II")" name="@(item.Name + "_II")" checked />&nbsp @item.Caption</label>
+            </div>
+            <div class="form-group clearfix"></div>
+        }
+        else
+        {
+            <div class="col-md-3">
+                <div class="input-icon">
+                    @if (item.Type.IsEnum || item.Type == typeof(string) || item.Type == typeof(bool))
+                    {
+                        @(Html.RenderEnum<NoneNumericalOperationType>(item.Name + "_NO"))
+
+                    }
+                    else
+                    {
+                        @(Html.RenderEnum<LogicalOperatorType>(item.Name + "_LO"))
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-icon">
+                    @if (item.Type.IsEnum)
+                    {
+
+                        @Html.RenderEnum(item.Name, item.Type, true);
+
+                    }
+                    else if (item.Type == typeof(DateTime))
+                    {
+                        <div id="datepicker_@item.Name" class="input-group date form_datetime col-md-8" data-picker-position="bottom-left" data-date-format="dd MM yyyy - HH:ii p" style="display:inline-flex;">
+                            <input id="@item.Name" name="@item.Name" type="text" class="form-control" readonly />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><i class="fa fa-times"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <input class="form-control " type="text" name="@item.Name" id="@item.Name">
+                    }
+
+                </div>
+            </div>
+                <div class="col-md-3">
+                    <label class="control-label pull-right" style="text-align: right;font-size:18px;"><input type="checkbox" id="@(item.Name + "_II")" name="@(item.Name + "_II")" />&nbsp @item.Caption</label>
+                </div>
+                <div class="form-group clearfix"></div>
+        }
+    }
+    <br><button type="submit" class="btn" data-color="#F4AD41">جستجو</button>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        @foreach(var item in MentionFields)
+        {
+            if(item.Type==typeof(DateTime))
+            {
+                @:$('#datepicker_@item.Name').datepicker({
+                @:    preventPastSelect: false,
+                @:    todayBtn: 1,
+                @:    autoclose: 1,
+                @:    todayHighlight: 1,
+                @:    format: "dd MM yyyy",
+                @:    isRTL: false
+                @:});
+            }
+        }
+
+        $('.selectpicker').selectpicker();
+        @if (searchModelManager != null)
+        {
+            @:$("#OrderByFieldName").val("@searchModelManager.OrderByFieldName");
+            @:$("#OrderByFieldName").change();
+            @:$("#OrderByType").val("@((byte)searchModelManager.OrderByType)");
+            @:$("#OrderByType").change();
+        }
+        $('.selectpicker').change();
+        $("#searchForm").on('submit', function (e) {
+            $(".date").each(function (e) {
+                var georgianValue = new Date();
+                georgianValue = $(this).data('datepicker').date.getGregorianDate();
+
+                var dd = georgianValue.getDate();
+                var mm = georgianValue.getMonth() + 1; //January is 0!
+
+                var yyyy = georgianValue.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                var georgianValue = yyyy + '/' + mm + '/' + dd;
+                $($(this).children("input")).val(georgianValue);
+
+            });
+        });
+    });
+</script>
